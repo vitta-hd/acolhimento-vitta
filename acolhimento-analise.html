@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análise de Elegibilidade – Acolhimento Vitta</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      padding: 32px 16px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #1a3a5c;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: 0.92rem;
+      margin-bottom: 28px;
+    }
+
+    /* Criteria legend */
+    .criteria {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .criteria-item {
+      background: #fff;
+      border: 1.5px solid #c8d8ea;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .criteria-item .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-sim { background: #22a06b; }
+    .dot-nao { background: #e5534b; }
+
+    /* Summary bar */
+    .summary {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .summary-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 28px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .summary-card .num { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.8rem; color: #666; margin-top: 2px; }
+    .num-sim { color: #22a06b; }
+    .num-nao { color: #e5534b; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      font-size: 0.88rem;
+    }
+    thead tr { background: #1a3a5c; color: #fff; }
+    thead th { padding: 14px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #eef0f3; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7faff; }
+    td { padding: 12px 12px; vertical-align: top; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+    .sim { background: #d4f0e2; color: #186b47; }
+    .nao { background: #fde8e7; color: #a02020; }
+
+    .tag {
+      display: inline-block;
+      background: #e8f0fc;
+      color: #2057c2;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.78rem;
+      margin: 2px 2px 2px 0;
+      white-space: nowrap;
+    }
+    .tag.t-cirurgia  { background: #fef3e2; color: #a05a00; }
+    .tag.t-gestante  { background: #fce4f5; color: #8a1a6a; }
+    .tag.t-medicamento { background: #e4f7ea; color: #1a6a35; }
+    .tag.t-oncologico { background: #fde8e7; color: #a02020; }
+    .tag.t-grave { background: #f0e8fd; color: #6020a0; }
+    .tag.t-sem { background: #f0f0f0; color: #666; }
+
+    .reason { color: #444; line-height: 1.5; }
+    .name { font-weight: 600; color: #1a3a5c; }
+    .paciente-label { font-size: 0.75rem; color: #888; }
+
+    @media (max-width: 600px) {
+      thead th:nth-child(4) { display: none; }
+      tbody td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Elegibilidade para Acolhimento Vitta</h1>
+<p class="subtitle">Análise baseada nos critérios definidos pela equipe — Amil Saúde / Vitta · Carga: maio 2026</p>
+
+<div class="criteria">
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Cirurgia futura agendada</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Gestante</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Toma medicamentos contínuos</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Caso oncológico ou tratamento grave</div>
+  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas dúvidas ou consultas</div>
+  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas cirurgias passadas (sem continuidade)</div>
+</div>
+
+<div class="summary">
+  <div class="summary-card">
+    <div class="num num-sim" id="count-sim">—</div>
+    <div class="label">Elegíveis (SIM)</div>
+  </div>
+  <div class="summary-card">
+    <div class="num num-nao" id="count-nao">—</div>
+    <div class="label">Não elegíveis (NÃO)</div>
+  </div>
+  <div class="summary-card">
+    <div class="num" style="color:#1a3a5c" id="count-total">—</div>
+    <div class="label">Total de pacientes</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Paciente</th>
+      <th>Elegível?</th>
+      <th>Motivos / Critérios atendidos</th>
+      <th>Justificativa</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>1</td>
+      <td>
+        <div class="name">Francisco Hiályson F. Medeiros</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Faz uso contínuo de Desvenlafaxina (antidepressivo/ansiolítico) com acompanhamento psiquiátrico ativo.</td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td>
+        <div class="name">Cristiane Amaro Padilha</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td class="reason">Câncer de mama (C50), em acompanhamento oncológico ativo, múltiplos especialistas. Procedimentos cirúrgicos na coluna e joelhos ainda não marcados (pendentes). Múltiplos medicamentos em uso.</td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td>
+        <div class="name">Fabiano Vitorino A. Ferreira</div>
+        <div class="paciente-label">SP · Prata NC</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Apenas consultas</span></td>
+      <td class="reason">Apenas acompanhamento psicológico. Sem medicamentos, sem cirurgia futura, sem condição grave ou oncológica e sem gestação.</td>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td>
+        <div class="name">Karine Melro de Almeida</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-oncologico">Investigação oncológica</span></td>
+      <td class="reason">Salpingooforectomia esquerda agendada para 08/06/2026. Teratoma no ovário com biópsia pós-cirúrgica pendente (diagnóstico oncológico em investigação).</td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td>
+        <div class="name">Raphaela Cristina A. de Araújo</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Uso contínuo de múltiplos medicamentos psiquiátricos: Fluoxetina, Duloxetina, Carbolitium, Bupropiona e Risperidona. Diagnóstico de Burnout/Depressão/Ansiedade.</td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td>
+        <div class="name">João Carlos Nunes Pereira</div>
+        <div class="paciente-label">RJ · Prata NC</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Hipertensão e Arritmia Cardíaca com uso contínuo de Losartana, Carvedilol, Espironolactona e Dapagliflozina. Acompanhamento cardiológico ativo.</td>
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td>
+        <div class="name">Kleyder Erlandes Santos</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td class="reason">Procedimento cirúrgico bucomaxilofacial em planejamento ativo, aguardando autorização de materiais pelo plano para agendamento. Há cirurgia futura prevista.</td>
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td>
+        <div class="name">Hugo Ibernom Leitão Neto</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Apenas consultas/exames</span></td>
+      <td class="reason">Apenas consulta com gastroenterologista e exames agendados. Sem medicamentos contínuos, sem cirurgia futura, sem condição grave ou oncológica.</td>
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td>
+        <div class="name">Willian Cândido dos Reis Souza</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Hipertireoidismo com uso contínuo de Levotiroxina. Acompanhamento endocrinológico com exames e consultas periódicas programadas.</td>
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td>
+        <div class="name">Samara Felipe Severino</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-grave">Tratamento grave</span><span class="tag t-medicamento">Medicamento biológico</span></td>
+      <td class="reason">Retocolite Ulcerativa Severa (K51) com uso de medicamento biológico intravenoso (Mezalazina, Imusuprex + biológico na veia). Caso de alta complexidade terapêutica.</td>
+    </tr>
+
+    <tr>
+      <td>11</td>
+      <td>
+        <div class="name">Jonas Matteo de Jesus Santos</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Apenas terapias</span></td>
+      <td class="reason">Suspeita de TEA e TDAH em investigação. Sem medicamentos prescritos, apenas terapias (psicólogo, fonoaudióloga e terapeuta ocupacional). Sem cirurgia futura.</td>
+    </tr>
+
+    <tr>
+      <td>12</td>
+      <td>
+        <div class="name">Gabriel de Souza T. Correia</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento biológico</span><span class="tag t-cirurgia">Procedimento futuro</span></td>
+      <td class="reason">Artrite Idiopática Juvenil (M08.0) com uso semanal de Etanercepte (biológico). Procedimento de recebimento e aplicação da medicação é recorrente e agendado.</td>
+    </tr>
+
+    <tr>
+      <td>13</td>
+      <td>
+        <div class="name">Karolyne Albani Gaigher</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Sem condição</span></td>
+      <td class="reason">Sem condição crônica, sem medicamentos, sem cirurgia futura, sem gestação e sem caso oncológico declarado.</td>
+    </tr>
+
+    <tr>
+      <td>14</td>
+      <td>
+        <div class="name">Felipe Rodrigues Ramos</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td class="reason">Cirurgia no joelho em 2019. Sem condição ativa, sem medicamentos, sem cirurgia futura agendada.</td>
+    </tr>
+
+    <tr>
+      <td>15</td>
+      <td>
+        <div class="name">Reinaldo José P. Marccelli</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Cirurgia de catarata agendada para 13/07. Uso contínuo de Benicar 40mg (hipertensão).</td>
+    </tr>
+
+    <tr>
+      <td>16</td>
+      <td>
+        <div class="name">Robson Nunes Martins</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Sem condição</span></td>
+      <td class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura, sem gestação.</td>
+    </tr>
+
+    <tr>
+      <td>17</td>
+      <td>
+        <div class="name">Leonardo Rodrigues Plouvier</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td class="reason">Apendicite na adolescência. Sem condição ativa, sem medicamentos, sem cirurgia futura.</td>
+    </tr>
+
+    <tr>
+      <td>18</td>
+      <td>
+        <div class="name">Rejane Faria da Cruz</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Diabetes com uso contínuo de Metformina XR 500mg. Acompanhamento com endocrinologista/gastroenterologista em andamento.</td>
+    </tr>
+
+    <tr>
+      <td>19</td>
+      <td>
+        <div class="name">Taisa Macedo de Lima</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Cirurgia de retirada da vesícula prevista para agosto/setembro. Uso contínuo de Alenia, Losartana, Escitalopram e Clonazepam. Múltiplas condições (asma, pânico, colelitíase).</td>
+    </tr>
+
+    <tr>
+      <td>20</td>
+      <td>
+        <div class="name">Pietra da Cruz Coelho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">TEA + TDAH diagnosticados, uso de Canabidiol prescrito e acompanhamento psiquiátrico/psicológico contínuo.</td>
+    </tr>
+
+    <tr>
+      <td>21</td>
+      <td>
+        <div class="name">Débora Kaline F. de S. Miranda</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Apenas anticoncepcional</span></td>
+      <td class="reason">Apenas uso de anticoncepcional. Cesarianas no passado sem continuidade. Sem condição de saúde ativa que justifique acolhimento.</td>
+    </tr>
+
+    <tr>
+      <td>22</td>
+      <td>
+        <div class="name">Maria Celia Viana de Oliveira</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Aguardando infiltração e bloqueio tibial (procedimento futuro). Limitação física (dificuldade de andar). Uso de medicamentos (Tramadol/Betatrinta) para dor.</td>
+    </tr>
+
+    <tr>
+      <td>23</td>
+      <td>
+        <div class="name">Thais Brasileiro da Fonseca</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Câncer de mama (C50). Mastectomia realizada, aguardando cirurgia de reconstrução pelo INCA (a qualquer momento) e simetrização posterior. Uso de reposição de ferro e B12.</td>
+    </tr>
+
+    <tr>
+      <td>24</td>
+      <td>
+        <div class="name">Vânia Lúcia Santiago Bela</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td class="reason">Cirurgia de varizes futura prevista. Endometriose profunda com histórico cirúrgico e acompanhamento ginecológico contínuo pós-operatório.</td>
+    </tr>
+
+    <tr>
+      <td>25</td>
+      <td>
+        <div class="name">Maura Lima Pereira</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Reabilitação</span></td>
+      <td class="reason">Osteossíntese de tornozelo, escleroterapia futura (3 sessões), fisioterapia diária, uso de Dobeven. Investigação de encondroma na tíbia. Caso de alta complexidade clínico-cirúrgica.</td>
+    </tr>
+
+    <tr>
+      <td>26</td>
+      <td>
+        <div class="name">Elisa Maria Carvalho Scarpa Pinto</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Câncer de mama em remissão (C50), uso contínuo de Tamoxifeno. Necessita exames de imagem periódicos (mamografia e ressonância) para monitoramento.</td>
+    </tr>
+
+    <tr>
+      <td>27</td>
+      <td>
+        <div class="name">Miguel Scarpa Ramos</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">TDAH com uso de Imipramina (medicamento psicotrópico contínuo) e acompanhamento psicológico semanal.</td>
+    </tr>
+
+    <tr>
+      <td>28</td>
+      <td>
+        <div class="name">Eloá Teixeira Nistaldo</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td class="reason">Adenoidectomia agendada para 02/06/2026.</td>
+    </tr>
+
+    <tr>
+      <td>29</td>
+      <td>
+        <div class="name">Leila Gonçalves Souto Leal</div>
+        <div class="paciente-label">SP · Prata NC</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td class="reason">Cesariana no passado. Sem condição ativa, sem medicamentos contínuos, sem cirurgia futura.</td>
+    </tr>
+
+    <tr>
+      <td>30</td>
+      <td>
+        <div class="name">Rebecca Mota Alves</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">TEA diagnosticado com uso contínuo de Risperidona e acompanhamento neurológico.</td>
+    </tr>
+
+    <tr>
+      <td>31</td>
+      <td>
+        <div class="name">Vanessa Dalmasio de Lima</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td class="reason">Miomectomia aguardando data final (autorização em andamento pela operadora anterior). Cirurgia futura prevista com pré-operatórios já concluídos.</td>
+    </tr>
+
+    <tr>
+      <td>32</td>
+      <td>
+        <div class="name">Paula Citelli Coutinho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-gestante">Gestante</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-oncologico">Histórico oncológico</span></td>
+      <td class="reason">Gestante (28 semanas e 5 dias), parto previsto para agosto. Ausência de tireoide com uso contínuo de Levotiroxina. Histórico de câncer de tireoide e pele em monitoramento.</td>
+    </tr>
+
+    <tr>
+      <td>33</td>
+      <td>
+        <div class="name">Luiz Rafael Soares Cezario</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Sem condição</span></td>
+      <td class="reason">Sem condição de saúde, sem medicamentos, sem cirurgia futura, sem gestação.</td>
+    </tr>
+
+    <tr>
+      <td>34</td>
+      <td>
+        <div class="name">Ana da Conceição Castilho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Diabetes com uso contínuo de Glifage (metformina) e reposição de vitaminas. Acompanhamento com endocrinologista e ginecologista.</td>
+    </tr>
+
+    <tr>
+      <td>35</td>
+      <td>
+        <div class="name">Edvar Azevedo de Abreu Júnior</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Hipertensão e colesterol com uso contínuo de Losartana, Anlodipino, Rosuvastatina e Ezetimiba.</td>
+    </tr>
+
+    <tr>
+      <td>36</td>
+      <td>
+        <div class="name">Luis Eduardo Soares da Silva Filho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Apenas terapias</span></td>
+      <td class="reason">Sequelas neurológicas pós-tumor cerebral. Sem medicamentos contínuos declarados. Apenas fisioterapia, fonoaudiologia e psicologia (sem cirurgia futura).</td>
+    </tr>
+
+    <tr>
+      <td>37</td>
+      <td>
+        <div class="name">Elisabeth Ximenes Pecly</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span></td>
+      <td class="reason">Hipertensão com uso contínuo de Losartana e Anlodipino.</td>
+    </tr>
+
+    <tr>
+      <td>38</td>
+      <td>
+        <div class="name">Edilamar Duarte Dias</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge sim">SIM</span></td>
+      <td><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
+      <td class="reason">Dissecção da aorta (condição cardiovascular grave), uso contínuo de Atenolol, Losartana, Hidroclorotiazida e Anlodipino. Acompanhamento cardiológico contínuo.</td>
+    </tr>
+
+    <tr>
+      <td>39</td>
+      <td>
+        <div class="name">Murilo Terra de Siqueira</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Sem condição</span></td>
+      <td class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</td>
+    </tr>
+
+    <tr>
+      <td>40</td>
+      <td>
+        <div class="name">Raimundo José de Santana</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td><span class="badge nao">NÃO</span></td>
+      <td><span class="tag t-sem">Medicamento pontual</span></td>
+      <td class="reason">Uso apenas de anti-inflamatório pontual, sem condição crônica, sem cirurgia futura, sem gestação ou oncológico.</td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<script>
+  const sim = document.querySelectorAll('.badge.sim').length;
+  const nao = document.querySelectorAll('.badge.nao').length;
+  document.getElementById('count-sim').textContent = sim;
+  document.getElementById('count-nao').textContent = nao;
+  document.getElementById('count-total').textContent = sim + nao;
+</script>
+
+</body>
+</html>

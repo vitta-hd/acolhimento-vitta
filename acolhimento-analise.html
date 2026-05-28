@@ -12,117 +12,144 @@
       color: #222;
       padding: 32px 16px;
     }
-    h1 {
-      text-align: center;
-      font-size: 1.6rem;
-      color: #1a3a5c;
-      margin-bottom: 8px;
-    }
-    .subtitle {
-      text-align: center;
-      color: #555;
-      font-size: 0.92rem;
-      margin-bottom: 28px;
-    }
+    h1 { text-align: center; font-size: 1.6rem; color: #1a3a5c; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #555; font-size: 0.92rem; margin-bottom: 24px; }
 
     /* Criteria legend */
     .criteria {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 32px;
+      display: flex; flex-wrap: wrap; gap: 10px;
+      justify-content: center; margin-bottom: 24px;
     }
     .criteria-item {
-      background: #fff;
-      border: 1.5px solid #c8d8ea;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: #fff; border: 1.5px solid #c8d8ea; border-radius: 8px;
+      padding: 8px 14px; font-size: 0.83rem; display: flex; align-items: center; gap: 8px;
     }
-    .criteria-item .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .criteria-item .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .dot-sim { background: #22a06b; }
     .dot-nao { background: #e5534b; }
 
     /* Summary bar */
-    .summary {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
+    .summary { display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
     .summary-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px 28px;
-      text-align: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      background: #fff; border-radius: 10px; padding: 14px 28px;
+      text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
     .summary-card .num { font-size: 2rem; font-weight: 700; }
     .summary-card .label { font-size: 0.8rem; color: #666; margin-top: 2px; }
     .num-sim { color: #22a06b; }
     .num-nao { color: #e5534b; }
 
+    /* Filter bar */
+    .filter-bar {
+      background: #fff; border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 0.75rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .filter-group select, .filter-group input[type="text"] {
+      border: 1.5px solid #d0daea; border-radius: 7px; padding: 7px 10px;
+      font-size: 0.88rem; color: #222; background: #f8fafc; outline: none;
+      min-width: 170px;
+    }
+    .filter-group select:focus, .filter-group input[type="text"]:focus { border-color: #1a3a5c; }
+    .btn-reset {
+      padding: 7px 16px; border-radius: 7px; border: 1.5px solid #c8d8ea;
+      background: #fff; color: #555; font-size: 0.85rem; cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-reset:hover { background: #f0f4f8; }
+    .filter-count { align-self: flex-end; font-size: 0.83rem; color: #888; white-space: nowrap; }
+
     /* Table */
     .table-wrap { overflow-x: auto; }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      font-size: 0.88rem;
+      width: 100%; border-collapse: collapse; background: #fff;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); font-size: 0.87rem;
     }
     thead tr { background: #1a3a5c; color: #fff; }
-    thead th { padding: 14px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
-    tbody tr { border-bottom: 1px solid #eef0f3; }
+    thead th { padding: 13px 11px; text-align: left; font-weight: 600; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #eef0f3; transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f7faff; }
-    td { padding: 12px 12px; vertical-align: top; }
+    tbody tr.hidden { display: none; }
+    td { padding: 11px 11px; vertical-align: top; }
 
+    /* Badge */
     .badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      white-space: nowrap;
+      display: inline-block; padding: 4px 14px; border-radius: 20px;
+      font-weight: 700; font-size: 0.85rem; white-space: nowrap; cursor: default;
     }
     .sim { background: #d4f0e2; color: #186b47; }
     .nao { background: #fde8e7; color: #a02020; }
+    .alterado { outline: 2px dashed #f59e0b; outline-offset: 2px; }
 
+    /* Tags */
     .tag {
-      display: inline-block;
-      background: #e8f0fc;
-      color: #2057c2;
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 0.78rem;
-      margin: 2px 2px 2px 0;
-      white-space: nowrap;
+      display: inline-block; border-radius: 4px; padding: 2px 7px;
+      font-size: 0.76rem; margin: 2px 2px 2px 0; white-space: nowrap;
     }
-    .tag.t-cirurgia  { background: #fef3e2; color: #a05a00; }
-    .tag.t-gestante  { background: #fce4f5; color: #8a1a6a; }
-    .tag.t-medicamento { background: #e4f7ea; color: #1a6a35; }
+    .tag.t-cirurgia   { background: #fef3e2; color: #a05a00; }
+    .tag.t-gestante   { background: #fce4f5; color: #8a1a6a; }
+    .tag.t-medicamento{ background: #e4f7ea; color: #1a6a35; }
     .tag.t-oncologico { background: #fde8e7; color: #a02020; }
-    .tag.t-grave { background: #f0e8fd; color: #6020a0; }
-    .tag.t-sem { background: #f0f0f0; color: #666; }
+    .tag.t-grave      { background: #f0e8fd; color: #6020a0; }
+    .tag.t-sem        { background: #f0f0f0; color: #666; }
 
     .reason { color: #444; line-height: 1.5; }
     .name { font-weight: 600; color: #1a3a5c; }
     .paciente-label { font-size: 0.75rem; color: #888; }
 
-    @media (max-width: 600px) {
-      thead th:nth-child(4) { display: none; }
-      tbody td:nth-child(4) { display: none; }
+    /* Edit controls in each row */
+    .edit-panel {
+      margin-top: 8px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .edit-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .edit-row label { font-size: 0.74rem; color: #888; white-space: nowrap; }
+
+    .btn-edit {
+      background: none; border: 1.5px solid #c8d8ea; border-radius: 6px;
+      padding: 3px 10px; font-size: 0.78rem; color: #555; cursor: pointer;
+    }
+    .btn-edit:hover { background: #f0f4f8; }
+    .btn-edit.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }
+
+    .btn-sim-toggle {
+      background: #d4f0e2; color: #186b47; border: 1.5px solid #aadbc5;
+      border-radius: 6px; padding: 3px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-nao-toggle {
+      background: #fde8e7; color: #a02020; border: 1.5px solid #f0b8b5;
+      border-radius: 6px; padding: 3px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-sim-toggle.sel, .btn-nao-toggle.sel { outline: 2.5px solid #1a3a5c; outline-offset: 1px; }
+
+    .motivo-select {
+      border: 1.5px solid #d0daea; border-radius: 6px; padding: 3px 8px;
+      font-size: 0.78rem; background: #f8fafc; color: #333; max-width: 260px;
+    }
+
+    .nota-input {
+      width: 100%; border: 1.5px solid #d0daea; border-radius: 6px;
+      padding: 5px 8px; font-size: 0.82rem; font-family: inherit; resize: vertical;
+      min-height: 36px; background: #fafcff; color: #333;
+    }
+    .nota-input:focus { border-color: #1a3a5c; outline: none; }
+    .nota-input::placeholder { color: #bbb; }
+
+    .nota-badge {
+      display: inline-block; background: #fff8e1; color: #7a5c00;
+      border: 1px solid #ffe08a; border-radius: 4px; font-size: 0.73rem;
+      padding: 1px 6px; margin-left: 4px; vertical-align: middle;
+    }
+
+    .row-modified td { background: #fffdf0; }
+
+    /* No results */
+    #no-results {
+      text-align: center; color: #aaa; padding: 32px;
+      display: none; font-size: 0.95rem;
     }
   </style>
 </head>
@@ -151,473 +178,845 @@
   </div>
   <div class="summary-card">
     <div class="num" style="color:#1a3a5c" id="count-total">—</div>
-    <div class="label">Total de pacientes</div>
+    <div class="label">Total visíveis</div>
+  </div>
+  <div class="summary-card">
+    <div class="num" style="color:#f59e0b" id="count-alterados">—</div>
+    <div class="label">Reclassificados</div>
   </div>
 </div>
 
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Elegibilidade</label>
+    <select id="f-elegivel">
+      <option value="">Todos</option>
+      <option value="sim">Somente SIM</option>
+      <option value="nao">Somente NÃO</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Motivo</label>
+    <select id="f-motivo">
+      <option value="">Todos os motivos</option>
+      <option value="t-cirurgia">Cirurgia futura</option>
+      <option value="t-gestante">Gestante</option>
+      <option value="t-medicamento">Medicamento</option>
+      <option value="t-oncologico">Oncológico</option>
+      <option value="t-grave">Condição grave</option>
+      <option value="t-sem">Sem critério</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Buscar paciente</label>
+    <input type="text" id="f-nome" placeholder="Nome do paciente…" />
+  </div>
+  <div class="filter-group">
+    <label>Com anotação</label>
+    <select id="f-nota">
+      <option value="">Todos</option>
+      <option value="com">Com anotação</option>
+      <option value="sem">Sem anotação</option>
+    </select>
+  </div>
+  <button class="btn-reset" onclick="resetFiltros()">Limpar filtros</button>
+  <span class="filter-count" id="filter-count"></span>
+</div>
+
 <div class="table-wrap">
-<table>
+<table id="main-table">
   <thead>
     <tr>
       <th>#</th>
       <th>Paciente</th>
       <th>Elegível?</th>
-      <th>Motivos / Critérios atendidos</th>
-      <th>Justificativa</th>
+      <th>Motivos</th>
+      <th>Justificativa / Anotações</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="tbody">
 
-    <tr>
+    <tr data-id="1" data-orig-status="sim" data-tags="t-medicamento">
       <td>1</td>
       <td>
         <div class="name">Francisco Hiályson F. Medeiros</div>
         <div class="paciente-label">RN · Prata NC</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Faz uso contínuo de Desvenlafaxina (antidepressivo/ansiolítico) com acompanhamento psiquiátrico ativo.</td>
+      <td class="td-status">
+        <span class="badge sim">SIM</span>
+      </td>
+      <td class="td-tags">
+        <span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Faz uso contínuo de Desvenlafaxina (antidepressivo/ansiolítico) com acompanhamento psiquiátrico ativo.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="2" data-orig-status="sim" data-tags="t-oncologico t-medicamento t-cirurgia">
       <td>2</td>
       <td>
         <div class="name">Cristiane Amaro Padilha</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
-      <td class="reason">Câncer de mama (C50), em acompanhamento oncológico ativo, múltiplos especialistas. Procedimentos cirúrgicos na coluna e joelhos ainda não marcados (pendentes). Múltiplos medicamentos em uso.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span>
+      </td>
+      <td>
+        <div class="reason">Câncer de mama (C50), acompanhamento oncológico ativo. Procedimentos cirúrgicos na coluna e joelhos pendentes. Múltiplos medicamentos em uso.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="3" data-orig-status="nao" data-tags="t-sem">
       <td>3</td>
       <td>
         <div class="name">Fabiano Vitorino A. Ferreira</div>
         <div class="paciente-label">SP · Prata NC</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Apenas consultas</span></td>
-      <td class="reason">Apenas acompanhamento psicológico. Sem medicamentos, sem cirurgia futura, sem condição grave ou oncológica e sem gestação.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Apenas consultas</span></td>
+      <td>
+        <div class="reason">Apenas acompanhamento psicológico. Sem medicamentos, sem cirurgia futura, sem condição grave ou oncológica.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="4" data-orig-status="sim" data-tags="t-cirurgia t-oncologico">
       <td>4</td>
       <td>
         <div class="name">Karine Melro de Almeida</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-oncologico">Investigação oncológica</span></td>
-      <td class="reason">Salpingooforectomia esquerda agendada para 08/06/2026. Teratoma no ovário com biópsia pós-cirúrgica pendente (diagnóstico oncológico em investigação).</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-oncologico">Investigação oncológica</span>
+      </td>
+      <td>
+        <div class="reason">Salpingooforectomia esquerda agendada para 08/06/2026. Teratoma no ovário com biópsia pós-cirúrgica pendente.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="5" data-orig-status="sim" data-tags="t-medicamento">
       <td>5</td>
       <td>
         <div class="name">Raphaela Cristina A. de Araújo</div>
         <div class="paciente-label">RN · Prata NC</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Uso contínuo de múltiplos medicamentos psiquiátricos: Fluoxetina, Duloxetina, Carbolitium, Bupropiona e Risperidona. Diagnóstico de Burnout/Depressão/Ansiedade.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Múltiplos medicamentos psiquiátricos: Fluoxetina, Duloxetina, Carbolitium, Bupropiona e Risperidona. Diagnóstico de Burnout/Depressão/Ansiedade.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="6" data-orig-status="sim" data-tags="t-medicamento">
       <td>6</td>
       <td>
         <div class="name">João Carlos Nunes Pereira</div>
         <div class="paciente-label">RJ · Prata NC</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Hipertensão e Arritmia Cardíaca com uso contínuo de Losartana, Carvedilol, Espironolactona e Dapagliflozina. Acompanhamento cardiológico ativo.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão e Arritmia Cardíaca com uso contínuo de Losartana, Carvedilol, Espironolactona e Dapagliflozina.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="7" data-orig-status="sim" data-tags="t-cirurgia">
       <td>7</td>
       <td>
         <div class="name">Kleyder Erlandes Santos</div>
         <div class="paciente-label">ES · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
-      <td class="reason">Procedimento cirúrgico bucomaxilofacial em planejamento ativo, aguardando autorização de materiais pelo plano para agendamento. Há cirurgia futura prevista.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Procedimento cirúrgico bucomaxilofacial em planejamento, aguardando autorização de materiais pelo plano.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="8" data-orig-status="nao" data-tags="t-sem">
       <td>8</td>
       <td>
         <div class="name">Hugo Ibernom Leitão Neto</div>
         <div class="paciente-label">AM · Prata NC</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Apenas consultas/exames</span></td>
-      <td class="reason">Apenas consulta com gastroenterologista e exames agendados. Sem medicamentos contínuos, sem cirurgia futura, sem condição grave ou oncológica.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Apenas consultas/exames</span></td>
+      <td>
+        <div class="reason">Apenas consulta com gastroenterologista e exames agendados. Sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="9" data-orig-status="sim" data-tags="t-medicamento">
       <td>9</td>
       <td>
         <div class="name">Willian Cândido dos Reis Souza</div>
         <div class="paciente-label">AM · Prata NC</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Hipertireoidismo com uso contínuo de Levotiroxina. Acompanhamento endocrinológico com exames e consultas periódicas programadas.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertireoidismo com uso contínuo de Levotiroxina. Acompanhamento endocrinológico periódico.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="10" data-orig-status="sim" data-tags="t-grave t-medicamento">
       <td>10</td>
       <td>
         <div class="name">Samara Felipe Severino</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-grave">Tratamento grave</span><span class="tag t-medicamento">Medicamento biológico</span></td>
-      <td class="reason">Retocolite Ulcerativa Severa (K51) com uso de medicamento biológico intravenoso (Mezalazina, Imusuprex + biológico na veia). Caso de alta complexidade terapêutica.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-grave">Tratamento grave</span><span class="tag t-medicamento">Medicamento biológico</span>
+      </td>
+      <td>
+        <div class="reason">Retocolite Ulcerativa Severa (K51) com medicamento biológico intravenoso (Mezalazina, Imusuprex + biológico na veia). Alta complexidade.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="11" data-orig-status="nao" data-tags="t-sem">
       <td>11</td>
       <td>
         <div class="name">Jonas Matteo de Jesus Santos</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Apenas terapias</span></td>
-      <td class="reason">Suspeita de TEA e TDAH em investigação. Sem medicamentos prescritos, apenas terapias (psicólogo, fonoaudióloga e terapeuta ocupacional). Sem cirurgia futura.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Apenas terapias</span></td>
+      <td>
+        <div class="reason">Suspeita de TEA e TDAH. Sem medicamentos prescritos, apenas terapias (psicólogo, fonoaudióloga, terapeuta ocupacional).</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="12" data-orig-status="sim" data-tags="t-medicamento t-cirurgia">
       <td>12</td>
       <td>
         <div class="name">Gabriel de Souza T. Correia</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento biológico</span><span class="tag t-cirurgia">Procedimento futuro</span></td>
-      <td class="reason">Artrite Idiopática Juvenil (M08.0) com uso semanal de Etanercepte (biológico). Procedimento de recebimento e aplicação da medicação é recorrente e agendado.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-medicamento">Medicamento biológico</span><span class="tag t-cirurgia">Procedimento futuro</span>
+      </td>
+      <td>
+        <div class="reason">Artrite Idiopática Juvenil (M08.0) com Etanercepte semanal (biológico). Recebimento e aplicação da medicação é procedimento recorrente agendado.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="13" data-orig-status="nao" data-tags="t-sem">
       <td>13</td>
       <td>
         <div class="name">Karolyne Albani Gaigher</div>
         <div class="paciente-label">ES · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Sem condição</span></td>
-      <td class="reason">Sem condição crônica, sem medicamentos, sem cirurgia futura, sem gestação e sem caso oncológico declarado.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem condição</span></td>
+      <td>
+        <div class="reason">Sem condição crônica, medicamentos, cirurgia futura, gestação ou oncológico declarado.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="14" data-orig-status="nao" data-tags="t-sem">
       <td>14</td>
       <td>
         <div class="name">Felipe Rodrigues Ramos</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
-      <td class="reason">Cirurgia no joelho em 2019. Sem condição ativa, sem medicamentos, sem cirurgia futura agendada.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td>
+        <div class="reason">Cirurgia no joelho em 2019. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="15" data-orig-status="sim" data-tags="t-cirurgia t-medicamento">
       <td>15</td>
       <td>
         <div class="name">Reinaldo José P. Marccelli</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Cirurgia de catarata agendada para 13/07. Uso contínuo de Benicar 40mg (hipertensão).</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Cirurgia de catarata agendada para 13/07. Uso contínuo de Benicar 40mg (hipertensão).</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="16" data-orig-status="nao" data-tags="t-sem">
       <td>16</td>
       <td>
         <div class="name">Robson Nunes Martins</div>
         <div class="paciente-label">ES · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Sem condição</span></td>
-      <td class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura, sem gestação.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem condição</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="17" data-orig-status="nao" data-tags="t-sem">
       <td>17</td>
       <td>
         <div class="name">Leonardo Rodrigues Plouvier</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
-      <td class="reason">Apendicite na adolescência. Sem condição ativa, sem medicamentos, sem cirurgia futura.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td>
+        <div class="reason">Apendicite na adolescência. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="18" data-orig-status="sim" data-tags="t-medicamento">
       <td>18</td>
       <td>
         <div class="name">Rejane Faria da Cruz</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Diabetes com uso contínuo de Metformina XR 500mg. Acompanhamento com endocrinologista/gastroenterologista em andamento.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Diabetes com uso contínuo de Metformina XR 500mg. Acompanhamento com endocrinologista/gastroenterologista.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="19" data-orig-status="sim" data-tags="t-cirurgia t-medicamento">
       <td>19</td>
       <td>
         <div class="name">Taisa Macedo de Lima</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Cirurgia de retirada da vesícula prevista para agosto/setembro. Uso contínuo de Alenia, Losartana, Escitalopram e Clonazepam. Múltiplas condições (asma, pânico, colelitíase).</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Cirurgia de retirada da vesícula prevista para agosto/setembro. Uso de Alenia, Losartana, Escitalopram e Clonazepam. Asma, pânico e colelitíase.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="20" data-orig-status="sim" data-tags="t-medicamento">
       <td>20</td>
       <td>
         <div class="name">Pietra da Cruz Coelho</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">TEA + TDAH diagnosticados, uso de Canabidiol prescrito e acompanhamento psiquiátrico/psicológico contínuo.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TEA + TDAH diagnosticados, uso de Canabidiol prescrito e acompanhamento psiquiátrico/psicológico contínuo.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="21" data-orig-status="nao" data-tags="t-sem">
       <td>21</td>
       <td>
         <div class="name">Débora Kaline F. de S. Miranda</div>
         <div class="paciente-label">RN · Prata NC</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Apenas anticoncepcional</span></td>
-      <td class="reason">Apenas uso de anticoncepcional. Cesarianas no passado sem continuidade. Sem condição de saúde ativa que justifique acolhimento.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Apenas anticoncepcional</span></td>
+      <td>
+        <div class="reason">Apenas uso de anticoncepcional. Cesarianas no passado sem continuidade. Sem condição ativa.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="22" data-orig-status="sim" data-tags="t-cirurgia t-medicamento">
       <td>22</td>
       <td>
         <div class="name">Maria Celia Viana de Oliveira</div>
         <div class="paciente-label">AM · Prata NC</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Aguardando infiltração e bloqueio tibial (procedimento futuro). Limitação física (dificuldade de andar). Uso de medicamentos (Tramadol/Betatrinta) para dor.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Aguardando infiltração e bloqueio tibial. Limitação física (dificuldade de andar). Uso de medicamentos para dor.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="23" data-orig-status="sim" data-tags="t-oncologico t-cirurgia t-medicamento">
       <td>23</td>
       <td>
         <div class="name">Thais Brasileiro da Fonseca</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Câncer de mama (C50). Mastectomia realizada, aguardando cirurgia de reconstrução pelo INCA (a qualquer momento) e simetrização posterior. Uso de reposição de ferro e B12.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-oncologico">Oncológico</span><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Câncer de mama (C50). Aguardando cirurgia de reconstrução pelo INCA + simetrização posterior. Uso de ferro e B12.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="24" data-orig-status="sim" data-tags="t-cirurgia">
       <td>24</td>
       <td>
         <div class="name">Vânia Lúcia Santiago Bela</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
-      <td class="reason">Cirurgia de varizes futura prevista. Endometriose profunda com histórico cirúrgico e acompanhamento ginecológico contínuo pós-operatório.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Cirurgia de varizes futura prevista. Endometriose profunda com acompanhamento pós-operatório contínuo.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="25" data-orig-status="sim" data-tags="t-cirurgia t-medicamento t-grave">
       <td>25</td>
       <td>
         <div class="name">Maura Lima Pereira</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Reabilitação</span></td>
-      <td class="reason">Osteossíntese de tornozelo, escleroterapia futura (3 sessões), fisioterapia diária, uso de Dobeven. Investigação de encondroma na tíbia. Caso de alta complexidade clínico-cirúrgica.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-cirurgia">Procedimento futuro</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Reabilitação</span>
+      </td>
+      <td>
+        <div class="reason">Osteossíntese de tornozelo, escleroterapia futura (3 sessões), fisioterapia diária, uso de Dobeven. Investigação de encondroma na tíbia.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="26" data-orig-status="sim" data-tags="t-oncologico t-medicamento">
       <td>26</td>
       <td>
         <div class="name">Elisa Maria Carvalho Scarpa Pinto</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Câncer de mama em remissão (C50), uso contínuo de Tamoxifeno. Necessita exames de imagem periódicos (mamografia e ressonância) para monitoramento.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span>
+      </td>
+      <td>
+        <div class="reason">Câncer de mama em remissão (C50), uso contínuo de Tamoxifeno. Exames de imagem periódicos para monitoramento.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="27" data-orig-status="sim" data-tags="t-medicamento">
       <td>27</td>
       <td>
         <div class="name">Miguel Scarpa Ramos</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">TDAH com uso de Imipramina (medicamento psicotrópico contínuo) e acompanhamento psicológico semanal.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TDAH com uso de Imipramina (psicotrópico contínuo) e acompanhamento psicológico semanal.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="28" data-orig-status="sim" data-tags="t-cirurgia">
       <td>28</td>
       <td>
         <div class="name">Eloá Teixeira Nistaldo</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
-      <td class="reason">Adenoidectomia agendada para 02/06/2026.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Adenoidectomia agendada para 02/06/2026.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="29" data-orig-status="nao" data-tags="t-sem">
       <td>29</td>
       <td>
         <div class="name">Leila Gonçalves Souto Leal</div>
         <div class="paciente-label">SP · Prata NC</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Cirurgia apenas no passado</span></td>
-      <td class="reason">Cesariana no passado. Sem condição ativa, sem medicamentos contínuos, sem cirurgia futura.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Cirurgia apenas no passado</span></td>
+      <td>
+        <div class="reason">Cesariana no passado. Sem condição ativa, sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="30" data-orig-status="sim" data-tags="t-medicamento">
       <td>30</td>
       <td>
         <div class="name">Rebecca Mota Alves</div>
         <div class="paciente-label">RJ · Bronze RJ</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">TEA diagnosticado com uso contínuo de Risperidona e acompanhamento neurológico.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TEA diagnosticado com uso contínuo de Risperidona e acompanhamento neurológico.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="31" data-orig-status="sim" data-tags="t-cirurgia">
       <td>31</td>
       <td>
         <div class="name">Vanessa Dalmasio de Lima</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-cirurgia">Cirurgia futura</span></td>
-      <td class="reason">Miomectomia aguardando data final (autorização em andamento pela operadora anterior). Cirurgia futura prevista com pré-operatórios já concluídos.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Miomectomia aguardando data final (autorização em andamento). Pré-operatórios já concluídos.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="32" data-orig-status="sim" data-tags="t-gestante t-medicamento t-oncologico">
       <td>32</td>
       <td>
         <div class="name">Paula Citelli Coutinho</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-gestante">Gestante</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-oncologico">Histórico oncológico</span></td>
-      <td class="reason">Gestante (28 semanas e 5 dias), parto previsto para agosto. Ausência de tireoide com uso contínuo de Levotiroxina. Histórico de câncer de tireoide e pele em monitoramento.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-gestante">Gestante</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-oncologico">Histórico oncológico</span>
+      </td>
+      <td>
+        <div class="reason">Gestante (28 semanas e 5 dias), parto previsto para agosto. Ausência de tireoide com Levotiroxina contínua. Histórico de câncer de tireoide e pele em monitoramento.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="33" data-orig-status="nao" data-tags="t-sem">
       <td>33</td>
       <td>
         <div class="name">Luiz Rafael Soares Cezario</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Sem condição</span></td>
-      <td class="reason">Sem condição de saúde, sem medicamentos, sem cirurgia futura, sem gestação.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem condição</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde, sem medicamentos, sem cirurgia futura, sem gestação.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="34" data-orig-status="sim" data-tags="t-medicamento">
       <td>34</td>
       <td>
         <div class="name">Ana da Conceição Castilho</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Diabetes com uso contínuo de Glifage (metformina) e reposição de vitaminas. Acompanhamento com endocrinologista e ginecologista.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Diabetes com uso contínuo de Glifage (metformina) e vitaminas. Acompanhamento endocrinológico e ginecológico.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="35" data-orig-status="sim" data-tags="t-medicamento">
       <td>35</td>
       <td>
         <div class="name">Edvar Azevedo de Abreu Júnior</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Hipertensão e colesterol com uso contínuo de Losartana, Anlodipino, Rosuvastatina e Ezetimiba.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão e colesterol com Losartana, Anlodipino, Rosuvastatina e Ezetimiba.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="36" data-orig-status="nao" data-tags="t-sem">
       <td>36</td>
       <td>
         <div class="name">Luis Eduardo Soares da Silva Filho</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Apenas terapias</span></td>
-      <td class="reason">Sequelas neurológicas pós-tumor cerebral. Sem medicamentos contínuos declarados. Apenas fisioterapia, fonoaudiologia e psicologia (sem cirurgia futura).</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Apenas terapias</span></td>
+      <td>
+        <div class="reason">Sequelas neurológicas pós-tumor cerebral. Sem medicamentos declarados. Apenas fisioterapia, fonoaudiologia e psicologia.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="37" data-orig-status="sim" data-tags="t-medicamento">
       <td>37</td>
       <td>
         <div class="name">Elisabeth Ximenes Pecly</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span></td>
-      <td class="reason">Hipertensão com uso contínuo de Losartana e Anlodipino.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão com uso contínuo de Losartana e Anlodipino.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="38" data-orig-status="sim" data-tags="t-medicamento t-grave">
       <td>38</td>
       <td>
         <div class="name">Edilamar Duarte Dias</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge sim">SIM</span></td>
-      <td><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
-      <td class="reason">Dissecção da aorta (condição cardiovascular grave), uso contínuo de Atenolol, Losartana, Hidroclorotiazida e Anlodipino. Acompanhamento cardiológico contínuo.</td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags">
+        <span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span>
+      </td>
+      <td>
+        <div class="reason">Dissecção da aorta (condição cardiovascular grave), uso de Atenolol, Losartana, Hidroclorotiazida e Anlodipino. Acompanhamento cardiológico contínuo.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="39" data-orig-status="nao" data-tags="t-sem">
       <td>39</td>
       <td>
         <div class="name">Murilo Terra de Siqueira</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Sem condição</span></td>
-      <td class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem condição</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
-    <tr>
+    <tr data-id="40" data-orig-status="nao" data-tags="t-sem">
       <td>40</td>
       <td>
         <div class="name">Raimundo José de Santana</div>
         <div class="paciente-label">RJ · Amil S380</div>
       </td>
-      <td><span class="badge nao">NÃO</span></td>
-      <td><span class="tag t-sem">Medicamento pontual</span></td>
-      <td class="reason">Uso apenas de anti-inflamatório pontual, sem condição crônica, sem cirurgia futura, sem gestação ou oncológico.</td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Medicamento pontual</span></td>
+      <td>
+        <div class="reason">Uso apenas de anti-inflamatório pontual. Sem condição crônica, cirurgia futura, gestação ou oncológico.</div>
+        <div class="edit-panel"></div>
+      </td>
     </tr>
 
   </tbody>
 </table>
+<p id="no-results">Nenhum paciente encontrado com os filtros selecionados.</p>
 </div>
 
 <script>
-  const sim = document.querySelectorAll('.badge.sim').length;
-  const nao = document.querySelectorAll('.badge.nao').length;
+// ── State (persisted in localStorage) ──────────────────────────────────────
+const STORE_KEY = 'acolhimento_overrides_v2';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveState(s) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(s));
+}
+
+let state = loadState(); // { "1": { status, motivos:[], nota }, ... }
+
+// Tag labels for display
+const TAG_LABELS = {
+  't-cirurgia':    'Cirurgia futura',
+  't-gestante':    'Gestante',
+  't-medicamento': 'Medicamento',
+  't-oncologico':  'Oncológico',
+  't-grave':       'Condição grave',
+  't-sem':         'Sem critério'
+};
+
+// ── Build edit panels ────────────────────────────────────────────────────────
+function buildEditPanels() {
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const panel = tr.querySelector('.edit-panel');
+    const origStatus = tr.dataset.origStatus;
+    const s = state[id] || {};
+
+    panel.innerHTML = `
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle${(s.status||origStatus)==='sim'?' sel':''}" onclick="toggleStatus('${id}','sim')">SIM</button>
+        <button class="btn-nao-toggle${(s.status||origStatus)==='nao'?' sel':''}" onclick="toggleStatus('${id}','nao')">NÃO</button>
+        ${s.status && s.status !== origStatus ? '<span style="font-size:0.74rem;color:#f59e0b;margin-left:4px">● alterado</span>' : ''}
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo('${id}', this)" multiple size="1" style="min-width:200px">
+          ${Object.entries(TAG_LABELS).map(([k,v]) => `<option value="${k}"${(s.motivos||[]).includes(k)?' selected':''}>${v}</option>`).join('')}
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota('${id}', this.value)">${s.nota||''}</textarea>
+      </div>
+    `;
+  });
+}
+
+function toggleStatus(id, newStatus) {
+  if (!state[id]) state[id] = {};
+  const tr = document.querySelector(`tr[data-id="${id}"]`);
+  const origStatus = tr.dataset.origStatus;
+  state[id].status = newStatus;
+  saveState(state);
+  applyRowState(tr);
+  buildEditPanels();
+  applyFilters();
+  updateCounts();
+}
+
+function changeMotivo(id, sel) {
+  if (!state[id]) state[id] = {};
+  const chosen = Array.from(sel.selectedOptions).map(o => o.value);
+  state[id].motivos = chosen;
+  saveState(state);
+  applyRowState(document.querySelector(`tr[data-id="${id}"]`));
+  applyFilters();
+}
+
+function saveNota(id, val) {
+  if (!state[id]) state[id] = {};
+  state[id].nota = val;
+  saveState(state);
+  applyRowState(document.querySelector(`tr[data-id="${id}"]`));
+  applyFilters();
+  updateCounts();
+}
+
+function applyRowState(tr) {
+  const id = tr.dataset.id;
+  const origStatus = tr.dataset.origStatus;
+  const s = state[id] || {};
+  const curStatus = s.status || origStatus;
+
+  // Update badge
+  const badge = tr.querySelector('.td-status .badge');
+  badge.className = `badge ${curStatus}`;
+  badge.textContent = curStatus === 'sim' ? 'SIM' : 'NÃO';
+  if (s.status && s.status !== origStatus) badge.classList.add('alterado');
+
+  // Update tags
+  const motivos = s.motivos && s.motivos.length ? s.motivos : null;
+  const tagTd = tr.querySelector('.td-tags');
+  const origTags = tr.dataset.tags || '';
+  const activeTags = motivos || origTags.split(' ').filter(Boolean);
+  tagTd.innerHTML = activeTags.map(t =>
+    `<span class="tag ${t}">${TAG_LABELS[t] || t}</span>`
+  ).join('');
+
+  // Update data-tags for filtering
+  tr.dataset.currentTags = activeTags.join(' ');
+  tr.dataset.currentStatus = curStatus;
+  tr.dataset.hasNota = (s.nota && s.nota.trim()) ? '1' : '0';
+
+  // Visual modified indicator
+  tr.classList.toggle('row-modified', !!(s.status && s.status !== origStatus));
+}
+
+// ── Filtering ────────────────────────────────────────────────────────────────
+function applyFilters() {
+  const fElegivel = document.getElementById('f-elegivel').value;
+  const fMotivo   = document.getElementById('f-motivo').value;
+  const fNome     = document.getElementById('f-nome').value.toLowerCase().trim();
+  const fNota     = document.getElementById('f-nota').value;
+
+  let visible = 0;
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const status   = tr.dataset.currentStatus || tr.dataset.origStatus;
+    const tags     = tr.dataset.currentTags || tr.dataset.tags || '';
+    const nome     = tr.querySelector('.name').textContent.toLowerCase();
+    const hasNota  = tr.dataset.hasNota === '1';
+
+    let show = true;
+    if (fElegivel && status !== fElegivel) show = false;
+    if (fMotivo   && !tags.includes(fMotivo)) show = false;
+    if (fNome     && !nome.includes(fNome))   show = false;
+    if (fNota === 'com' && !hasNota) show = false;
+    if (fNota === 'sem' && hasNota)  show = false;
+
+    tr.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  document.getElementById('filter-count').textContent =
+    visible < 40 ? `Exibindo ${visible} de 40` : '';
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  updateCounts();
+}
+
+function resetFiltros() {
+  document.getElementById('f-elegivel').value = '';
+  document.getElementById('f-motivo').value   = '';
+  document.getElementById('f-nome').value     = '';
+  document.getElementById('f-nota').value     = '';
+  applyFilters();
+}
+
+// ── Counts ───────────────────────────────────────────────────────────────────
+function updateCounts() {
+  let sim = 0, nao = 0, alterados = 0;
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    if (tr.classList.contains('hidden')) return;
+    const status = tr.dataset.currentStatus || tr.dataset.origStatus;
+    if (status === 'sim') sim++; else nao++;
+  });
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const s = state[id] || {};
+    if (s.status && s.status !== tr.dataset.origStatus) alterados++;
+  });
   document.getElementById('count-sim').textContent = sim;
   document.getElementById('count-nao').textContent = nao;
   document.getElementById('count-total').textContent = sim + nao;
+  document.getElementById('count-alterados').textContent = alterados;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll('tr[data-id]').forEach(tr => {
+  tr.dataset.currentStatus = tr.dataset.origStatus;
+  tr.dataset.currentTags   = tr.dataset.tags || '';
+  tr.dataset.hasNota       = '0';
+  applyRowState(tr);
+});
+
+buildEditPanels();
+updateCounts();
+
+['f-elegivel','f-motivo','f-nota'].forEach(id =>
+  document.getElementById(id).addEventListener('change', applyFilters)
+);
+document.getElementById('f-nome').addEventListener('input', applyFilters);
 </script>
 
 </body>

@@ -291,13 +291,19 @@ function proximo(){
 function voltar(){ if(history.length){ current=history.pop(); render(); } }
 
 function getFimMsg(){
+  // Veio de uma tela de orientação (mensagem terminal) → mensagem genérica
+  if(STEPS[current] && STEPS[current].type === 'message'){
+    return 'Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙<br><br>Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me';
+  }
+  // Completou o formulário completo → mensagem empática por trilha + contato universal
   const sit = answers.situacao || '';
-  if(sit.includes('gestante'))   return 'Desejamos que seu parto seja tranquilo, seguro e cheio de amor. 💙';
-  if(sit.includes('cirurgia'))   return 'Desejamos que o procedimento corra muito bem e que sua recuperação seja rápida e tranquila. 💙';
-  if(sit.includes('tratamento')) return 'Continuaremos ao seu lado para garantir a continuidade do seu tratamento. 💙';
-  if(sit.includes('medicamento'))return 'Cuidaremos para que o acesso à sua medicação seja mantido sem interrupções. 💙';
-  if(sit.includes('internado'))  return 'Estamos aqui para garantir seu cuidado e bem-estar nesse momento. 💙';
-  return 'Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙';
+  const c = 'Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me';
+  if(sit.includes('gestante'))    return `Desejamos que seu parto seja tranquilo, seguro e cheio de amor. 💙<br><br>${c}`;
+  if(sit.includes('cirurgia'))    return `Desejamos que o procedimento corra muito bem e que sua recuperação seja rápida e tranquila. 💙<br><br>${c}`;
+  if(sit.includes('tratamento'))  return `Continuaremos ao seu lado para garantir a continuidade do seu tratamento. 💙<br><br>${c}`;
+  if(sit.includes('medicamento')) return `Cuidaremos para que o acesso à sua medicação seja mantido sem interrupções. 💙<br><br>${c}`;
+  if(sit.includes('internado'))   return `Estamos aqui para garantir seu cuidado e bem-estar nesse momento. 💙<br><br>${c}`;
+  return `Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙<br><br>${c}`;
 }
 
 async function enviar(){
@@ -315,8 +321,7 @@ async function enviar(){
       <img src="${LOGO}" class="h-9 mb-8 mx-auto" alt="Vitta"/>
       <div class="w-14 h-14 bg-v-blue text-white flex items-center justify-center mx-auto mb-6 text-2xl">✓</div>
       <h1 class="text-2xl md:text-3xl font-semibold mb-3">Recebemos o seu acolhimento!</h1>
-      <p class="text-v-t70">${getFimMsg()}</p>
-      <p class="text-v-t70 mt-2">Nossa equipe vai dar sequência e entrar em contato pelo canal informado.</p>
+      <p class="text-v-t70 leading-relaxed">${getFimMsg()}</p>
     </div>`;
 }
 function setProgress2(p){ progressEl().style.width=p+'%'; }

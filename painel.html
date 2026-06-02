@@ -503,9 +503,11 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   <div class="max-w-6xl mx-auto px-6 py-8">
 
     <!-- Search -->
-    <div class="mb-6">
-      <input id="rules-search" oninput="searchRules()" type="text" placeholder="Buscar nas regras gerais..."
-        class="w-full md:w-96 border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+    <div class="mb-6 relative" style="max-width:420px">
+      <input id="rules-search" oninput="searchRules()" onblur="setTimeout(hideDropdown,200)" autocomplete="off"
+        type="text" placeholder="Pesquisar tópico ou pergunta..."
+        class="w-full border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+      <div id="search-dropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #d1d5db;border-top:none;z-index:50;max-height:280px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1)"></div>
     </div>
 
     <div class="flex flex-col md:flex-row gap-6">
@@ -1063,25 +1065,145 @@ function toggleSidebar(){
   }
 }
 
+// ── Índice de sugestões de busca ──────────────────────────────────────────
+var SEARCH_INDEX = [
+  // Omni
+  {q:'Quantos dias o benefício Omni fica ativo?', sec:'omni'},
+  {q:'Por quanto tempo o benefício fica ativo após a consulta?', sec:'omni'},
+  {q:'Quando o saldo Omni é renovado?', sec:'omni'},
+  {q:'O saldo Omni é acumulativo?', sec:'omni'},
+  {q:'Onde comprar medicamentos pelo benefício?', sec:'omni'},
+  {q:'Como o membro realiza a compra de medicamentos?', sec:'omni'},
+  {q:'Como consultar o saldo Omni?', sec:'omni'},
+  {q:'Quais medicamentos estão cobertos pelo Omni?', sec:'omni'},
+  {q:'O que fazer se o benefício Omni não ficou ativo?', sec:'omni'},
+  {q:'Como anexar o cupom fiscal após a compra?', sec:'omni'},
+  {q:'Prazo para receber reembolso Omni?', sec:'omni'},
+  // App
+  {q:'Como o membro se cadastra no App?', sec:'app'},
+  {q:'Como recuperar a senha do App?', sec:'app'},
+  {q:'Como agendar uma teleconsulta pelo App?', sec:'app'},
+  {q:'Como cancelar uma consulta pelo App?', sec:'app'},
+  {q:'O App não localiza horários do médico — o que fazer?', sec:'app'},
+  {q:'Como alterar e-mail ou telefone no App?', sec:'app'},
+  {q:'Erro ao agendar no App — o que fazer?', sec:'app'},
+  // Limitadores
+  {q:'Quantas consultas posso ter agendadas ao mesmo tempo?', sec:'limitadores'},
+  {q:'Existe limite de consultas por mês?', sec:'limitadores'},
+  {q:'Posso agendar mais de uma consulta na mesma especialidade?', sec:'limitadores'},
+  {q:'Qual o intervalo mínimo entre consultas da mesma especialidade?', sec:'limitadores'},
+  {q:'Como funciona a política de no-show?', sec:'limitadores'},
+  {q:'Fui bloqueado por falta — o que acontece?', sec:'limitadores'},
+  {q:'Regras de agendamento do App', sec:'limitadores'},
+  // Agendamentos
+  {q:'Quais especialidades médicas a Vitta oferece?', sec:'agendamentos'},
+  {q:'Como funciona o Plantão Médico?', sec:'agendamentos'},
+  {q:'Como agendar para dependentes menores de idade?', sec:'agendamentos'},
+  {q:'Membro menor de 12 anos pode ser atendido?', sec:'agendamentos'},
+  {q:'Adolescente pode se consultar sozinho?', sec:'agendamentos'},
+  {q:'Dependente maior de 18 anos — como agendar?', sec:'agendamentos'},
+  {q:'O titular pode agendar para o filho maior de idade?', sec:'agendamentos'},
+  {q:'Como acessar o plantão médico à noite?', sec:'agendamentos'},
+  // Reagendamento
+  {q:'Como reagendar uma consulta?', sec:'reagendamento'},
+  {q:'Como cancelar uma consulta?', sec:'reagendamento'},
+  // Falha
+  {q:'O médico não entrou na consulta — o que fazer?', sec:'falha'},
+  {q:'Falha na teleconsulta — como resolver?', sec:'falha'},
+  {q:'Link da consulta não funcionou', sec:'falha'},
+  // Documentos
+  {q:'Não recebi a receita da consulta — o que fazer?', sec:'documentos'},
+  {q:'Onde encontro os documentos da minha consulta?', sec:'documentos'},
+  {q:'Receita médica não aparece no App', sec:'documentos'},
+  // Atendimento
+  {q:'Qual o horário de atendimento do WhatsApp?', sec:'atendimento'},
+  {q:'Qual o SLA de retorno?', sec:'atendimento'},
+  {q:'Como acionar o SAC?', sec:'atendimento'},
+  {q:'Qual o telefone da Vitta?', sec:'atendimento'},
+  // Exames
+  {q:'Como agendar exames?', sec:'exames'},
+  {q:'Quais planos têm cobertura de exames?', sec:'exames'},
+  {q:'Quais laboratórios a Vitta trabalha?', sec:'exames'},
+  {q:'Coleta domiciliar de exames — como funciona?', sec:'exames'},
+  {q:'Coleta atrasada — o que fazer?', sec:'exames'},
+  // Terapias
+  {q:'Como funciona o agendamento de psicologia?', sec:'terapias'},
+  {q:'Como funciona o agendamento de nutrição?', sec:'terapias'},
+  {q:'Fui removido da psicologia por falta — e agora?', sec:'terapias'},
+  {q:'Validade do encaminhamento para terapia?', sec:'terapias'},
+  {q:'Posso trocar de psicólogo?', sec:'terapias'},
+  // Particular
+  {q:'Como funciona a consulta particular?', sec:'particular'},
+  {q:'Qual o valor da consulta particular?', sec:'particular'},
+  {q:'Como solicitar reembolso de consulta particular?', sec:'particular'},
+  {q:'Prazo para receber nota fiscal da consulta particular?', sec:'particular'},
+];
+
 function searchRules(){
   var q=document.getElementById('rules-search').value.toLowerCase().trim();
-  if(!q)return;
-  var found=false;
-  document.querySelectorAll('.content-section').forEach(function(sec){
-    if(sec.textContent.toLowerCase().includes(q)&&!found){
-      found=true;
-      var id=sec.id.replace('sec-','');
-      document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
-      document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
-      sec.classList.add('active');
-      document.querySelectorAll('.sidebar-item').forEach(function(s){
-        if(s.getAttribute('onclick')&&s.getAttribute('onclick').includes("'"+id+"'")){
-          s.classList.add('active');
-        }
-      });
-    }
+  var dd=document.getElementById('search-dropdown');
+  if(!q){dd.style.display='none';return;}
+  var matches=SEARCH_INDEX.filter(function(i){
+    return i.q.toLowerCase().includes(q);
+  });
+  if(!matches.length){dd.style.display='none';return;}
+  dd.innerHTML=matches.slice(0,8).map(function(m){
+    return '<div onclick="selectSuggestion(\''+m.sec+'\',this)" '+
+      'style="padding:10px 16px;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f3f4f6;color:#1e3a5f" '+
+      'onmouseover="this.style.background=\'#f0f6ff\'" onmouseout="this.style.background=\'\'">'+
+      '<span style="color:#0a4dbe;margin-right:6px">↳</span>'+m.q+'</div>';
+  }).join('');
+  dd.style.display='block';
+}
+
+function selectSuggestion(secId, el){
+  var inp=document.getElementById('rules-search');
+  inp.value=el.textContent.trim().replace('↳','').trim();
+  hideDropdown();
+  document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('sec-'+secId).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(function(s){
+    if(s.getAttribute('onclick')&&s.getAttribute('onclick').includes("'"+secId+"'")){s.classList.add('active');}
   });
 }
+
+function hideDropdown(){document.getElementById('search-dropdown').style.display='none';}
+
+// ── Subtítulos recolhíveis ────────────────────────────────────────────────
+function initCollapsible(){
+  document.querySelectorAll('h3.sec-title, h4.sub-title').forEach(function(h){
+    // Adiciona seta e cursor
+    h.style.cursor='pointer';
+    h.style.userSelect='none';
+    var arrow=document.createElement('span');
+    arrow.className='ctoggle';
+    arrow.textContent=' ▾';
+    arrow.style.cssText='font-size:.75rem;color:#0a4dbe;transition:transform .2s;display:inline-block';
+    h.appendChild(arrow);
+
+    // Agrupa os elementos irmãos seguintes até o próximo h3/h4/h2
+    var siblings=[];
+    var el=h.nextElementSibling;
+    while(el && !el.matches('h3.sec-title,h4.sub-title,h2')){
+      siblings.push(el);
+      el=el.nextElementSibling;
+    }
+
+    // Cria um wrapper em volta deles
+    var wrap=document.createElement('div');
+    wrap.className='c-body';
+    h.parentNode.insertBefore(wrap,siblings[0]||null);
+    siblings.forEach(function(s){wrap.appendChild(s);});
+
+    h.addEventListener('click',function(){
+      var open=wrap.style.display!=='none';
+      wrap.style.display=open?'none':'';
+      arrow.style.transform=open?'rotate(-90deg)':'rotate(0deg)';
+    });
+  });
+}
+window.addEventListener('DOMContentLoaded',initCollapsible);
 </script>
 </body>
 </html>

@@ -511,12 +511,12 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
     <div class="flex flex-col md:flex-row gap-6">
 
       <!-- Sidebar -->
-      <aside id="sidebar" class="md:w-64 shrink-0">
+      <aside id="sidebar" style="width:256px;flex-shrink:0;transition:width .2s">
         <nav class="bg-white border border-gray-200 overflow-hidden">
           <div class="px-4 py-3 flex items-center justify-between" style="background:#0a2d5e">
-            <p class="text-white text-xs font-semibold uppercase tracking-wide">Tópicos</p>
-            <button onclick="toggleSidebar()" title="Recolher menu"
-              class="text-white opacity-70 hover:opacity-100 text-lg leading-none select-none">⟨</button>
+            <p id="sidebar-title" class="text-white text-xs font-semibold uppercase tracking-wide">Tópicos</p>
+            <button onclick="toggleSidebar()" id="sidebar-btn" title="Recolher menu"
+              style="color:rgba(255,255,255,.8);font-size:1.1rem;background:none;border:none;cursor:pointer;line-height:1;padding:0 2px">❮</button>
           </div>
           <div id="sidebar-nav">
             <div class="sidebar-item active px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('atendimento')">📱 Time de Atendimento WhatsApp</div>
@@ -1043,12 +1043,24 @@ function openSection(id){
 function toggleSidebar(){
   var aside=document.getElementById('sidebar');
   var nav=document.getElementById('sidebar-nav');
-  var btn=aside.querySelector('button[title]');
-  var collapsed=aside.classList.toggle('md:w-10');
-  aside.classList.toggle('md:w-64',!collapsed);
-  nav.classList.toggle('hidden',collapsed);
-  btn.textContent=collapsed?'⟩':'⟨';
-  btn.title=collapsed?'Expandir menu':'Recolher menu';
+  var btn=document.getElementById('sidebar-btn');
+  var title=document.getElementById('sidebar-title');
+  var collapsed=aside.getAttribute('data-collapsed')==='1';
+  if(collapsed){
+    aside.style.width='256px';
+    nav.style.display='';
+    title.style.display='';
+    btn.textContent='❮';
+    btn.title='Recolher menu';
+    aside.setAttribute('data-collapsed','0');
+  } else {
+    aside.style.width='36px';
+    nav.style.display='none';
+    title.style.display='none';
+    btn.textContent='❯';
+    btn.title='Expandir menu';
+    aside.setAttribute('data-collapsed','1');
+  }
 }
 
 function searchRules(){

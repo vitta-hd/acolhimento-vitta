@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Painel Interno • Hospital Digital Vitta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{
+  fontFamily:{sans:['"IBM Plex Sans"','system-ui','sans-serif'],mono:['"IBM Plex Mono"','monospace']},
+  colors:{
+    navy:{DEFAULT:'#0a2d5e',dark:'#071f42',mid:'#0e3a78',light:'#1a4f9e',faint:'#e8f0fc'},
+    v:{blue:'#0a4dbe',bluel:'#e9f0fb',t100:'#161616',t70:'#525252',t50:'#6f6f6f',border:'#e0e0e0'}
+  }
+}}}
+</script>
+<style>
+*{font-family:'IBM Plex Sans',sans-serif;}
+.tab-btn{transition:all .2s;}
+.tab-btn.active{background:#0a4dbe;color:#fff;}
+.tab-btn:not(.active){background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);}
+.tab-btn:not(.active):hover{background:rgba(255,255,255,.2);}
+.company-card{transition:box-shadow .2s;}
+.company-card:hover{box-shadow:0 4px 20px rgba(10,45,94,.15);}
+.expand-body{display:none;}
+.expand-body.open{display:block;}
+.chevron{transition:transform .2s;}
+.chevron.open{transform:rotate(180deg);}
+.sidebar-item{cursor:pointer;transition:all .15s;}
+.sidebar-item.active{background:#e8f0fc;border-left:3px solid #0a4dbe;color:#0a2d5e;font-weight:600;}
+.sidebar-item:not(.active):hover{background:#f5f8ff;}
+.content-section{display:none;}
+.content-section.active{display:block;}
+.badge-conv{background:#dcfce7;color:#166534;}
+.badge-sub{background:#fef9c3;color:#854d0e;}
+.badge-part{background:#fee2e2;color:#991b1b;}
+.badge-sim{background:#dcfce7;color:#166534;}
+.badge-nao{background:#fee2e2;color:#991b1b;}
+.badge-wpp{background:#dbeafe;color:#1e40af;}
+.highlight-box{background:#f0f6ff;border-left:3px solid #0a4dbe;padding:12px 16px;margin:12px 0;}
+.warn-box{background:#fffbeb;border-left:3px solid #f59e0b;padding:12px 16px;margin:12px 0;}
+.rule-box{background:#f8faff;border:1px solid #c7d8f5;border-radius:0;padding:16px;margin:12px 0;}
+h3.sec-title{font-size:1.1rem;font-weight:700;color:#0a2d5e;margin-bottom:8px;margin-top:20px;}
+h4.sub-title{font-size:.95rem;font-weight:600;color:#0e3a78;margin-bottom:6px;margin-top:14px;}
+p.body-text{color:#374151;line-height:1.7;margin-bottom:8px;font-size:.9rem;}
+ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;list-style:disc;margin-bottom:8px;}
+ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;list-style:decimal;margin-bottom:8px;}
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<div class="bg-navy-dark" style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
+  <div class="max-w-6xl mx-auto px-6 py-14 flex flex-col md:flex-row md:items-center gap-8">
+    <div class="flex-1">
+      <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
+           class="h-10 mb-6 brightness-0 invert" alt="Vitta"/>
+      <p class="text-xs font-mono uppercase tracking-widest text-blue-300 mb-2">Painel Interno</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">Hospital Digital Vitta</h1>
+      <p class="text-blue-200 text-lg leading-relaxed max-w-lg">Consulte elegibilidade por empresa e acesse as regras e orientações do time de atendimento.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button onclick="showTab('elig')" id="btn-elig"
+        class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
+        🏥 Elegibilidade
+      </button>
+      <button onclick="showTab('rules')" id="btn-rules"
+        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide">
+        📋 Regras Gerais
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABA ELEGIBILIDADE
+═══════════════════════════════════════════════ -->
+<div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10">
+
+  <!-- Busca -->
+  <div class="mb-8">
+    <input id="elig-search" oninput="filterCompanies()" type="text" placeholder="Buscar empresa..."
+      class="w-full md:w-80 border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+  </div>
+
+  <!-- Cards -->
+  <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+    <!-- FOSNOR -->
+    <div class="company-card bg-white border border-gray-200" data-name="fosnor galvani fosfatados">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#0a2d5e">FN</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">FOSNOR</p>
+          <p class="text-xs text-gray-500 truncate">Fosfatados do Norte-Nordeste (Galvani)</p>
+          <p class="text-xs text-blue-600 mt-1">Bradesco • Fee for Service</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco — Fee for Service</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KOVI -->
+    <div class="company-card bg-white border border-gray-200" data-name="kovi cnu bradesco">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#e85d04">KV</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">KOVI</p>
+          <p class="text-xs text-gray-500">2 modalidades de plano</p>
+          <p class="text-xs text-blue-600 mt-1">CNU · Bradesco</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4 space-y-5">
+          <div>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">CNU + Bradesco Plano Efetivo</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 text-xs font-medium">Particular</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-wpp px-2 py-0.5 text-xs font-medium">Bradesco: Sim | CNU: via WhatsApp</span></div>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 pt-4">
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CDV -->
+    <div class="company-card bg-white border border-gray-200" data-name="cdv casa dos ventos bradesco">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#0891b2">CDV</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">CDV — Casa dos Ventos</p>
+          <p class="text-xs text-gray-500">Bradesco</p>
+          <p class="text-xs text-blue-600 mt-1">Fee for Service</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOPES -->
+    <div class="company-card bg-white border border-gray-200" data-name="lopes bradesco">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#7c3aed">LP</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">LOPES</p>
+          <p class="text-xs text-gray-500">Bradesco</p>
+          <p class="text-xs text-blue-600 mt-1">Fee for Service</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FCL -->
+    <div class="company-card bg-white border border-gray-200" data-name="fundacao casper libero fcl bradesco capitado plus">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#be123c">FCL</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">Fundação Casper Libero</p>
+          <p class="text-xs text-gray-500">Bradesco Capitado Plus</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Capitado Plus</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESPM -->
+    <div class="company-card bg-white border border-gray-200" data-name="espm bradesco capitado plus">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#0a4dbe">ESPM</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">ESPM</p>
+          <p class="text-xs text-gray-500">Bradesco Capitado Plus</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Capitado Plus</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSPER -->
+    <div class="company-card bg-white border border-gray-200" data-name="insper bradesco fee for service">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#065f46">INS</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">INSPER</p>
+          <p class="text-xs text-gray-500">Bradesco — Fee for Service</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Fee for Service</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOSTEIRO -->
+    <div class="company-card bg-white border border-gray-200" data-name="mosteiro bradesco efetivo ideal fee for service">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#78350f">MOS</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">MOSTEIRO</p>
+          <p class="text-xs text-gray-500">2 modalidades de plano</p>
+          <p class="text-xs text-blue-600 mt-1">Bradesco</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4 space-y-5">
+          <div>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Planos Efetivo e Ideal</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 pt-4">
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL ENERGIES -->
+    <div class="company-card bg-white border border-gray-200 md:col-span-2" data-name="total energies totalenergies tembra nexta omint careplus bradesco unimed sul america">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-sm shrink-0" style="background:#dc2626">TE</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">TOTALENERGIES</p>
+          <p class="text-xs text-gray-500">6 empresas do grupo • múltiplos convênios</p>
+          <p class="text-xs text-blue-600 mt-1">Omint · Bradesco · Unimed · Sul América</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4 grid md:grid-cols-2 gap-5">
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">TOTALENERGIES EP BRASIL LTDA.</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Omint / Careplus</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">TEMBRA</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Bradesco</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">TE DIESEL COMERCIO E TRANSPORTES</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Unimed Araxá</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsídio Vitta</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Unimed Araxá</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Unimed Araxá</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Sul América</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Sul América (Vitta Amplia)</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-4">
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Bradesco</p>
+            <p class="text-xs font-mono text-gray-400 mb-3">Bradesco</p>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- WEWORK -->
+    <div class="company-card bg-white border border-gray-200" data-name="wework bradesco efetivo ideal fee for service">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#1d4ed8">WW</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">WEWORK</p>
+          <p class="text-xs text-gray-500">2 modalidades de plano</p>
+          <p class="text-xs text-blue-600 mt-1">Bradesco</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4 space-y-5">
+          <div>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Planos Efetivo e Ideal</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 pt-4">
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRITISH -->
+    <div class="company-card bg-white border border-gray-200" data-name="british vitta hd capitado plus">
+      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:#166534">BR</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-900 text-sm">BRITISH</p>
+          <p class="text-xs text-gray-500">Vitta HD — Capitado Plus</p>
+        </div>
+        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="expand-body border-t border-gray-100 px-5 pb-5">
+        <div class="mt-4">
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convênio Vitta HD — Capitado Plus</p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
+            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- Legenda -->
+  <div class="mt-10 bg-white border border-gray-200 p-6">
+    <p class="text-xs font-mono uppercase text-gray-400 mb-4">Legenda</p>
+    <div class="flex flex-wrap gap-4 text-sm">
+      <div class="flex items-center gap-2"><span class="badge-conv px-3 py-1 text-xs font-medium">Convênio</span><span class="text-gray-600">Consulta faturada no convênio do membro</span></div>
+      <div class="flex items-center gap-2"><span class="badge-sub px-3 py-1 text-xs font-medium">Subsidiado</span><span class="text-gray-600">Consulta subsidiada pela Vitta ou empresa</span></div>
+      <div class="flex items-center gap-2"><span class="badge-part px-3 py-1 text-xs font-medium">Particular</span><span class="text-gray-600">Membro paga diretamente à Vitta</span></div>
+    </div>
+  </div>
+
+</div><!-- /tab-elig -->
+
+
+<!-- ═══════════════════════════════════════════════
+     ABA REGRAS GERAIS
+═══════════════════════════════════════════════ -->
+<div id="tab-rules" class="hidden">
+  <div class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- Search -->
+    <div class="mb-6">
+      <input id="rules-search" oninput="searchRules()" type="text" placeholder="Buscar nas regras gerais..."
+        class="w-full md:w-96 border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+
+      <!-- Sidebar -->
+      <aside class="md:w-64 shrink-0">
+        <nav class="bg-white border border-gray-200 overflow-hidden">
+          <div class="bg-navy-dark px-4 py-3" style="background:#0a2d5e">
+            <p class="text-white text-xs font-semibold uppercase tracking-wide">Tópicos</p>
+          </div>
+          <div id="sidebar-nav">
+            <div class="sidebar-item active px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('atendimento')">📱 Time de Atendimento WhatsApp</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('agendamentos')">🗓️ Agendamentos de Consultas</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('reagendamento')">🔄 Reagendamentos e Cancelamentos</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('falha')">⚠️ Falha na Teleconsulta</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('documentos')">📄 Documentos da Consulta</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('limitadores')">🔒 Limitadores App</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('app')">📲 Aplicativo Vitta</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('exames')">🧪 Agendamento de Exames</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('terapias')">🧠 Terapias — Psicologia e Nutrição</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('particular')">💳 Consultas Particulares</div>
+            <div class="sidebar-item px-4 py-3 text-sm" onclick="openSection('omni')">💊 Benefício de Medicamentos | Omni</div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="flex-1 bg-white border border-gray-200 p-7 text-sm">
+
+        <!-- ── ATENDIMENTO ── -->
+        <div id="sec-atendimento" class="content-section active">
+          <h2 class="text-xl font-bold text-navy-DEFAULT mb-1" style="color:#0a2d5e">📱 Time de Atendimento WhatsApp</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Canal principal de contato</p>
+
+          <div class="grid sm:grid-cols-3 gap-4 mb-6">
+            <div class="bg-blue-50 border border-blue-200 p-4 text-center">
+              <p class="text-xs text-blue-600 font-mono uppercase mb-1">Seg a Sex</p>
+              <p class="text-2xl font-bold text-blue-800">08h – 20h</p>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 p-4 text-center">
+              <p class="text-xs text-blue-600 font-mono uppercase mb-1">Sáb e Dom</p>
+              <p class="text-2xl font-bold text-blue-800">09h – 18h</p>
+            </div>
+            <div class="bg-green-50 border border-green-200 p-4 text-center">
+              <p class="text-xs text-green-600 font-mono uppercase mb-1">Árvore automática</p>
+              <p class="text-2xl font-bold text-green-800">24h</p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="font-semibold text-blue-800 mb-1">⚡ SLA de Retorno: 5 minutos</p>
+            <p class="text-gray-600 text-sm">O canal de WhatsApp é o que possui o retorno mais rápido e deve ser sempre priorizado.</p>
+          </div>
+
+          <h3 class="sec-title">📞 Telefone</h3>
+          <p class="body-text">O número <strong>11 49493-6663</strong> aceita tanto WhatsApp quanto ligações.</p>
+          <p class="body-text">O auto atendimento da árvore automática funciona 24 horas e, em muitos casos, consegue orientar o membro sem necessidade de atendimento humano.</p>
+
+          <h3 class="sec-title">📧 SAC — Segunda Instância</h3>
+          <div class="warn-box">
+            <p class="font-semibold mb-1">Quando acionar o SAC?</p>
+            <p class="text-gray-600 text-sm">O SAC funciona como segunda instância ao membro quando o primeiro contato no WhatsApp não deu certo ou não foi satisfatório.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mt-3">
+            <div class="bg-gray-50 p-3 border border-gray-200">
+              <p class="text-xs text-gray-400 font-mono uppercase mb-1">Canal</p>
+              <p class="font-medium">E-mail: sac@vitta.me</p>
+            </div>
+            <div class="bg-gray-50 p-3 border border-gray-200">
+              <p class="text-xs text-gray-400 font-mono uppercase mb-1">SLA de Resposta</p>
+              <p class="font-medium">5 dias úteis</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── AGENDAMENTOS ── -->
+        <div id="sec-agendamentos" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🗓️ Agendamentos de Consultas</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Especialidades, dependentes e plantão médico</p>
+
+          <h3 class="sec-title">Especialidades disponíveis</h3>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Alergia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Cardiologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Dermatologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Endocrinologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Gastroenterologia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Ginecologista / Obstetra</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Infectologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Mastologia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Medicina da Família</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Nefrologia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Neurologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Oftalmologia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Ortopedia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Otorrinolaringologista</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Pediatra</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Psiquiatra</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Reumatologia</span>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1">Urologista</span>
+            <span class="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-1">Psicologia</span>
+            <span class="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-1">Nutrição</span>
+          </div>
+          <p class="body-text">O membro consegue consultar a rede e médicos com horários disponíveis diretamente pelo App.</p>
+          <div class="highlight-box">
+            <p class="font-semibold mb-1">💡 Médico da Família vs Clínico Geral</p>
+            <p class="text-sm text-gray-600"><strong>Médico Pessoal (Médico da Família):</strong> indicado para consultas de rotina e início do cuidado.<br/>
+            <strong>Clínico Geral / Pronto Atendimento:</strong> indicado para urgências com queixa específica.</p>
+          </div>
+          <div class="warn-box">
+            <p class="font-semibold mb-1">⛑️ Emergências</p>
+            <p class="text-sm text-gray-600">Em casos de sintomas graves, o membro deve se direcionar imediatamente ao pronto-socorro mais próximo ou ligar para o <strong>SAMU 192</strong>. Para saúde mental em crise: <strong>CVV 188</strong>.</p>
+          </div>
+
+          <h3 class="sec-title">Agendamento para dependentes e menores de idade</h3>
+
+          <h4 class="sub-title">Crianças até 12 anos</h4>
+          <p class="body-text">A presença de pai, mãe ou responsável é necessária, pois a criança não tem autonomia para decisões médicas. O titular pode agendar livremente para dependentes menores pelo WhatsApp ou pelo App, usando o acesso do próprio titular.</p>
+
+          <h4 class="sub-title">Adolescentes de 12 a 17 anos</h4>
+          <p class="body-text">O adolescente tem mais autonomia e pode ser atendido desacompanhado, se desejar. O médico mantém sigilo profissional mesmo em relação aos pais. O titular ou o próprio dependente pode agendar pelo WhatsApp ou App, sendo que o dependente também possui acesso próprio ao App.</p>
+
+          <h4 class="sub-title">Maiores de 18 anos</h4>
+          <p class="body-text">O agendamento só pode ser realizado pelo próprio membro, desde que ele tenha aceitado os termos e acessado o App. O agendamento via WhatsApp só é permitido quando o contato partir do próprio membro.</p>
+          <div class="warn-box">
+            <p class="text-sm text-gray-600">Se o titular solicitar agendamento para dependente maior de idade, o time deve orientar que o próprio dependente realize o contato. Exceção apenas para PCD ou idosos.</p>
+          </div>
+
+          <h3 class="sec-title">Como funciona o Plantão Médico?</h3>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="rule-box">
+              <p class="font-semibold mb-2">☀️ Durante o dia (até 21h)</p>
+              <p class="text-sm text-gray-600">Pacientes FFS entram na fila pelo App e são agendados automaticamente. Pacientes subsidiados, capitados e capitado plus devem agendar como <strong>Clínico Geral</strong>.</p>
+            </div>
+            <div class="rule-box">
+              <p class="font-semibold mb-2">🌙 Após 21h / Fins de semana e feriados (após 18h)</p>
+              <p class="text-sm text-gray-600">O botão de Plantão Médico fica disponível para todos os membros.</p>
+            </div>
+          </div>
+          <h4 class="sub-title">Passo a passo para acessar o Plantão Médico</h4>
+          <ol class="body-list">
+            <li>Fazer login com CPF ou dados cadastrados.</li>
+            <li>Localizar e clicar em <strong>"Plantão Médico"</strong> ou <strong>"Acessar Plantão Médico"</strong>.</li>
+            <li>Clicar em <strong>"Continuar"</strong>.</li>
+            <li>Digitar o motivo do atendimento de forma clara e objetiva. <em>(Campo obrigatório.)</em></li>
+            <li>Clicar em <strong>"Entrar na fila"</strong>.</li>
+            <li>Confirmar a mensagem <em>"Atendimento Confirmado"</em>.</li>
+            <li>Ler os termos, aceitar e clicar novamente em <strong>"Entrar na fila"</strong>.</li>
+            <li>Aguardar na tela de espera. <strong>⛔ Não fechar o App.</strong></li>
+          </ol>
+        </div>
+
+        <!-- ── REAGENDAMENTO ── -->
+        <div id="sec-reagendamento" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🔄 Reagendamentos e Cancelamentos</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Orientações para o membro</p>
+          <p class="body-text">O membro tem autonomia para realizar cancelamentos e reagendamentos diretamente pelo App com antecedência. Caso não consiga, pode entrar em contato com o time de WhatsApp.</p>
+          <div class="warn-box">
+            <p class="font-semibold mb-1">⚠️ Importância do cancelamento antecipado</p>
+            <p class="text-sm text-gray-600">É fundamental que os membros realizem cancelamentos e reagendamentos com antecedência para evitar ausências (no-show), possibilitar que os horários sejam ocupados por outras pessoas e evitar prejuízos para toda a comunidade.</p>
+          </div>
+        </div>
+
+        <!-- ── FALHA ── -->
+        <div id="sec-falha" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">⚠️ Falha na Teleconsulta</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Procedimento em caso de problemas técnicos</p>
+          <p class="body-text">Em casos onde o membro encontrar uma falha na teleconsulta, ou perceber que acessou a consulta e o profissional ainda não entrou dentro dos primeiros <strong>5 minutos</strong>, ele deve acionar imediatamente o WhatsApp.</p>
+          <div class="highlight-box">
+            <p class="font-semibold mb-1">🕒 Horário de atendimento para falhas: 07h às 22h</p>
+            <p class="text-sm text-gray-600">Há um time dedicado ao atendimento de médicos para gerar um novo link. O contato deve ser realizado o quanto antes, considerando os tempos de consulta — o médico pode avançar para o próximo atendimento.</p>
+          </div>
+        </div>
+
+        <!-- ── DOCUMENTOS ── -->
+        <div id="sec-documentos" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">📄 Documentos da Consulta</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Receitas, atestados e prontuários</p>
+          <p class="body-text">Se o membro relatar que não recebeu os documentos da teleconsulta, orientar que ele verifique:</p>
+          <ul class="body-list">
+            <li>No App: seção <strong>Consultas e Documentos</strong></li>
+            <li>No e-mail pessoal cadastrado</li>
+          </ul>
+          <p class="body-text">Caso não encontre, o membro pode acionar via WhatsApp ou enviar e-mail para <strong>sac@vitta.me</strong>.</p>
+        </div>
+
+        <!-- ── LIMITADORES ── -->
+        <div id="sec-limitadores" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🔒 Limitadores do App</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Regras de agendamento — contratos SUB, CAPTADO e CAP PLUS</p>
+          <p class="body-text">Os limitadores são regras criadas para organizar os agendamentos, garantir acesso justo às consultas, reduzir faltas e oferecer atendimento mais eficiente para toda a comunidade.</p>
+
+          <div class="space-y-4 mt-4">
+            <div class="rule-box">
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 1 — Consultas simultâneas</p>
+              <p class="font-semibold mb-1">Até 2 consultas agendadas ao mesmo tempo</p>
+              <p class="text-sm text-gray-600">Independentemente da especialidade ou data. Com 2 consultas ativas, é necessário realizar uma (ou aguardar a data passar) para liberar novo agendamento.</p>
+              <p class="text-xs text-blue-600 mt-2">💡 Exceções: Plantão Médico e Psicologia não entram nessa regra.</p>
+            </div>
+
+            <div class="rule-box">
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 2 — Limite mensal</p>
+              <p class="font-semibold mb-1">Até 2 consultas por mês</p>
+              <p class="text-sm text-gray-600">Considera a soma de consultas já realizadas e agendadas no mesmo mês. Atingido o limite, novos agendamentos só podem ser feitos para o mês seguinte.</p>
+              <p class="text-xs text-blue-600 mt-2">💡 Plantão Médico entra na contagem mensal. Exceção: SICREDI e ESPM (sem limitadores).</p>
+            </div>
+
+            <div class="rule-box">
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 3 — Mesma especialidade</p>
+              <p class="font-semibold mb-1">Não é possível ter mais de um agendamento ativo na mesma especialidade</p>
+              <p class="text-sm text-gray-600">Válido também para especialidades equivalentes: Clínica Médica, Clínico Geral e Médico da Família/Pessoal.</p>
+              <p class="text-xs text-orange-600 mt-2">⚠️ Essa regra se aplica a todos os contratos, inclusive Fee for Service.</p>
+            </div>
+
+            <div class="rule-box">
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 4 — Intervalo mínimo</p>
+              <p class="font-semibold mb-1">24 horas de intervalo após consulta da mesma especialidade</p>
+              <p class="text-sm text-gray-600">Após realizar uma consulta, é necessário aguardar 24 horas para agendar nova consulta na mesma especialidade.</p>
+              <p class="text-xs text-blue-600 mt-2">💡 Plantão Médico não segue essa regra.</p>
+              <p class="text-xs text-orange-600 mt-1">⚠️ Aplica-se a todos os contratos, inclusive FFS.</p>
+            </div>
+
+            <div class="rule-box">
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 5 — No-Show (política de faltas)</p>
+              <p class="font-semibold mb-2">Política de faltas mensais</p>
+              <div class="space-y-1 text-sm text-gray-600">
+                <p>🟡 <strong>1ª falta no mês:</strong> sem penalidade — apenas um lembrete.</p>
+                <p>🔴 <strong>2ª falta no mês:</strong> bloqueio para novos agendamentos por 30 dias corridos.</p>
+              </div>
+              <div class="mt-2 bg-red-50 p-2 text-xs text-red-700">
+                <p>Durante o bloqueio: não é possível criar novos agendamentos (incluindo Plantão Médico). Consultas já agendadas permanecem válidas.</p>
+              </div>
+              <p class="text-xs text-orange-600 mt-2">⚠️ Aplica-se a contratos SUB, CAPTADO e CAP PLUS (inclusive Sicredi). Não se aplica a FFS nem à ESPM.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── APP ── -->
+        <div id="sec-app" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">📲 Aplicativo Vitta</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Cadastro, acesso e funcionalidades</p>
+
+          <h3 class="sec-title">1. Como o membro se cadastra?</h3>
+          <p class="body-text">O membro deve utilizar o CPF para iniciar o cadastro. Após isso, receberá um código no e-mail ou passará por um fluxo de perguntas de verificação:</p>
+          <ul class="body-list">
+            <li>Mês de nascimento</li><li>Ano de nascimento</li>
+            <li>Primeiro nome da mãe</li><li>Operadora do plano de saúde</li>
+          </ul>
+          <p class="body-text">Após responder corretamente, o membro cria uma senha e acessa o App.</p>
+
+          <h3 class="sec-title">2. Como o membro recupera a senha?</h3>
+          <p class="body-text">Após confirmar o CPF, o membro deve clicar em <strong>"Esqueci minha senha"</strong>. Um token será enviado ao e-mail de cadastro. Após confirmar o token, basta criar nova senha.</p>
+
+          <h3 class="sec-title">3. Como o membro agenda uma teleconsulta?</h3>
+          <p class="body-text"><strong>Opção 1:</strong> Ícone "+" na tela inicial → tipo de atendimento → especialidade → dia/horário → motivo → "Confirmar agendamento".</p>
+          <p class="body-text"><strong>Opção 2:</strong> Ícone "Teleconsultas" → tipo de atendimento → especialidade → dia/horário → motivo → "Confirmar agendamento".</p>
+          <div class="highlight-box mt-2">
+            <p class="font-semibold text-sm mb-1">Regras por faixa etária para agendamento no App</p>
+            <ul class="text-sm text-gray-600 space-y-1 mt-1">
+              <li>• <strong>Menores de 12 anos:</strong> sem acesso próprio — agendamento feito pelo login do titular.</li>
+              <li>• <strong>12 a 17 anos:</strong> podem ter acesso próprio; também acessível pelo titular.</li>
+              <li>• <strong>Maiores de 18 anos:</strong> cada um deve ter seu próprio acesso. Não é possível agendar para dependentes maiores por App de terceiros.</li>
+            </ul>
+          </div>
+
+          <h3 class="sec-title">4. Como o membro utiliza o benefício de medicamentos?</h3>
+          <p class="body-text">O membro precisa ter realizado uma consulta na Vitta. Após a realização, o benefício fica ativo por 5 dias corridos. Com o benefício ativo e medicamentos prescritos por profissional Vitta, o membro pode comprar em qualquer farmácia.</p>
+          <p class="body-text">No App: tela inicial → card do plano de medicamentos → "Comprar medicamento" → scanner QR code → informar ao farmacêutico que o pagamento é via Pix.</p>
+
+          <h3 class="sec-title">5. O que fazer em caso de erro ao agendar?</h3>
+          <p class="body-text">Se o membro não conseguir concluir um agendamento pelo App, orientar que acesse o site: <strong>agende.vitta.com.br</strong> (mesmo login do App). Se persistir, acionar o WhatsApp <strong>(11) 4949-3663</strong> com evidências do erro.</p>
+
+          <h3 class="sec-title">6. Como o membro cancela uma teleconsulta?</h3>
+          <ol class="body-list">
+            <li>Acessar a aba <strong>"Agenda"</strong> no App.</li>
+            <li>Selecionar a consulta a cancelar.</li>
+            <li>Escolher o motivo do cancelamento.</li>
+            <li>Confirmar o cancelamento.</li>
+          </ol>
+          <p class="body-text text-xs text-gray-500">Disponível apenas para medicina e nutrição. Para psicologia, duas faltas consecutivas não justificadas geram perda das sessões.</p>
+
+          <h3 class="sec-title">7. Não localiza horários do médico?</h3>
+          <p class="body-text">O App exibe por padrão apenas os próximos 5 dias. O membro deve alterar as datas manualmente para visualizar agendas futuras do médico desejado.</p>
+
+          <h3 class="sec-title">8. Como alterar e-mail ou telefone?</h3>
+          <p class="body-text"><strong>Telefone:</strong> "Mais" (canto inferior direito) → "Dados da Conta" → "Informações de Acesso" → "Seu celular".</p>
+          <p class="body-text"><strong>E-mail:</strong> "Mais" → "Dados da Conta" → "Informações de Acesso" → "E-mail de contato".</p>
+
+          <h3 class="sec-title">9. O que fazer em caso de problemas?</h3>
+          <p class="body-text">Acionar o WhatsApp <strong>(11) 4949-3663</strong> (aceita ligações). Se o problema persistir: SAC <strong>0800 000 5008</strong> ou e-mail <strong>sac@vitta.me</strong>.</p>
+        </div>
+
+        <!-- ── EXAMES ── -->
+        <div id="sec-exames" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧪 Agendamentos de Exames Vitta</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Laboratórios parceiros e coberturas</p>
+
+          <div class="grid sm:grid-cols-3 gap-3 mb-6">
+            <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
+            <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
+            <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">PREVTOTAL</p><p class="text-xs text-blue-600">Exames de imagem · RJ</p></div>
+          </div>
+
+          <h3 class="sec-title">Planos com cobertura de exames</h3>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="badge-sim px-3 py-1 text-xs font-medium">Seguros Unimed</span>
+            <span class="badge-sim px-3 py-1 text-xs font-medium">Porto Seguro</span>
+            <span class="badge-sim px-3 py-1 text-xs font-medium">Omint</span>
+            <span class="badge-sim px-3 py-1 text-xs font-medium">Bradesco (exceto Efetivo e Ideal)</span>
+          </div>
+          <div class="warn-box">
+            <p class="text-sm text-gray-600">⚠️ <strong>Sem cobertura:</strong> Capitado, Capitado Plus e Subsidiados — exceto FCL (pode agendar pelo convênio Bradesco). Bradesco Efetivo e Ideal estão sujeitos a autorização do plano, podendo ser cancelados posteriormente.</p>
+          </div>
+
+          <h3 class="sec-title">Cidades atendidas — LABI</h3>
+          <ul class="body-list">
+            <li>Grande São Paulo (SP, Guarulhos, Osasco, Barueri, Mogi das Cruzes…)</li>
+            <li>Grande Rio (Rio de Janeiro, Niterói, São Gonçalo)</li>
+            <li>Grande ABCD (Santo André, SBC, São Caetano, Diadema)</li>
+            <li>Interior SP (Sorocaba, Campinas, Piracicaba, São José dos Campos)</li>
+            <li>Litoral SP · Curitiba e região</li>
+          </ul>
+          <p class="body-text text-xs text-gray-500">ISALAB: cobertura apenas no estado de SP — consultar cobertura no concierge.</p>
+
+          <h3 class="sec-title">Como é realizado o agendamento?</h3>
+          <p class="body-text">O agendamento é realizado exclusivamente pelo time de atendimento via WhatsApp, onde são enviadas as orientações e agendada a coleta no endereço do membro. Após o registro, os exames são autorizados no convênio e o laboratório vai até a casa do membro. No dia da coleta, o membro recebe um protocolo para retirar os resultados.</p>
+
+          <h3 class="sec-title">Coleta atrasada ou resultado não recebido?</h3>
+          <p class="body-text">O membro deve acionar imediatamente o time de WhatsApp, que fará contato com o laboratório para verificar as informações e trazer um retorno.</p>
+
+          <h3 class="sec-title">Exames e convênios sem cobertura</h3>
+          <p class="body-text">O membro deve procurar a rede do seu convênio médico para agendar com um prestador credenciado. Todos os pedidos dos médicos Vitta são assinados digitalmente e têm validade nacional.</p>
+        </div>
+
+        <!-- ── TERAPIAS ── -->
+        <div id="sec-terapias" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧠 Terapias Vitta — Psicologia e Nutrição</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Acompanhamento terapêutico via teleconsulta</p>
+
+          <h3 class="sec-title">Como funciona o agendamento?</h3>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="rule-box">
+              <p class="font-semibold mb-2">🧠 Psicologia</p>
+              <p class="text-sm text-gray-600">Consultas semanais no mesmo dia e horário escolhido pelo membro. Duração: 30 minutos. Inicialmente são agendadas 24 consultas, renovadas conforme necessidade acordada entre membro e profissional.</p>
+            </div>
+            <div class="rule-box">
+              <p class="font-semibold mb-2">🥗 Nutrição</p>
+              <p class="text-sm text-gray-600">Uma única consulta de 30 minutos é agendada. O retorno é acordado com o profissional, e o membro deve acionar o time para agendar a próxima consulta.</p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="font-semibold mb-1">👨‍⚕️ Sobre os profissionais</p>
+            <p class="text-sm text-gray-600">Todos os profissionais da Vitta são altamente qualificados. O membro pode ler sobre o profissional no App. Em casos de não identificação com o profissional, o time deve ser acionado para realizar a troca.</p>
+          </div>
+
+          <h3 class="sec-title">Regras de Psicologia</h3>
+          <div class="warn-box">
+            <p class="font-semibold mb-1">⚠️ 2 faltas consecutivas (justificadas ou não) ou falta na 1ª consulta interrompem o acompanhamento.</p>
+            <p class="text-sm text-gray-600 mt-1">Com aviso de pelo menos <strong>2 horas de antecedência</strong>, o time pode tentar reagendar a consulta. Caso não seja possível ou o membro não acione, a consulta contabiliza como falta.</p>
+          </div>
+
+          <h3 class="sec-title">Foi retirado por faltas?</h3>
+          <p class="body-text">O horário foi liberado na agenda para outros membros. O membro precisa reiniciar o processo: se o encaminhamento ainda estiver válido, basta agendar novamente. Se o horário estiver ocupado, será necessário escolher outro horário ou profissional.</p>
+
+          <h3 class="sec-title">Renovação e validade do encaminhamento</h3>
+          <p class="body-text">Para iniciar novo acompanhamento de psicologia ou nova consulta de nutrição, o encaminhamento deve ter validade de até <strong>60 dias</strong>. Encaminhamentos sem data também são válidos.</p>
+          <p class="body-text">Uma vez iniciada a terapia, o encaminhamento é usado para autorizar senhas e consultas pelos próximos <strong>180 dias (6 meses)</strong>. No 5º mês, o membro recebe uma mensagem para renovação, com novo lembrete na semana do vencimento.</p>
+
+          <h3 class="sec-title">📎 Cartilhas</h3>
+          <div class="flex flex-wrap gap-3">
+            <a href="https://drive.google.com/drive/folders/1AjENDAHlw8IV0fY1eX5xLlMoENp-WGLF" target="_blank" class="text-sm text-blue-600 underline hover:text-blue-800">📄 Cartilha de Nutrição</a>
+            <a href="https://drive.google.com/file/d/1E_KW-piIopJZQrjMbl03HQnAKNxyCCvA/view" target="_blank" class="text-sm text-blue-600 underline hover:text-blue-800">📄 Cartilha de Psicologia</a>
+          </div>
+        </div>
+
+        <!-- ── PARTICULAR ── -->
+        <div id="sec-particular" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">💳 Consultas Particulares</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Para planos sem credenciamento Vitta</p>
+
+          <p class="body-text">O agendamento particular é ofertado apenas para planos que ainda não possuem credenciamento com a Vitta. O membro paga antes da consulta e, em até 7 dias úteis após a realização, recebe a nota fiscal para solicitar reembolso no plano.</p>
+
+          <div class="highlight-box">
+            <p class="font-semibold mb-1">💰 Valores</p>
+            <div class="grid sm:grid-cols-2 gap-3 mt-2">
+              <div><p class="text-sm"><strong>Consultas médicas:</strong> R$ 99,90</p><p class="text-xs text-gray-500">Retorno em até 15 dias sem novo pagamento (mesmo médico).</p></div>
+              <div><p class="text-sm"><strong>Psicologia e Nutrição (sessão):</strong> R$ 79,90</p></div>
+            </div>
+          </div>
+
+          <h3 class="sec-title">Processo de pagamento</h3>
+          <ol class="body-list">
+            <li>Após o agendamento, é gerado um link de pagamento.</li>
+            <li>Pagamento aceito: boleto, cartão de crédito ou PIX.</li>
+            <li>O pagamento deve ser efetuado em até <strong>24h úteis antes da consulta</strong>.</li>
+            <li>O comprovante deve ser enviado para confirmação. O não envio cancela a consulta.</li>
+          </ol>
+
+          <h3 class="sec-title">Reagendamentos e cancelamentos</h3>
+          <p class="body-text">Em cancelamentos, o valor é estornado ao membro. Caso não receba, o membro deve acionar o WhatsApp. Em reagendamentos, o valor já pago é usado para a nova consulta.</p>
+          <div class="warn-box">
+            <p class="text-sm text-gray-600">Em psicologia, as consultas são pagas semanalmente. Se o membro não pagar, a consulta é cancelada e a falta é contabilizada.</p>
+          </div>
+
+          <h3 class="sec-title">Reembolso</h3>
+          <ul class="body-list">
+            <li>O membro pode consultar o valor de reembolso pelo App ou site do convênio.</li>
+            <li>A Vitta não garante valores ou aprovação do reembolso — isso depende do plano.</li>
+            <li>Algumas empresas possuem coparticipação mesmo para procedimentos de reembolso.</li>
+            <li>Nota fiscal emitida em até <strong>7 dias úteis</strong>.</li>
+          </ul>
+        </div>
+
+        <!-- ── OMNI ── -->
+        <div id="sec-omni" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">💊 Benefício de Medicamentos | Omni</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Compra de medicamentos com subsídio</p>
+
+          <p class="body-text">Benefício que permite aos membros Vitta comprar medicamentos com valor estipulado mensalmente, conforme lista oficial.</p>
+
+          <div class="grid sm:grid-cols-2 gap-3 mb-6">
+            <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Ativação após consulta Vitta</p><p class="font-semibold">Até 5 horas</p></div>
+            <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Ativação após Plantão Médico</p><p class="font-semibold">Até 20 minutos</p></div>
+            <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Validade após consulta</p><p class="font-semibold">5 dias corridos</p></div>
+            <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Prazo reembolso</p><p class="font-semibold">4 dias úteis</p></div>
+          </div>
+
+          <h3 class="sec-title">Requisitos para uso</h3>
+          <ul class="body-list">
+            <li>Receita deve ser exclusivamente de médico Vitta (rede ou plantão).</li>
+            <li>Medicamento deve constar na <a href="https://www.vitta.com.br/lista-de-medicamentos/" target="_blank" class="text-blue-600 underline">lista oficial de medicamentos</a>.</li>
+            <li>O nome e fabricante do medicamento devem ser exatamente como na prescrição (coluna A da planilha).</li>
+          </ul>
+
+          <h3 class="sec-title">Como o membro realiza a compra?</h3>
+          <ol class="body-list">
+            <li>Acessar o App Vitta → <strong>Medicamentos</strong> → "Comprar medicamentos".</li>
+            <li>Clicar no medicamento e ler o código de barras da caixa.</li>
+            <li>No caixa, informar que o pagamento é via <strong>PIX</strong>.</li>
+            <li>Após a compra, anexar obrigatoriamente o cupom fiscal no App.</li>
+          </ol>
+          <div class="flex flex-wrap gap-3 mt-2">
+            <a href="https://www.youtube.com/watch?v=jQ_nZ6pdV0Y" target="_blank" class="text-sm text-blue-600 underline hover:text-blue-800">🎬 Vídeo: Como usar o benefício Omni</a>
+            <a href="https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/02/22/20241202222620-S6Q79CQB.json" target="_blank" class="text-sm text-blue-600 underline hover:text-blue-800">💬 Consultar saldo via chatbot</a>
+          </div>
+
+          <h3 class="sec-title">Renovação do saldo</h3>
+          <p class="body-text">O saldo é renovado após 30 dias da última compra com utilização. Se o membro fizer nova consulta antes de completar 31 dias, o saldo não será renovado — continuará com o saldo remanescente.</p>
+          <div class="highlight-box">
+            <p class="text-sm text-gray-600">📌 O saldo não é acumulativo.</p>
+          </div>
+
+          <h3 class="sec-title">Problemas e reembolso</h3>
+          <ul class="body-list">
+            <li><strong>Benefício não ativo / receita não no App:</strong> abrir chamado para o time de tech e redirecionar ao reembolso.</li>
+            <li><strong>Prazo de ativação vencido:</strong> o membro precisará realizar nova consulta para reativar.</li>
+            <li><strong>Erros na compra:</strong> redirecionar ao reembolso via formulário (validação pela Omni).</li>
+            <li><strong>Falhas no App Vitta:</strong> reembolso realizado pela Omni via planilha (validação responsabilidade da Vitta).</li>
+          </ul>
+          <div class="warn-box">
+            <p class="text-sm text-gray-600">⚠️ Após a compra, é <strong>obrigatório</strong> o anexo do cupom fiscal. O não envio bloqueia o benefício até o envio do comprovante.</p>
+          </div>
+
+          <h3 class="sec-title">Principais regras resumidas</h3>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p>✅ Receita exclusiva de médico Vitta.</p>
+            <p>✅ Saldo renovado mensalmente — 30 dias após a última compra.</p>
+            <p>✅ Benefício ativo por 5 dias após a consulta.</p>
+            <p>✅ Compra em qualquer farmácia com CNPJ de farmácia, pagamento via PIX.</p>
+            <p>✅ Medicamentos genéricos conforme lista oficial — nome e fabricante idênticos à prescrição.</p>
+            <p>✅ Anexo obrigatório do cupom fiscal após a compra.</p>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div><!-- /tab-rules -->
+
+<footer class="mt-12 py-5 text-center text-xs text-white" style="background:#071f42">
+  Hospital Digital Vitta — Painel Interno
+</footer>
+
+<script>
+function showTab(t){
+  document.getElementById('tab-elig').classList.toggle('hidden', t!=='elig');
+  document.getElementById('tab-rules').classList.toggle('hidden', t!=='rules');
+  document.getElementById('btn-elig').classList.toggle('active', t==='elig');
+  document.getElementById('btn-rules').classList.toggle('active', t==='rules');
+}
+
+function toggle(btn){
+  var card=btn.closest('.company-card');
+  var body=card.querySelector('.expand-body');
+  var chev=btn.querySelector('.chevron');
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  chev.classList.toggle('open',!open);
+}
+
+function filterCompanies(){
+  var q=document.getElementById('elig-search').value.toLowerCase();
+  document.querySelectorAll('#companies-grid .company-card').forEach(function(c){
+    c.style.display=(c.dataset.name||'').includes(q)?'':'none';
+  });
+}
+
+function openSection(id){
+  document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('sec-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function searchRules(){
+  var q=document.getElementById('rules-search').value.toLowerCase().trim();
+  if(!q)return;
+  var found=false;
+  document.querySelectorAll('.content-section').forEach(function(sec){
+    if(sec.textContent.toLowerCase().includes(q)&&!found){
+      found=true;
+      var id=sec.id.replace('sec-','');
+      document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
+      document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
+      sec.classList.add('active');
+      document.querySelectorAll('.sidebar-item').forEach(function(s){
+        if(s.getAttribute('onclick')&&s.getAttribute('onclick').includes("'"+id+"'")){
+          s.classList.add('active');
+        }
+      });
+    }
+  });
+}
+</script>
+</body>
+</html>

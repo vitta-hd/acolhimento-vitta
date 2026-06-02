@@ -492,10 +492,12 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
     <div class="flex flex-col md:flex-row gap-6">
 
       <!-- Sidebar -->
-      <aside class="md:w-64 shrink-0">
+      <aside id="sidebar" class="md:w-64 shrink-0">
         <nav class="bg-white border border-gray-200 overflow-hidden">
-          <div class="bg-navy-dark px-4 py-3" style="background:#0a2d5e">
+          <div class="px-4 py-3 flex items-center justify-between" style="background:#0a2d5e">
             <p class="text-white text-xs font-semibold uppercase tracking-wide">Tópicos</p>
+            <button onclick="toggleSidebar()" title="Recolher menu"
+              class="text-white opacity-70 hover:opacity-100 text-lg leading-none select-none">⟨</button>
           </div>
           <div id="sidebar-nav">
             <div class="sidebar-item active px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('atendimento')">📱 Time de Atendimento WhatsApp</div>
@@ -908,9 +910,8 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
           <p class="body-text">Benefício que permite aos membros Vitta comprar medicamentos com valor estipulado mensalmente, conforme lista oficial.</p>
 
-          <div class="grid sm:grid-cols-2 gap-3 mb-6">
+          <div class="grid sm:grid-cols-3 gap-3 mb-6">
             <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Ativação após consulta Vitta</p><p class="font-semibold">Até 5 horas</p></div>
-            <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Ativação após Plantão Médico</p><p class="font-semibold">Até 20 minutos</p></div>
             <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Validade após consulta</p><p class="font-semibold">5 dias corridos</p></div>
             <div class="rule-box"><p class="text-xs font-mono text-blue-600 uppercase mb-1">Prazo reembolso</p><p class="font-semibold">4 dias úteis</p></div>
           </div>
@@ -941,14 +942,12 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <h3 class="sec-title">Problemas e reembolso</h3>
-          <ul class="body-list">
-            <li><strong>Benefício não ativo / receita não no App:</strong> abrir chamado para o time de tech e redirecionar ao reembolso.</li>
-            <li><strong>Prazo de ativação vencido:</strong> o membro precisará realizar nova consulta para reativar.</li>
-            <li><strong>Erros na compra:</strong> redirecionar ao reembolso via formulário (validação pela Omni).</li>
-            <li><strong>Falhas no App Vitta:</strong> reembolso realizado pela Omni via planilha (validação responsabilidade da Vitta).</li>
-          </ul>
+          <p class="body-text">Em casos onde algo não funcionar no App e o membro estiver dentro das regras de elegibilidade, ele será redirecionado pelo time ao reembolso. O membro preenche os dados em um formulário e recebe o estorno em até <strong>4 dias úteis</strong>.</p>
+
+          <h3 class="sec-title">📎 Anexo do cupom fiscal</h3>
           <div class="warn-box">
-            <p class="text-sm text-gray-600">⚠️ Após a compra, é <strong>obrigatório</strong> o anexo do cupom fiscal. O não envio bloqueia o benefício até o envio do comprovante.</p>
+            <p class="font-semibold mb-1">⚠️ Obrigatório após toda compra</p>
+            <p class="text-sm text-gray-600">O envio do cupom fiscal é obrigatório. O não envio bloqueia o benefício para as próximas compras. Caso o membro não tenha enviado na hora, ele pode acessar o <strong>histórico de compras</strong> no App e anexar o comprovante de lá.</p>
           </div>
 
           <h3 class="sec-title">Principais regras resumidas</h3>
@@ -1000,6 +999,17 @@ function openSection(id){
   document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
   document.getElementById('sec-'+id).classList.add('active');
   event.currentTarget.classList.add('active');
+}
+
+function toggleSidebar(){
+  var aside=document.getElementById('sidebar');
+  var nav=document.getElementById('sidebar-nav');
+  var btn=aside.querySelector('button[title]');
+  var collapsed=aside.classList.toggle('md:w-10');
+  aside.classList.toggle('md:w-64',!collapsed);
+  nav.classList.toggle('hidden',collapsed);
+  btn.textContent=collapsed?'⟩':'⟨';
+  btn.title=collapsed?'Expandir menu':'Recolher menu';
 }
 
 function searchRules(){

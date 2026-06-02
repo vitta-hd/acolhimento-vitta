@@ -51,6 +51,25 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 </head>
 <body class="bg-gray-50 min-h-screen">
 
+<!-- ── TELA DE SENHA ── -->
+<div id="lock-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
+  <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
+    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
+         style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
+    <p style="color:#bfdbfe;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Mono',monospace">Painel Interno</p>
+    <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Hospital Digital Vitta</h1>
+    <input id="lock-input" type="password" placeholder="Digite a senha"
+      onkeydown="if(event.key==='Enter')checkPass()"
+      style="width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;box-sizing:border-box"/>
+    <p id="lock-err" style="color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px"></p>
+    <button onclick="checkPass()"
+      style="margin-top:16px;width:100%;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer">
+      Entrar
+    </button>
+  </div>
+</div>
+<div id="main-content" style="display:none">
+
 <!-- ═══════════════════════════════════════════════
      HERO
 ═══════════════════════════════════════════════ -->
@@ -969,6 +988,26 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <footer class="mt-12 py-5 text-center text-xs text-white" style="background:#071f42">
   Hospital Digital Vitta — Painel Interno
 </footer>
+</div><!-- /main-content -->
+
+<script>
+function checkPass(){
+  var v=document.getElementById('lock-input').value;
+  if(v==='Vitta2026'){
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    sessionStorage.setItem('vitta-auth','1');
+  } else {
+    document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
+    document.getElementById('lock-input').value='';
+    document.getElementById('lock-input').focus();
+  }
+}
+if(sessionStorage.getItem('vitta-auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+}
+</script>
 
 <script>
 function showTab(t){

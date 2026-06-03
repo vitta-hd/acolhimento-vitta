@@ -561,6 +561,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <div id="sidebar-nav">
             <div class="sidebar-item active px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('atendimento')">📱 Time de Atendimento WhatsApp</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('agendamentos')">🗓️ Agendamentos de Consultas</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('plantao')">🚑 Plantão Médico</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('reagendamento')">🔄 Reagendamentos e Cancelamentos</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('falha')">⚠️ Falha na Teleconsulta</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('documentos')">📄 Documentos da Consulta</div>
@@ -626,7 +627,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
         <!-- ── AGENDAMENTOS ── -->
         <div id="sec-agendamentos" class="content-section">
           <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🗓️ Agendamentos de Consultas</h2>
-          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Especialidades, dependentes e plantão médico</p>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Especialidades e agendamento para dependentes</p>
 
           <h3 class="sec-title">Especialidades disponíveis</h3>
           <div class="flex flex-wrap gap-2 mb-4">
@@ -675,6 +676,13 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <div class="warn-box">
             <p class="text-sm text-gray-600">Se o titular solicitar agendamento para dependente maior de idade, o time deve orientar que o próprio dependente realize o contato. Exceção apenas para PCD ou idosos.</p>
           </div>
+
+        </div>
+
+        <!-- ── PLANTÃO MÉDICO ── -->
+        <div id="sec-plantao" class="content-section">
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🚑 Plantão Médico</h2>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Atendimento de urgência pelo App</p>
 
           <h3 class="sec-title">Como funciona o Plantão Médico?</h3>
           <div class="grid sm:grid-cols-2 gap-4 mb-4">
@@ -1158,13 +1166,13 @@ var SEARCH_INDEX = [
   {q:'Regras de agendamento do App', sec:'limitadores'},
   // Agendamentos
   {q:'Quais especialidades médicas a Vitta oferece?', sec:'agendamentos'},
-  {q:'Como funciona o Plantão Médico?', sec:'agendamentos'},
+  {q:'Como funciona o Plantão Médico?', sec:'plantao'},
   {q:'Como agendar para dependentes menores de idade?', sec:'agendamentos'},
   {q:'Membro menor de 12 anos pode ser atendido?', sec:'agendamentos'},
   {q:'Adolescente pode se consultar sozinho?', sec:'agendamentos'},
   {q:'Dependente maior de 18 anos: como agendar?', sec:'agendamentos'},
   {q:'O titular pode agendar para o filho maior de idade?', sec:'agendamentos'},
-  {q:'Como acessar o plantão médico à noite?', sec:'agendamentos'},
+  {q:'Como acessar o plantão médico à noite?', sec:'plantao'},
   // Reagendamento
   {q:'Como reagendar uma consulta?', sec:'reagendamento'},
   {q:'Como cancelar uma consulta?', sec:'reagendamento'},

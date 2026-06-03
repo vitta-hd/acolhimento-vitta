@@ -6,11 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Painel Interno • Hospital Digital Vitta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config={theme:{extend:{
-  fontFamily:{sans:['"IBM Plex Sans"','system-ui','sans-serif'],mono:['"IBM Plex Mono"','monospace']},
+  fontFamily:{sans:['"IBM Plex Sans"','system-ui','sans-serif'],mono:['"IBM Plex Sans"','system-ui','sans-serif']},
   colors:{
     navy:{DEFAULT:'#0a2d5e',dark:'#071f42',mid:'#0e3a78',light:'#1a4f9e',faint:'#e8f0fc'},
     v:{blue:'#0a4dbe',bluel:'#e9f0fb',t100:'#161616',t70:'#525252',t50:'#6f6f6f',border:'#e0e0e0'}
@@ -57,7 +57,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
     <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
          style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
-    <p style="color:#bfdbfe;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Mono',monospace">Painel Interno</p>
+    <p style="color:#bfdbfe;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Sans',sans-serif">Painel Interno</p>
     <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Hospital Digital Vitta</h1>
     <input id="lock-input" type="password" placeholder="Digite a senha"
       onkeydown="if(event.key==='Enter')checkPass()"
@@ -81,16 +81,16 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
            class="h-10 mb-6 brightness-0 invert" alt="Vitta"/>
       <p class="text-xs font-mono uppercase tracking-widest text-blue-300 mb-2">Painel Interno</p>
       <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">Hospital Digital Vitta</h1>
-      <p class="text-blue-200 text-lg leading-relaxed max-w-lg">Consulte elegibilidade por empresa e acesse as regras e orientações do time de atendimento.</p>
+      
     </div>
     <div class="flex flex-col sm:flex-row gap-3">
-      <button onclick="showTab('elig')" id="btn-elig"
-        class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
-        🏥 Elegibilidade
-      </button>
       <button onclick="showTab('rules')" id="btn-rules"
-        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide">
+        class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
         📋 Regras Gerais
+      </button>
+      <button onclick="showTab('elig')" id="btn-elig"
+        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide">
+        🏥 Elegibilidade
       </button>
     </div>
   </div>
@@ -99,7 +99,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <!-- ═══════════════════════════════════════════════
      ABA ELEGIBILIDADE
 ═══════════════════════════════════════════════ -->
-<div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10">
+<div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10 hidden">
 
   <!-- Busca -->
   <div class="mb-8">
@@ -126,7 +126,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       </button>
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco — Fee for Service</p>
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco: Fee for Service</p>
           <div class="space-y-2">
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
@@ -165,7 +165,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             </div>
           </div>
           <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
             <div class="space-y-2">
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
@@ -186,7 +186,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#0891b2">CDV</span>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">CDV — Casa dos Ventos</p>
+          <p class="font-semibold text-gray-900 text-sm">CDV: Casa dos Ventos</p>
           <p class="text-xs text-gray-500">Bradesco</p>
           <p class="text-xs text-blue-600 mt-1">Fee for Service</p>
         </div>
@@ -249,7 +249,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       </button>
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Capitado Plus</p>
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Capitado Plus</p>
           <div class="space-y-2">
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
@@ -276,7 +276,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       </button>
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Capitado Plus</p>
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Capitado Plus</p>
           <div class="space-y-2">
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
@@ -297,13 +297,13 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
         </div>
         <div class="flex-1 min-w-0">
           <p class="font-semibold text-gray-900 text-sm">INSPER</p>
-          <p class="text-xs text-gray-500">Bradesco — Fee for Service</p>
+          <p class="text-xs text-gray-500">Bradesco: Fee for Service</p>
         </div>
         <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
       </button>
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Fee for Service</p>
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Fee for Service</p>
           <div class="space-y-2">
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
@@ -332,7 +332,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4 space-y-5">
           <div>
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Planos Efetivo e Ideal</p>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Planos Efetivo e Ideal</p>
             <div class="space-y-2">
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
@@ -342,7 +342,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             </div>
           </div>
           <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
             <div class="space-y-2">
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
@@ -409,7 +409,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Unimed Araxá</p>
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Unimed Araxá</p>
             <p class="text-xs font-mono text-gray-400 mb-3">Unimed Araxá</p>
             <div class="space-y-1.5">
               <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
@@ -421,7 +421,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Sul América</p>
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Sul América</p>
             <p class="text-xs font-mono text-gray-400 mb-3">Sul América (Vitta Amplia)</p>
             <div class="space-y-1.5">
               <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
@@ -433,7 +433,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA — Bradesco</p>
+            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Bradesco</p>
             <p class="text-xs font-mono text-gray-400 mb-3">Bradesco</p>
             <div class="space-y-1.5">
               <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
@@ -465,7 +465,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4 space-y-5">
           <div>
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco — Planos Efetivo e Ideal</p>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Planos Efetivo e Ideal</p>
             <div class="space-y-2">
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
@@ -475,7 +475,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             </div>
           </div>
           <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos — Fee for Service</p>
+            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
             <div class="space-y-2">
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
               <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
@@ -497,13 +497,13 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
         </div>
         <div class="flex-1 min-w-0">
           <p class="font-semibold text-gray-900 text-sm">BRITISH</p>
-          <p class="text-xs text-gray-500">Vitta HD — Capitado Plus</p>
+          <p class="text-xs text-gray-500">Vitta HD: Capitado Plus</p>
         </div>
         <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
       </button>
       <div class="expand-body border-t border-gray-100 px-5 pb-5">
         <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convênio Vitta HD — Capitado Plus</p>
+          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convênio Vitta HD: Capitado Plus</p>
           <div class="space-y-2">
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
             <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
@@ -533,7 +533,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <!-- ═══════════════════════════════════════════════
      ABA REGRAS GERAIS
 ═══════════════════════════════════════════════ -->
-<div id="tab-rules" class="hidden">
+<div id="tab-rules">
   <div class="max-w-6xl mx-auto px-6 py-8">
 
     <!-- Search -->
@@ -563,7 +563,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('limitadores')">🔒 Limitadores App</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('app')">📲 Aplicativo Vitta</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('exames')">🧪 Agendamento de Exames</div>
-            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('terapias')">🧠 Terapias — Psicologia e Nutrição</div>
+            <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('terapias')">🧠 Terapias: Psicologia e Nutrição</div>
             <div class="sidebar-item px-4 py-3 text-sm border-b border-gray-100" onclick="openSection('particular')">💳 Consultas Particulares</div>
             <div class="sidebar-item px-4 py-3 text-sm" onclick="openSection('omni')">💊 Benefício de Medicamentos | Omni</div>
           </div>
@@ -599,10 +599,10 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <h3 class="sec-title">📞 Telefone</h3>
-          <p class="body-text">O número <strong>11 49493-6663</strong> aceita tanto WhatsApp quanto ligações.</p>
+          <p class="body-text">O número <strong>11 4949-3663</strong> aceita tanto WhatsApp quanto ligações.</p>
           <p class="body-text">O auto atendimento da árvore automática funciona 24 horas e, em muitos casos, consegue orientar o membro sem necessidade de atendimento humano.</p>
 
-          <h3 class="sec-title">📧 SAC — Segunda Instância</h3>
+          <h3 class="sec-title">📧 SAC: Segunda Instância</h3>
           <div class="warn-box">
             <p class="font-semibold mb-1">Quando acionar o SAC?</p>
             <p class="text-gray-600 text-sm">O SAC funciona como segunda instância ao membro quando o primeiro contato no WhatsApp não deu certo ou não foi satisfatório.</p>
@@ -714,7 +714,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <p class="body-text">Em casos onde o membro encontrar uma falha na teleconsulta, ou perceber que acessou a consulta e o profissional ainda não entrou dentro dos primeiros <strong>5 minutos</strong>, ele deve acionar imediatamente o WhatsApp.</p>
           <div class="highlight-box">
             <p class="font-semibold mb-1">🕒 Horário de atendimento para falhas: 07h às 22h</p>
-            <p class="text-sm text-gray-600">Há um time dedicado ao atendimento de médicos para gerar um novo link. O contato deve ser realizado o quanto antes, considerando os tempos de consulta — o médico pode avançar para o próximo atendimento.</p>
+            <p class="text-sm text-gray-600">Há um time dedicado ao atendimento de médicos para gerar um novo link. O contato deve ser realizado o quanto antes, considerando os tempos de consulta: o médico pode avançar para o próximo atendimento.</p>
           </div>
         </div>
 
@@ -727,39 +727,42 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             <li>No App: seção <strong>Consultas e Documentos</strong></li>
             <li>No e-mail pessoal cadastrado</li>
           </ul>
-          <p class="body-text">Caso não encontre, o membro pode acionar via WhatsApp ou enviar e-mail para <strong>sac@vitta.me</strong>.</p>
+          <p class="body-text">Caso não encontre, o membro pode acionar via WhatsApp <strong>11 49493663</strong> ou enviar e-mail para <strong>sac@vitta.me</strong>.</p>
         </div>
 
         <!-- ── LIMITADORES ── -->
         <div id="sec-limitadores" class="content-section">
           <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🔒 Limitadores do App</h2>
-          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Regras de agendamento — contratos SUB, CAPTADO e CAP PLUS</p>
+          <p class="text-xs text-gray-400 font-mono uppercase mb-6">Regras de agendamento: contratos Subsidiado, Capitado e Capitado Plus</p>
           <p class="body-text">Os limitadores são regras criadas para organizar os agendamentos, garantir acesso justo às consultas, reduzir faltas e oferecer atendimento mais eficiente para toda a comunidade.</p>
 
           <div class="space-y-4 mt-4">
             <div class="rule-box">
-              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 1 — Consultas simultâneas</p>
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 1: Consultas simultâneas</p>
               <p class="font-semibold mb-1">Até 2 consultas agendadas ao mesmo tempo</p>
               <p class="text-sm text-gray-600">Independentemente da especialidade ou data. Com 2 consultas ativas, é necessário realizar uma (ou aguardar a data passar) para liberar novo agendamento.</p>
               <p class="text-xs text-blue-600 mt-2">💡 Exceções: Plantão Médico e Psicologia não entram nessa regra.</p>
+              <p class="text-xs text-orange-600 mt-2">⚠️ Essa regra se aplica aos contratos Capitado, Capitado Plus e Subsidiado. Com exceção da ESPM que não possui nenhum limitador.</p>
             </div>
 
             <div class="rule-box">
-              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 2 — Limite mensal</p>
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 2: Limite mensal</p>
               <p class="font-semibold mb-1">Até 2 consultas por mês</p>
               <p class="text-sm text-gray-600">Considera a soma de consultas já realizadas e agendadas no mesmo mês. Atingido o limite, novos agendamentos só podem ser feitos para o mês seguinte.</p>
-              <p class="text-xs text-blue-600 mt-2">💡 Plantão Médico entra na contagem mensal. Exceção: SICREDI e ESPM (sem limitadores).</p>
+              <p class="text-xs text-blue-600 mt-2">💡 Plantão Médico entra na contagem mensal.<br>Psicologia não entra na contagem mensal.</p>
+              <p class="text-xs text-orange-600 mt-2">⚠️ Essa regra se aplica aos contratos Capitado, Capitado Plus e Subsidiado. Com exceção da ESPM e SICREDI.</p>
             </div>
 
             <div class="rule-box">
-              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 3 — Mesma especialidade</p>
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 3: Mesma especialidade</p>
               <p class="font-semibold mb-1">Não é possível ter mais de um agendamento ativo na mesma especialidade</p>
               <p class="text-sm text-gray-600">Válido também para especialidades equivalentes: Clínica Médica, Clínico Geral e Médico da Família/Pessoal.</p>
+              <p class="text-xs text-blue-600 mt-2">💡 Psicologia não entra nessa contagem.</p>
               <p class="text-xs text-orange-600 mt-2">⚠️ Essa regra se aplica a todos os contratos, inclusive Fee for Service.</p>
             </div>
 
             <div class="rule-box">
-              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 4 — Intervalo mínimo</p>
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 4: Intervalo mínimo</p>
               <p class="font-semibold mb-1">24 horas de intervalo após consulta da mesma especialidade</p>
               <p class="text-sm text-gray-600">Após realizar uma consulta, é necessário aguardar 24 horas para agendar nova consulta na mesma especialidade.</p>
               <p class="text-xs text-blue-600 mt-2">💡 Plantão Médico não segue essa regra.</p>
@@ -767,16 +770,16 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             </div>
 
             <div class="rule-box">
-              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 5 — No-Show (política de faltas)</p>
+              <p class="text-xs font-mono text-blue-600 uppercase mb-2">Regra 5: No-Show (política de faltas)</p>
               <p class="font-semibold mb-2">Política de faltas mensais</p>
               <div class="space-y-1 text-sm text-gray-600">
-                <p>🟡 <strong>1ª falta no mês:</strong> sem penalidade — apenas um lembrete.</p>
+                <p>🟡 <strong>1ª falta no mês:</strong> sem penalidade: apenas um lembrete.</p>
                 <p>🔴 <strong>2ª falta no mês:</strong> bloqueio para novos agendamentos por 30 dias corridos.</p>
               </div>
               <div class="mt-2 bg-red-50 p-2 text-xs text-red-700">
                 <p>Durante o bloqueio: não é possível criar novos agendamentos (incluindo Plantão Médico). Consultas já agendadas permanecem válidas.</p>
               </div>
-              <p class="text-xs text-orange-600 mt-2">⚠️ Aplica-se a contratos SUB, CAPTADO e CAP PLUS (inclusive Sicredi). Não se aplica a FFS nem à ESPM.</p>
+              <p class="text-xs text-orange-600 mt-2">⚠️ Aplica-se a contratos Subsidiado, Capitado e Capitado Plus (inclusive Sicredi). Não se aplica a FFS nem à ESPM.</p>
             </div>
           </div>
         </div>
@@ -803,7 +806,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <div class="highlight-box mt-2">
             <p class="font-semibold text-sm mb-1">Regras por faixa etária para agendamento no App</p>
             <ul class="text-sm text-gray-600 space-y-1 mt-1">
-              <li>• <strong>Menores de 12 anos:</strong> sem acesso próprio — agendamento feito pelo login do titular.</li>
+              <li>• <strong>Menores de 12 anos:</strong> sem acesso próprio: agendamento feito pelo login do titular.</li>
               <li>• <strong>12 a 17 anos:</strong> podem ter acesso próprio; também acessível pelo titular.</li>
               <li>• <strong>Maiores de 18 anos:</strong> cada um deve ter seu próprio acesso. Não é possível agendar para dependentes maiores por App de terceiros.</li>
             </ul>
@@ -841,10 +844,9 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧪 Agendamentos de Exames Vitta</h2>
           <p class="text-xs text-gray-400 font-mono uppercase mb-6">Laboratórios parceiros e coberturas</p>
 
-          <div class="grid sm:grid-cols-3 gap-3 mb-6">
+          <div class="grid sm:grid-cols-2 gap-3 mb-6">
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
-            <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">PREVTOTAL</p><p class="text-xs text-blue-600">Exames de imagem · RJ</p></div>
           </div>
 
           <h3 class="sec-title">Planos com cobertura de exames</h3>
@@ -855,10 +857,11 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             <span class="badge-sim px-3 py-1 text-xs font-medium">Bradesco (exceto Efetivo e Ideal)</span>
           </div>
           <div class="warn-box">
-            <p class="text-sm text-gray-600">⚠️ <strong>Sem cobertura:</strong> Capitado, Capitado Plus e Subsidiados — exceto FCL (pode agendar pelo convênio Bradesco). Bradesco Efetivo e Ideal estão sujeitos a autorização do plano, podendo ser cancelados posteriormente.</p>
+            <p class="text-sm text-gray-600">⚠️ <strong>Sem cobertura:</strong> Capitado, Capitado Plus e Subsidiados: exceto FCL (pode agendar pelo convênio Bradesco). Bradesco Efetivo e Ideal estão sujeitos a autorização do plano, podendo ser cancelados posteriormente.</p>
           </div>
 
-          <h3 class="sec-title">Cidades atendidas — LABI</h3>
+          <h3 class="sec-title">Cidades atendidas</h3>
+          <h4 class="sub-title">Labi:</h4>
           <ul class="body-list">
             <li>Grande São Paulo (SP, Guarulhos, Osasco, Barueri, Mogi das Cruzes…)</li>
             <li>Grande Rio (Rio de Janeiro, Niterói, São Gonçalo)</li>
@@ -866,7 +869,8 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
             <li>Interior SP (Sorocaba, Campinas, Piracicaba, São José dos Campos)</li>
             <li>Litoral SP · Curitiba e região</li>
           </ul>
-          <p class="body-text text-xs text-gray-500">ISALAB: cobertura apenas no estado de SP — consultar cobertura no concierge.</p>
+          <h4 class="sub-title">Isalab:</h4>
+          <p class="body-text text-xs text-gray-500">Cobertura apenas no estado de SP. Consultar cobertura no concierge.</p>
 
           <h3 class="sec-title">Como é realizado o agendamento?</h3>
           <p class="body-text">O agendamento é realizado exclusivamente pelo time de atendimento via WhatsApp, onde são enviadas as orientações e agendada a coleta no endereço do membro. Após o registro, os exames são autorizados no convênio e o laboratório vai até a casa do membro. No dia da coleta, o membro recebe um protocolo para retirar os resultados.</p>
@@ -880,7 +884,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
         <!-- ── TERAPIAS ── -->
         <div id="sec-terapias" class="content-section">
-          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧠 Terapias Vitta — Psicologia e Nutrição</h2>
+          <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧠 Terapias Vitta: Psicologia e Nutrição</h2>
           <p class="text-xs text-gray-400 font-mono uppercase mb-6">Acompanhamento terapêutico via teleconsulta</p>
 
           <h3 class="sec-title">Como funciona o agendamento?</h3>
@@ -952,7 +956,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <h3 class="sec-title">Reembolso</h3>
           <ul class="body-list">
             <li>O membro pode consultar o valor de reembolso pelo App ou site do convênio.</li>
-            <li>A Vitta não garante valores ou aprovação do reembolso — isso depende do plano.</li>
+            <li>A Vitta não garante valores ou aprovação do reembolso: isso depende do plano.</li>
             <li>Algumas empresas possuem coparticipação mesmo para procedimentos de reembolso.</li>
             <li>Nota fiscal emitida em até <strong>7 dias úteis</strong>.</li>
           </ul>
@@ -991,7 +995,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           </div>
 
           <h3 class="sec-title">Renovação do saldo</h3>
-          <p class="body-text">O saldo é renovado após 30 dias da última compra com utilização. Se o membro fizer nova consulta antes de completar 31 dias, o saldo não será renovado — continuará com o saldo remanescente.</p>
+          <p class="body-text">O saldo é renovado após 30 dias da última compra com utilização. Se o membro fizer nova consulta antes de completar 31 dias, o saldo não será renovado: continuará com o saldo remanescente.</p>
           <div class="highlight-box">
             <p class="text-sm text-gray-600">📌 O saldo não é acumulativo.</p>
           </div>
@@ -1008,10 +1012,10 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <h3 class="sec-title">Principais regras resumidas</h3>
           <div class="space-y-2 text-sm text-gray-600">
             <p>✅ Receita exclusiva de médico Vitta.</p>
-            <p>✅ Saldo renovado mensalmente — 30 dias após a última compra.</p>
+            <p>✅ Saldo renovado mensalmente: 30 dias após a última compra.</p>
             <p>✅ Benefício ativo por 5 dias após a consulta.</p>
             <p>✅ Compra em qualquer farmácia com CNPJ de farmácia, pagamento via PIX.</p>
-            <p>✅ Medicamentos genéricos conforme lista oficial — nome e fabricante idênticos à prescrição.</p>
+            <p>✅ Medicamentos genéricos conforme lista oficial: nome e fabricante idênticos à prescrição.</p>
             <p>✅ Anexo obrigatório do cupom fiscal após a compra.</p>
           </div>
         </div>
@@ -1022,7 +1026,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 </div><!-- /tab-rules -->
 
 <footer class="mt-12 py-5 text-center text-xs text-white" style="background:#071f42">
-  Hospital Digital Vitta — Painel Interno
+  Hospital Digital Vitta: Painel Interno
 </footer>
 </div><!-- /main-content -->
 
@@ -1131,16 +1135,16 @@ var SEARCH_INDEX = [
   {q:'Como recuperar a senha do App?', sec:'app'},
   {q:'Como agendar uma teleconsulta pelo App?', sec:'app'},
   {q:'Como cancelar uma consulta pelo App?', sec:'app'},
-  {q:'O App não localiza horários do médico — o que fazer?', sec:'app'},
+  {q:'O App não localiza horários do médico: o que fazer?', sec:'app'},
   {q:'Como alterar e-mail ou telefone no App?', sec:'app'},
-  {q:'Erro ao agendar no App — o que fazer?', sec:'app'},
+  {q:'Erro ao agendar no App: o que fazer?', sec:'app'},
   // Limitadores
   {q:'Quantas consultas posso ter agendadas ao mesmo tempo?', sec:'limitadores'},
   {q:'Existe limite de consultas por mês?', sec:'limitadores'},
   {q:'Posso agendar mais de uma consulta na mesma especialidade?', sec:'limitadores'},
   {q:'Qual o intervalo mínimo entre consultas da mesma especialidade?', sec:'limitadores'},
   {q:'Como funciona a política de no-show?', sec:'limitadores'},
-  {q:'Fui bloqueado por falta — o que acontece?', sec:'limitadores'},
+  {q:'Fui bloqueado por falta: o que acontece?', sec:'limitadores'},
   {q:'Regras de agendamento do App', sec:'limitadores'},
   // Agendamentos
   {q:'Quais especialidades médicas a Vitta oferece?', sec:'agendamentos'},
@@ -1148,18 +1152,18 @@ var SEARCH_INDEX = [
   {q:'Como agendar para dependentes menores de idade?', sec:'agendamentos'},
   {q:'Membro menor de 12 anos pode ser atendido?', sec:'agendamentos'},
   {q:'Adolescente pode se consultar sozinho?', sec:'agendamentos'},
-  {q:'Dependente maior de 18 anos — como agendar?', sec:'agendamentos'},
+  {q:'Dependente maior de 18 anos: como agendar?', sec:'agendamentos'},
   {q:'O titular pode agendar para o filho maior de idade?', sec:'agendamentos'},
   {q:'Como acessar o plantão médico à noite?', sec:'agendamentos'},
   // Reagendamento
   {q:'Como reagendar uma consulta?', sec:'reagendamento'},
   {q:'Como cancelar uma consulta?', sec:'reagendamento'},
   // Falha
-  {q:'O médico não entrou na consulta — o que fazer?', sec:'falha'},
-  {q:'Falha na teleconsulta — como resolver?', sec:'falha'},
+  {q:'O médico não entrou na consulta: o que fazer?', sec:'falha'},
+  {q:'Falha na teleconsulta: como resolver?', sec:'falha'},
   {q:'Link da consulta não funcionou', sec:'falha'},
   // Documentos
-  {q:'Não recebi a receita da consulta — o que fazer?', sec:'documentos'},
+  {q:'Não recebi a receita da consulta: o que fazer?', sec:'documentos'},
   {q:'Onde encontro os documentos da minha consulta?', sec:'documentos'},
   {q:'Receita médica não aparece no App', sec:'documentos'},
   // Atendimento
@@ -1171,12 +1175,12 @@ var SEARCH_INDEX = [
   {q:'Como agendar exames?', sec:'exames'},
   {q:'Quais planos têm cobertura de exames?', sec:'exames'},
   {q:'Quais laboratórios a Vitta trabalha?', sec:'exames'},
-  {q:'Coleta domiciliar de exames — como funciona?', sec:'exames'},
-  {q:'Coleta atrasada — o que fazer?', sec:'exames'},
+  {q:'Coleta domiciliar de exames: como funciona?', sec:'exames'},
+  {q:'Coleta atrasada: o que fazer?', sec:'exames'},
   // Terapias
   {q:'Como funciona o agendamento de psicologia?', sec:'terapias'},
   {q:'Como funciona o agendamento de nutrição?', sec:'terapias'},
-  {q:'Fui removido da psicologia por falta — e agora?', sec:'terapias'},
+  {q:'Fui removido da psicologia por falta: e agora?', sec:'terapias'},
   {q:'Validade do encaminhamento para terapia?', sec:'terapias'},
   {q:'Posso trocar de psicólogo?', sec:'terapias'},
   // Particular

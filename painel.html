@@ -866,6 +866,31 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧪 Agendamentos de Exames Vitta</h2>
           <p class="text-xs text-gray-400 font-mono uppercase mb-6">Laboratórios parceiros e coberturas</p>
 
+          <!-- Widget CEP -->
+          <div class="border border-blue-200 bg-blue-50 rounded p-4 mb-4">
+            <p class="font-semibold text-blue-900 mb-1 text-sm">📍 Consultar cobertura por CEP (LABI)</p>
+            <p class="text-xs text-gray-500 mb-3">Verifique se o CEP do membro tem cobertura de coleta domiciliar LABI.</p>
+            <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank"
+               class="inline-block bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-blue-800 transition">
+              🔍 Abrir busca por CEP
+            </a>
+          </div>
+
+          <!-- Widget Cobertura de Exame -->
+          <div class="border border-indigo-200 bg-indigo-50 rounded p-4 mb-6">
+            <p class="font-semibold text-indigo-900 mb-1 text-sm">🔬 Consultar cobertura do exame (LABI)</p>
+            <p class="text-xs text-gray-500 mb-1">Cole um ou mais nomes de exames ou códigos TUSS — um por linha ou separados por vírgula.</p>
+            <p class="text-xs text-gray-400 mb-3">💡 Para pedidos em PDF ou imagem: abra o arquivo, copie os nomes dos exames e cole aqui.</p>
+            <textarea id="exam-input" rows="3"
+              class="w-full border border-indigo-200 rounded p-2 text-sm mb-2 focus:outline-none focus:border-indigo-400"
+              placeholder="Ex: Hemograma completo&#10;40311018&#10;TSH, glicose, colesterol"></textarea>
+            <button onclick="buscarExames()"
+              class="bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-indigo-800 transition">
+              Buscar cobertura
+            </button>
+            <div id="exam-results" class="mt-3"></div>
+          </div>
+
           <div class="grid sm:grid-cols-2 gap-3 mb-6">
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
@@ -1499,6 +1524,74 @@ function initCollapsible(){
   });
 }
 window.addEventListener('DOMContentLoaded',initCollapsible);
+
+// ── BUSCA DE EXAMES ──
+var _examesDB = null;
+function loadExamesDB(cb){
+  if(_examesDB){ cb(_examesDB); return; }
+  fetch('exames.json').then(function(r){ return r.json(); }).then(function(data){
+    _examesDB = data;
+    cb(data);
+  }).catch(function(){ cb([]); });
+}
+
+function normalizar(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+
+function buscarExames(){
+  var input = document.getElementById('exam-input').value;
+  var div = document.getElementById('exam-results');
+  div.innerHTML = '<p class="text-xs text-gray-500">Carregando...</p>';
+
+  // Split por linha ou vírgula
+  var termos = input.split(/[\n,]+/).map(function(t){ return t.trim(); }).filter(Boolean);
+  if(!termos.length){ div.innerHTML=''; return; }
+
+  loadExamesDB(function(db){
+    if(!db.length){
+      div.innerHTML='<p class="text-xs text-red-500">Não foi possível carregar a base de exames.</p>';
+      return;
+    }
+    var html = '';
+    termos.forEach(function(termo){
+      var norm = normalizar(termo);
+      var matches = db.filter(function(e){
+        if(e.t && e.t===termo.trim()) return true;
+        if(normalizar(e.n).indexOf(norm)>=0) return true;
+        for(var i=0;i<e.s.length;i++){
+          if(normalizar(e.s[i]).indexOf(norm)>=0) return true;
+        }
+        return false;
+      }).slice(0,8);
+
+      html += '<div class="mb-3">';
+      html += '<p class="text-xs font-mono text-indigo-600 uppercase mb-1">🔍 "'+termo+'" — '+matches.length+' resultado(s)</p>';
+      if(matches.length===0){
+        html += '<div class="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">Exame não encontrado na cobertura LABI.</div>';
+      } else {
+        matches.forEach(function(e){
+          var tags = '';
+          if(e.d==='Sim') tags += '<span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded mr-1">🏠 Coleta domiciliar</span>';
+          if(e.pr) tags += '<span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded mr-1">⏱ '+e.pr+' dias úteis</span>';
+          if(e.p) tags += '<span class="inline-block bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded">⚠️ Requer preparo</span>';
+          var tuss = e.t ? '<span class="text-gray-400 ml-2 font-mono">TUSS '+e.t+'</span>' : '';
+          var preparo = e.p ? '<p class="text-xs text-gray-500 mt-1 italic">'+e.p+'</p>' : '';
+          html += '<div class="bg-white border border-indigo-100 rounded px-3 py-2 mb-1">';
+          html += '<p class="text-sm font-semibold text-gray-800">✅ '+e.n+tuss+'</p>';
+          html += '<div class="mt-1">'+tags+'</div>';
+          html += preparo;
+          html += '</div>';
+        });
+      }
+      html += '</div>';
+    });
+    div.innerHTML = html;
+  });
+}
 </script>
 </body>
 </html>

@@ -57,7 +57,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
     <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
          style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
-    <p style="color:#bfdbfe;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Sans',sans-serif">Painel Interno</p>
+    <p style="color:#bfdbfe;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Sans',sans-serif"></p>
     <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Hospital Digital Vitta</h1>
     <input id="lock-input" type="password" placeholder="Digite a senha"
       onkeydown="if(event.key==='Enter')checkPass()"
@@ -78,12 +78,11 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   <div class="max-w-6xl mx-auto px-6 py-14 flex flex-col md:flex-row md:items-center gap-8">
     <div class="flex-1">
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
-           class="h-10 mb-6 brightness-0 invert" alt="Vitta"/>
-      <p class="text-xs font-mono uppercase tracking-widest text-blue-300 mb-2">Painel Interno</p>
+           class="h-10 mb-6 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
       <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">Hospital Digital Vitta</h1>
       
     </div>
-    <div class="flex flex-col sm:flex-row gap-3">
+    <div id="tab-buttons" class="flex flex-col sm:flex-row gap-3">
       <button onclick="showTab('rules')" id="btn-rules"
         class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
         📋 Regras Gerais
@@ -99,6 +98,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <!-- ═══════════════════════════════════════════════
      ABA ELEGIBILIDADE
 ═══════════════════════════════════════════════ -->
+<div id="content-area">
 <div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10 hidden">
 
   <!-- Busca -->
@@ -1024,6 +1024,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
     </div>
   </div>
 </div><!-- /tab-rules -->
+</div><!-- /content-area -->
 
 <footer class="mt-12 py-5 text-center text-xs text-white" style="background:#071f42">
   Hospital Digital Vitta: Painel Interno
@@ -1055,6 +1056,14 @@ function showTab(t){
   document.getElementById('tab-rules').classList.toggle('hidden', t!=='rules');
   document.getElementById('btn-elig').classList.toggle('active', t==='elig');
   document.getElementById('btn-rules').classList.toggle('active', t==='rules');
+}
+
+function toggleContent(){
+  var ca=document.getElementById('content-area');
+  var tb=document.getElementById('tab-buttons');
+  var hidden=ca.style.display==='none';
+  ca.style.display=hidden?'':'none';
+  tb.style.display=hidden?'':'none';
 }
 
 function logoErr(img){

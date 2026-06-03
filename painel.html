@@ -1464,7 +1464,8 @@ function initCollapsible(){
     var arrow=document.createElement('span');
     arrow.className='ctoggle';
     arrow.textContent=' ▾';
-    arrow.style.cssText='font-size:.75rem;color:#0a4dbe;transition:transform .2s;display:inline-block';
+    var arrowSize=h.closest('#sec-rede')?'1.1rem':'.75rem';
+    arrow.style.cssText='font-size:'+arrowSize+';color:#0a4dbe;transition:transform .2s;display:inline-block';
     h.appendChild(arrow);
 
     // Agrupa os elementos irmãos seguintes até o próximo h3/h4/h2
@@ -1480,6 +1481,12 @@ function initCollapsible(){
     wrap.className='c-body';
     h.parentNode.insertBefore(wrap,siblings[0]||null);
     siblings.forEach(function(s){wrap.appendChild(s);});
+
+    var startCollapsed=h.closest('#sec-rede')!==null;
+    if(startCollapsed){
+      wrap.style.display='none';
+      arrow.style.transform='rotate(-90deg)';
+    }
 
     h.addEventListener('click',function(){
       var open=wrap.style.display!=='none';

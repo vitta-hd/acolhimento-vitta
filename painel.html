@@ -1458,6 +1458,7 @@ function hideDropdown(){document.getElementById('search-dropdown').style.display
 // ── Subtítulos recolhíveis ────────────────────────────────────────────────
 function initCollapsible(){
   document.querySelectorAll('h3.sec-title, h4.sub-title').forEach(function(h){
+    if(h.matches('h4.sub-title') && h.closest('#sec-rede')) return;
     // Adiciona seta e cursor
     h.style.cursor='pointer';
     h.style.userSelect='none';

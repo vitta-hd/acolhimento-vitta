@@ -1470,9 +1470,11 @@ function initCollapsible(){
     h.appendChild(arrow);
 
     // Agrupa os elementos irmãos seguintes até o próximo h3/h4/h2
+    var inRede=h.closest('#sec-rede')!==null;
+    var stopSelector=inRede?'h3.sec-title,h2':'h3.sec-title,h4.sub-title,h2';
     var siblings=[];
     var el=h.nextElementSibling;
-    while(el && !el.matches('h3.sec-title,h4.sub-title,h2')){
+    while(el && !el.matches(stopSelector)){
       siblings.push(el);
       el=el.nextElementSibling;
     }

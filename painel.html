@@ -866,31 +866,6 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
           <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧪 Agendamentos de Exames Vitta</h2>
           <p class="text-xs text-gray-400 font-mono uppercase mb-6">Laboratórios parceiros e coberturas</p>
 
-          <!-- Widget CEP -->
-          <div class="border border-blue-200 bg-blue-50 rounded p-4 mb-4">
-            <p class="font-semibold text-blue-900 mb-1 text-sm">📍 Consultar cobertura por CEP (LABI)</p>
-            <p class="text-xs text-gray-500 mb-3">Verifique se o CEP do membro tem cobertura de coleta domiciliar LABI.</p>
-            <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank"
-               class="inline-block bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-blue-800 transition">
-              🔍 Abrir busca por CEP
-            </a>
-          </div>
-
-          <!-- Widget Cobertura de Exame -->
-          <div class="border border-indigo-200 bg-indigo-50 rounded p-4 mb-6">
-            <p class="font-semibold text-indigo-900 mb-1 text-sm">🔬 Consultar cobertura do exame (LABI)</p>
-            <p class="text-xs text-gray-500 mb-1">Cole um ou mais nomes de exames ou códigos TUSS — um por linha ou separados por vírgula.</p>
-            <p class="text-xs text-gray-400 mb-3">💡 Para pedidos em PDF ou imagem: abra o arquivo, copie os nomes dos exames e cole aqui.</p>
-            <textarea id="exam-input" rows="3"
-              class="w-full border border-indigo-200 rounded p-2 text-sm mb-2 focus:outline-none focus:border-indigo-400"
-              placeholder="Ex: Hemograma completo&#10;40311018&#10;TSH, glicose, colesterol"></textarea>
-            <button onclick="buscarExames()"
-              class="bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-indigo-800 transition">
-              Buscar cobertura
-            </button>
-            <div id="exam-results" class="mt-3"></div>
-          </div>
-
           <div class="grid sm:grid-cols-2 gap-3 mb-6">
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
             <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
@@ -927,6 +902,31 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
           <h3 class="sec-title">Exames e convênios sem cobertura</h3>
           <p class="body-text">O membro deve procurar a rede do seu convênio médico para agendar com um prestador credenciado. Todos os pedidos dos médicos Vitta são assinados digitalmente e têm validade nacional.</p>
+
+          <!-- Widget CEP -->
+          <div class="border border-blue-200 bg-blue-50 rounded p-4 mb-4 mt-6">
+            <p class="font-semibold text-blue-900 mb-1 text-sm">📍 Consultar cobertura por CEP</p>
+            <p class="text-xs text-gray-500 mb-3">Verifique se o CEP do membro tem cobertura de coleta domiciliar.</p>
+            <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank"
+               class="inline-block bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-blue-800 transition">
+              🔍 Abrir busca por CEP
+            </a>
+          </div>
+
+          <!-- Widget Cobertura de Exame -->
+          <div class="border border-indigo-200 bg-indigo-50 rounded p-4 mb-2">
+            <p class="font-semibold text-indigo-900 mb-1 text-sm">🔬 Consultar cobertura do exame</p>
+            <p class="text-xs text-gray-500 mb-1">Cole um ou mais nomes de exames ou códigos TUSS — um por linha ou separados por vírgula.</p>
+            <p class="text-xs text-gray-400 mb-3">💡 Para pedidos em PDF ou imagem: abra o arquivo, copie os nomes dos exames e cole aqui.</p>
+            <textarea id="exam-input" rows="3"
+              class="w-full border border-indigo-200 rounded p-2 text-sm mb-2 focus:outline-none focus:border-indigo-400"
+              placeholder="Ex: Hemograma completo&#10;40311018&#10;TSH, glicose, colesterol"></textarea>
+            <button onclick="buscarExames()"
+              class="bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded hover:bg-indigo-800 transition">
+              Buscar cobertura
+            </button>
+            <div id="exam-results" class="mt-3"></div>
+          </div>
         </div>
 
         <!-- ── TERAPIAS ── -->

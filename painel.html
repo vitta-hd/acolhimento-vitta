@@ -1724,20 +1724,48 @@ function appendMsg(text,who,sec){
   msgs.scrollTop=msgs.scrollHeight;
 }
 
+function excerptFromSection(secId, keywords){
+  var el=document.getElementById('sec-'+secId);
+  if(!el) return null;
+  // Coleta todos os parágrafos e itens de lista da seção
+  var texts=[];
+  el.querySelectorAll('p,li,div.rule-box,div.highlight-box').forEach(function(n){
+    var t=(n.innerText||n.textContent||'').replace(/\s+/g,' ').trim();
+    if(t.length>30) texts.push(t);
+  });
+  if(!texts.length) return null;
+  // Pontua cada parágrafo pelos keywords
+  var best=null, bestScore=-1;
+  texts.forEach(function(t){
+    var tn=normalizar(t);
+    var score=0;
+    keywords.forEach(function(w){ if(tn.indexOf(w)>=0) score++; });
+    if(score>bestScore){ bestScore=score; best=t; }
+  });
+  // Trunca em ~220 chars
+  if(best && best.length>220) best=best.substring(0,220).replace(/\s\S+$/,'')+'…';
+  return best;
+}
+
 function findAnswer(q){
+  var words=q.split(' ').filter(function(w){return w.length>2;});
+
   // Busca no índice de perguntas
   var best=null, bestScore=0;
   SEARCH_INDEX.forEach(function(item){
     var score=0;
-    var words=q.split(' ').filter(function(w){return w.length>2;});
     words.forEach(function(w){
       if(normalizar(item.q).indexOf(w)>=0) score++;
     });
     if(score>bestScore){bestScore=score;best=item;}
   });
+
   if(best && bestScore>=1){
-    return {text:'Encontrei informações sobre "'+best.q+'" na seção indicada. Clique abaixo para ver o conteúdo completo.', sec:best.sec};
+    var excerpt=excerptFromSection(best.sec, words);
+    var text=excerpt||'Clique abaixo para ver o conteúdo completo.';
+    return {text:text, sec:best.sec};
   }
+
   // Busca por seção por palavra-chave
   var map={
     'plantao':'plantao','urgencia':'plantao','pronto':'plantao',
@@ -1751,6 +1779,7 @@ function findAnswer(q){
     'psicologa':'terapias','psicologia':'terapias','nutricao':'terapias','terapeuta':'terapias',
     'particular':'particular','fora plano':'particular',
     'medicamento':'omni','remedio':'omni','farmacia':'omni','omni':'omni',
+    'ativo':'omni','ativa':'omni','ativacao':'omni',
     'convenio':'rede','rede credenciada':'rede','bradesco':'rede','unimed':'rede','amil':'rede','sulamerica':'rede',
     'dependente':'agendamentos','filho':'agendamentos','menor':'agendamentos','especialidade':'agendamentos',
     'capitado':'limitadores','subsidiado':'limitadores'
@@ -1759,7 +1788,11 @@ function findAnswer(q){
   Object.keys(map).forEach(function(k){
     if(q.indexOf(normalizar(k))>=0) found=map[k];
   });
-  if(found) return {text:'Encontrei conteúdo relacionado. Clique abaixo para ver a seção completa.', sec:found};
+  if(found){
+    var excerpt=excerptFromSection(found, words);
+    return {text:excerpt||'Clique abaixo para ver a seção completa.', sec:found};
+  }
+
   return {text:'Não encontrei uma resposta específica para essa dúvida. Tente reformular ou consulte diretamente pelo WhatsApp da Vitta: 11 4949-3663.', sec:null};
 }
 

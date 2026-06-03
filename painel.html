@@ -1052,6 +1052,7 @@ if(sessionStorage.getItem('vitta-auth')==='1'){
 
 <script>
 function showTab(t){
+  document.getElementById('content-area').style.display='';
   document.getElementById('tab-elig').classList.toggle('hidden', t!=='elig');
   document.getElementById('tab-rules').classList.toggle('hidden', t!=='rules');
   document.getElementById('btn-elig').classList.toggle('active', t==='elig');

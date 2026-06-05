@@ -171,6 +171,25 @@
 </head>
 <body>
 
+<!-- ── TELA DE SENHA ── -->
+<div id="lock-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
+  <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
+    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
+         style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
+    <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Análise de Elegibilidade</h1>
+    <input id="lock-input" type="password" placeholder="Digite a senha"
+      onkeydown="if(event.key==='Enter')checkPass()"
+      style="width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;box-sizing:border-box"/>
+    <p id="lock-err" style="color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px"></p>
+    <button onclick="checkPass()"
+      style="margin-top:16px;width:100%;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer;border-radius:6px">
+      Entrar
+    </button>
+  </div>
+</div>
+
+<div id="main-content" style="display:none">
+
 <h1>Elegibilidade para Acolhimento Vitta</h1>
 <p class="subtitle">Análise baseada nos critérios definidos pela equipe — Amil Saúde / Vitta · Carga: maio 2026</p>
 
@@ -1846,8 +1865,24 @@ updateCounts();
   document.getElementById(id).addEventListener('change', applyFilters)
 );
 document.getElementById('f-nome').addEventListener('input', applyFilters);
+
+function checkPass(){
+  var v=document.getElementById('lock-input').value;
+  if(v==='Deivid16@'){
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    sessionStorage.setItem('eleg-auth','1');
+  } else {
+    document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
+    document.getElementById('lock-input').value='';
+    document.getElementById('lock-input').focus();
+  }
+}
+if(sessionStorage.getItem('eleg-auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+}
 </script>
 
-
-
+</div>
 </body></html>

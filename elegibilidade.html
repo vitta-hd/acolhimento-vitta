@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)file:///C:/Users/andressa.matias/Downloads/acolhimentoanalise%20(1).html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análise de Elegibilidade – Acolhimento Vitta</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      padding: 32px 16px;
+    }
+    h1 { text-align: center; font-size: 1.6rem; color: #1a3a5c; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #555; font-size: 0.92rem; margin-bottom: 24px; }
+
+    /* Criteria legend */
+    .criteria {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      justify-content: center; margin-bottom: 24px;
+    }
+    .criteria-item {
+      background: #fff; border: 1.5px solid #c8d8ea; border-radius: 8px;
+      padding: 8px 14px; font-size: 0.83rem; display: flex; align-items: center; gap: 8px;
+    }
+    .criteria-item .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-sim { background: #22a06b; }
+    .dot-nao { background: #e5534b; }
+
+    /* Summary bar */
+    .summary { display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .summary-card {
+      background: #fff; border-radius: 10px; padding: 14px 28px;
+      text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .summary-card .num { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.8rem; color: #666; margin-top: 2px; }
+    .num-sim { color: #22a06b; }
+    .num-nao { color: #e5534b; }
+
+    /* Filter bar */
+    .filter-bar {
+      background: #fff; border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 0.75rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .filter-group select, .filter-group input[type="text"] {
+      border: 1.5px solid #d0daea; border-radius: 7px; padding: 7px 10px;
+      font-size: 0.88rem; color: #222; background: #f8fafc; outline: none;
+      min-width: 170px;
+    }
+    .filter-group select:focus, .filter-group input[type="text"]:focus { border-color: #1a3a5c; }
+    .btn-reset {
+      padding: 7px 16px; border-radius: 7px; border: 1.5px solid #c8d8ea;
+      background: #fff; color: #555; font-size: 0.85rem; cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-reset:hover { background: #f0f4f8; }
+    .filter-count { align-self: flex-end; font-size: 0.83rem; color: #888; white-space: nowrap; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); font-size: 0.87rem;
+    }
+    thead tr { background: #1a3a5c; color: #fff; }
+    thead th { padding: 13px 11px; text-align: left; font-weight: 600; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #eef0f3; transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7faff; }
+    tbody tr.hidden { display: none; }
+    td { padding: 11px 11px; vertical-align: top; }
+
+    /* Badge */
+    .badge {
+      display: inline-block; padding: 4px 14px; border-radius: 20px;
+      font-weight: 700; font-size: 0.85rem; white-space: nowrap; cursor: default;
+    }
+    .sim { background: #d4f0e2; color: #186b47; }
+    .nao { background: #fde8e7; color: #a02020; }
+    .alterado { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+
+    /* Tags */
+    .tag {
+      display: inline-block; border-radius: 4px; padding: 2px 7px;
+      font-size: 0.76rem; margin: 2px 2px 2px 0; white-space: nowrap;
+    }
+    .tag.t-cirurgia   { background: #fef3e2; color: #a05a00; }
+    .tag.t-gestante   { background: #fce4f5; color: #8a1a6a; }
+    .tag.t-medicamento{ background: #e4f7ea; color: #1a6a35; }
+    .tag.t-oncologico { background: #fde8e7; color: #a02020; }
+    .tag.t-grave      { background: #f0e8fd; color: #6020a0; }
+    .tag.t-sem        { background: #f0f0f0; color: #666; }
+
+    .reason { color: #444; line-height: 1.5; }
+    .name { font-weight: 600; color: #1a3a5c; }
+    .paciente-label { font-size: 0.75rem; color: #888; }
+
+    /* Edit controls in each row */
+    .edit-panel {
+      margin-top: 8px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .edit-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .edit-row label { font-size: 0.74rem; color: #888; white-space: nowrap; }
+
+    .btn-edit {
+      background: none; border: 1.5px solid #c8d8ea; border-radius: 6px;
+      padding: 3px 10px; font-size: 0.78rem; color: #555; cursor: pointer;
+    }
+    .btn-edit:hover { background: #f0f4f8; }
+    .btn-edit.active { background: #1a3a5c; color: #fff; border-color: #1a3a5c; }
+
+    .btn-sim-toggle {
+      background: #d4f0e2; color: #186b47; border: 1.5px solid #aadbc5;
+      border-radius: 6px; padding: 3px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-nao-toggle {
+      background: #fde8e7; color: #a02020; border: 1.5px solid #f0b8b5;
+      border-radius: 6px; padding: 3px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-sim-toggle.sel, .btn-nao-toggle.sel { outline: 2.5px solid #1a3a5c; outline-offset: 1px; }
+
+    .motivo-select {
+      border: 1.5px solid #d0daea; border-radius: 6px; padding: 3px 8px;
+      font-size: 0.78rem; background: #f8fafc; color: #333; max-width: 260px;
+    }
+
+    .nota-input {
+      width: 100%; border: 1.5px solid #d0daea; border-radius: 6px;
+      padding: 5px 8px; font-size: 0.82rem; font-family: inherit; resize: vertical;
+      min-height: 36px; background: #fafcff; color: #333;
+    }
+    .nota-input:focus { border-color: #1a3a5c; outline: none; }
+    .nota-input::placeholder { color: #bbb; }
+
+    .nota-badge {
+      display: inline-block; background: #fff8e1; color: #7a5c00;
+      border: 1px solid #ffe08a; border-radius: 4px; font-size: 0.73rem;
+      padding: 1px 6px; margin-left: 4px; vertical-align: middle;
+    }
+
+    .row-modified td { background: #fffdf0; }
+
+
+.status-select {
+  border: 1.5px solid #d0daea; border-radius: 6px; padding: 4px 8px;
+  font-size: 0.78rem; background: #f8fafc; color: #333; width: 100%; max-width: 220px;
+}
+.st-nao-iniciado  { background:#f3f4f6; color:#555; }
+.st-andamento     { background:#dbeafe; color:#1e40af; }
+.st-aguardando    { background:#fef3c7; color:#92400e; }
+.st-relacionamento{ background:#ede9fe; color:#5b21b6; }
+.st-encaminhado   { background:#fce7f3; color:#9d174d; }
+.st-finalizado    { background:#d1fae5; color:#065f46; }
+.st-concluido     { background:#dcfce7; color:#14532d; font-weight:700; }
+.status-badge {
+  display:inline-block; border-radius:12px; padding:3px 10px;
+  font-size:0.75rem; white-space:nowrap;
+}
+    /* No results */
+    #no-results {
+      text-align: center; color: #aaa; padding: 32px;
+      display: none; font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Elegibilidade para Acolhimento Vitta</h1>
+<p class="subtitle">Análise baseada nos critérios definidos pela equipe — Amil Saúde / Vitta · Carga: maio 2026</p>
+
+<div class="criteria">
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Cirurgia futura agendada</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Gestante</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Toma medicamentos contínuos</div>
+  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Caso oncológico ou tratamento grave</div>
+  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas dúvidas ou consultas</div>
+  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas cirurgias passadas (sem continuidade)</div>
+</div>
+
+<div class="summary">
+  <div class="summary-card">
+    <div class="num num-sim" id="count-sim">16</div>
+    <div class="label">Elegíveis (SIM)</div>
+  </div>
+  <div class="summary-card">
+    <div class="num num-nao" id="count-nao">24</div>
+    <div class="label">Não elegíveis (NÃO)</div>
+  </div>
+  <div class="summary-card">
+    <div class="num" style="color:#1a3a5c" id="count-total">40</div>
+    <div class="label">Total visíveis</div>
+  </div>
+  <div class="summary-card">
+    <div class="num" style="color:#f59e0b" id="count-alterados">11</div>
+    <div class="label">Reclassificados</div>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Elegibilidade</label>
+    <select id="f-elegivel">
+      <option value="">Todos</option>
+      <option value="sim">Somente SIM</option>
+      <option value="nao">Somente NÃO</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Motivo</label>
+    <select id="f-motivo">
+      <option value="">Todos os motivos</option>
+      <option value="t-cirurgia">Cirurgia futura</option>
+      <option value="t-gestante">Gestante</option>
+      <option value="t-medicamento">Medicamento</option>
+      <option value="t-oncologico">Oncológico</option>
+      <option value="t-grave">Condição grave</option>
+      <option value="t-sem">Sem critério</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Buscar paciente</label>
+    <input type="text" id="f-nome" placeholder="Nome do paciente…">
+  </div>
+  <div class="filter-group">
+    <label>Com anotação</label>
+    <select id="f-nota">
+      <option value="">Todos</option>
+      <option value="com">Com anotação</option>
+      <option value="sem">Sem anotação</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Status</label>
+    <select id="f-status">
+      <option value="">Todos os status</option>
+      <option value="nao-iniciado">Não iniciado</option>
+      <option value="andamento">Em andamento</option>
+      <option value="aguardando">Aguardando retorno membro</option>
+      <option value="relacionamento">Em andamento relacionamento</option>
+      <option value="encaminhado">Encaminhado operadora</option>
+      <option value="finalizado">Finalizado</option>
+      <option value="concluido">Concluído</option>
+    </select>
+  </div>
+  <button class="btn-reset" onclick="resetFiltros()">Limpar filtros</button>
+  <span class="filter-count" id="filter-count"></span>
+</div>
+
+<div class="table-wrap">
+<table id="main-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Paciente</th>
+      <th>Elegível?</th>
+      <th>Motivos</th>
+      <th>Justificativa / Anotações</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+
+    <tr data-id="1" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>1</td>
+      <td>
+        <div class="name">Francisco Hiályson F. Medeiros</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td class="td-status">
+        <span class="badge nao">NÃO</span>
+      </td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Faz uso contínuo de Desvenlafaxina (antidepressivo/ansiolítico) com acompanhamento psiquiátrico ativo.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;1&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;1&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;1&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;1&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="2" data-orig-status="sim" data-tags="t-oncologico t-medicamento t-cirurgia" data-current-status="sim" data-current-tags="t-oncologico t-medicamento t-cirurgia" data-has-nota="0" class="">
+      <td>2</td>
+      <td>
+        <div class="name">Cristiane Amaro Padilha</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Câncer de mama (C50), acompanhamento oncológico ativo. Procedimentos cirúrgicos na coluna e joelhos pendentes. Múltiplos medicamentos em uso.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;2&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;2&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;2&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;2&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="3" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>3</td>
+      <td>
+        <div class="name">Fabiano Vitorino A. Ferreira</div>
+        <div class="paciente-label">SP · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Apenas acompanhamento psicológico. Sem medicamentos, sem cirurgia futura, sem condição grave ou oncológica.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;3&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;3&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;3&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;3&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="4" data-orig-status="sim" data-tags="t-cirurgia t-oncologico" data-current-status="sim" data-current-tags="t-cirurgia t-oncologico" data-has-nota="0" class="">
+      <td>4</td>
+      <td>
+        <div class="name">Karine Melro de Almeida</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-oncologico">Oncológico</span></td>
+      <td>
+        <div class="reason">Salpingooforectomia esquerda agendada para 08/06/2026. Teratoma no ovário com biópsia pós-cirúrgica pendente.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;4&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;4&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;4&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;4&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="5" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>5</td>
+      <td>
+        <div class="name">Raphaela Cristina A. de Araújo</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Múltiplos medicamentos psiquiátricos: Fluoxetina, Duloxetina, Carbolitium, Bupropiona e Risperidona. Diagnóstico de Burnout/Depressão/Ansiedade.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;5&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;5&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;5&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;5&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="6" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>6</td>
+      <td>
+        <div class="name">João Carlos Nunes Pereira</div>
+        <div class="paciente-label">RJ · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão e Arritmia Cardíaca com uso contínuo de Losartana, Carvedilol, Espironolactona e Dapagliflozina.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;6&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;6&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;6&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;6&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="7" data-orig-status="sim" data-tags="t-cirurgia" data-current-status="sim" data-current-tags="t-cirurgia" data-has-nota="0" class="">
+      <td>7</td>
+      <td>
+        <div class="name">Kleyder Erlandes Santos</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Procedimento cirúrgico bucomaxilofacial em planejamento, aguardando autorização de materiais pelo plano.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;7&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;7&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;7&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;7&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="8" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>8</td>
+      <td>
+        <div class="name">Hugo Ibernom Leitão Neto</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Apenas consulta com gastroenterologista e exames agendados. Sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;8&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;8&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;8&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;8&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="9" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>9</td>
+      <td>
+        <div class="name">Willian Cândido dos Reis Souza</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertireoidismo com uso contínuo de Levotiroxina. Acompanhamento endocrinológico periódico.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;9&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;9&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;9&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;9&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="10" data-orig-status="sim" data-tags="t-grave t-medicamento" data-current-status="sim" data-current-tags="t-grave t-medicamento" data-has-nota="0" class="">
+      <td>10</td>
+      <td>
+        <div class="name">Samara Felipe Severino</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-grave">Condição grave</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Retocolite Ulcerativa Severa (K51) com medicamento biológico intravenoso (Mezalazina, Imusuprex + biológico na veia). Alta complexidade.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;10&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;10&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;10&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;10&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="11" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>11</td>
+      <td>
+        <div class="name">Jonas Matteo de Jesus Santos</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Suspeita de TEA e TDAH. Sem medicamentos prescritos, apenas terapias (psicólogo, fonoaudióloga, terapeuta ocupacional).</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;11&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;11&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;11&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;11&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="12" data-orig-status="sim" data-tags="t-medicamento t-cirurgia" data-current-status="sim" data-current-tags="t-medicamento t-cirurgia" data-has-nota="0" class="">
+      <td>12</td>
+      <td>
+        <div class="name">Gabriel de Souza T. Correia</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Artrite Idiopática Juvenil (M08.0) com Etanercepte semanal (biológico). Recebimento e aplicação da medicação é procedimento recorrente agendado.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;12&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;12&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;12&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;12&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="13" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>13</td>
+      <td>
+        <div class="name">Karolyne Albani Gaigher</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Sem condição crônica, medicamentos, cirurgia futura, gestação ou oncológico declarado.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;13&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;13&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;13&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;13&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="14" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>14</td>
+      <td>
+        <div class="name">Felipe Rodrigues Ramos</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Cirurgia no joelho em 2019. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;14&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;14&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;14&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;14&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="15" data-orig-status="sim" data-tags="t-cirurgia t-medicamento" data-current-status="sim" data-current-tags="t-cirurgia t-medicamento" data-has-nota="0" class="">
+      <td>15</td>
+      <td>
+        <div class="name">Reinaldo José P. Marccelli</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Cirurgia de catarata agendada para 13/07. Uso contínuo de Benicar 40mg (hipertensão).</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;15&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;15&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;15&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;15&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="16" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>16</td>
+      <td>
+        <div class="name">Robson Nunes Martins</div>
+        <div class="paciente-label">ES · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;16&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;16&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;16&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;16&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="17" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>17</td>
+      <td>
+        <div class="name">Leonardo Rodrigues Plouvier</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Apendicite na adolescência. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;17&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;17&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;17&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;17&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="18" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>18</td>
+      <td>
+        <div class="name">Rejane Faria da Cruz</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Diabetes com uso contínuo de Metformina XR 500mg. Acompanhamento com endocrinologista/gastroenterologista.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;18&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;18&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;18&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;18&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="19" data-orig-status="sim" data-tags="t-cirurgia t-medicamento" data-current-status="sim" data-current-tags="t-cirurgia t-medicamento" data-has-nota="0" class="">
+      <td>19</td>
+      <td>
+        <div class="name">Taisa Macedo de Lima</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Cirurgia de retirada da vesícula prevista para agosto/setembro. Uso de Alenia, Losartana, Escitalopram e Clonazepam. Asma, pânico e colelitíase.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;19&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;19&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;19&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;19&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="20" data-orig-status="sim" data-tags="t-medicamento" data-current-status="sim" data-current-tags="t-medicamento" data-has-nota="0" class="">
+      <td>20</td>
+      <td>
+        <div class="name">Pietra da Cruz Coelho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TEA + TDAH diagnosticados, uso de Canabidiol prescrito e acompanhamento psiquiátrico/psicológico contínuo.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;20&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;20&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;20&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;20&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="21" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>21</td>
+      <td>
+        <div class="name">Débora Kaline F. de S. Miranda</div>
+        <div class="paciente-label">RN · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Apenas uso de anticoncepcional. Cesarianas no passado sem continuidade. Sem condição ativa.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;21&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;21&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;21&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;21&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="22" data-orig-status="sim" data-tags="t-cirurgia t-medicamento" data-current-status="sim" data-current-tags="t-cirurgia t-medicamento" data-has-nota="0" class="">
+      <td>22</td>
+      <td>
+        <div class="name">Maria Celia Viana de Oliveira</div>
+        <div class="paciente-label">AM · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Aguardando infiltração e bloqueio tibial. Limitação física (dificuldade de andar). Uso de medicamentos para dor.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;22&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;22&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;22&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;22&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="23" data-orig-status="sim" data-tags="t-oncologico t-cirurgia t-medicamento" data-current-status="sim" data-current-tags="t-oncologico t-cirurgia t-medicamento" data-has-nota="0" class="">
+      <td>23</td>
+      <td>
+        <div class="name">Thais Brasileiro da Fonseca</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Câncer de mama (C50). Aguardando cirurgia de reconstrução pelo INCA + simetrização posterior. Uso de ferro e B12.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;23&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;23&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;23&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;23&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="24" data-orig-status="sim" data-tags="t-cirurgia" data-current-status="sim" data-current-tags="t-cirurgia" data-has-nota="0" class="">
+      <td>24</td>
+      <td>
+        <div class="name">Vânia Lúcia Santiago Bela</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Cirurgia de varizes futura prevista. Endometriose profunda com acompanhamento pós-operatório contínuo.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;24&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;24&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;24&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;24&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="25" data-orig-status="sim" data-tags="t-cirurgia t-medicamento t-grave" data-current-status="sim" data-current-tags="t-cirurgia t-medicamento t-grave" data-has-nota="0" class="">
+      <td>25</td>
+      <td>
+        <div class="name">Maura Lima Pereira</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
+      <td>
+        <div class="reason">Osteossíntese de tornozelo, escleroterapia futura (3 sessões), fisioterapia diária, uso de Dobeven. Investigação de encondroma na tíbia.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;25&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;25&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;25&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;25&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="26" data-orig-status="sim" data-tags="t-oncologico t-medicamento" data-current-status="sim" data-current-tags="t-oncologico t-medicamento" data-has-nota="0" class="">
+      <td>26</td>
+      <td>
+        <div class="name">Elisa Maria Carvalho Scarpa Pinto</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Câncer de mama em remissão (C50), uso contínuo de Tamoxifeno. Exames de imagem periódicos para monitoramento.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;26&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;26&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;26&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;26&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="27" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>27</td>
+      <td>
+        <div class="name">Miguel Scarpa Ramos</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TDAH com uso de Imipramina (psicotrópico contínuo) e acompanhamento psicológico semanal.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;27&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;27&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;27&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;27&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="28" data-orig-status="sim" data-tags="t-cirurgia" data-current-status="sim" data-current-tags="t-cirurgia" data-has-nota="0" class="">
+      <td>28</td>
+      <td>
+        <div class="name">Eloá Teixeira Nistaldo</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Adenoidectomia agendada para 02/06/2026.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;28&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;28&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;28&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;28&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="29" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>29</td>
+      <td>
+        <div class="name">Leila Gonçalves Souto Leal</div>
+        <div class="paciente-label">SP · Prata NC</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Cesariana no passado. Sem condição ativa, sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;29&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;29&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;29&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;29&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="30" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>30</td>
+      <td>
+        <div class="name">Rebecca Mota Alves</div>
+        <div class="paciente-label">RJ · Bronze RJ</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">TEA diagnosticado com uso contínuo de Risperidona e acompanhamento neurológico.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;30&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;30&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;30&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;30&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="31" data-orig-status="sim" data-tags="t-cirurgia" data-current-status="sim" data-current-tags="t-cirurgia" data-has-nota="0" class="">
+      <td>31</td>
+      <td>
+        <div class="name">Vanessa Dalmasio de Lima</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
+      <td>
+        <div class="reason">Miomectomia aguardando data final (autorização em andamento). Pré-operatórios já concluídos.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;31&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;31&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;31&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;31&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="32" data-orig-status="sim" data-tags="t-gestante t-medicamento t-oncologico" data-current-status="sim" data-current-tags="t-gestante t-medicamento t-oncologico" data-has-nota="0" class="">
+      <td>32</td>
+      <td>
+        <div class="name">Paula Citelli Coutinho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge sim">SIM</span></td>
+      <td class="td-tags"><span class="tag t-gestante">Gestante</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-oncologico">Oncológico</span></td>
+      <td>
+        <div class="reason">Gestante (28 semanas e 5 dias), parto previsto para agosto. Ausência de tireoide com Levotiroxina contínua. Histórico de câncer de tireoide e pele em monitoramento.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle sel" onclick="toggleStatus(&#39;32&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle" onclick="toggleStatus(&#39;32&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;32&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;32&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="33" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>33</td>
+      <td>
+        <div class="name">Luiz Rafael Soares Cezario</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde, sem medicamentos, sem cirurgia futura, sem gestação.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;33&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;33&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;33&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;33&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="34" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>34</td>
+      <td>
+        <div class="name">Ana da Conceição Castilho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Diabetes com uso contínuo de Glifage (metformina) e vitaminas. Acompanhamento endocrinológico e ginecológico.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;34&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;34&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;34&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;34&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="35" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>35</td>
+      <td>
+        <div class="name">Edvar Azevedo de Abreu Júnior</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão e colesterol com Losartana, Anlodipino, Rosuvastatina e Ezetimiba.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;35&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;35&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;35&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;35&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="36" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>36</td>
+      <td>
+        <div class="name">Luis Eduardo Soares da Silva Filho</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Sequelas neurológicas pós-tumor cerebral. Sem medicamentos declarados. Apenas fisioterapia, fonoaudiologia e psicologia.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;36&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;36&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;36&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;36&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="37" data-orig-status="nao" data-tags="t-medicamento" data-current-status="nao" data-current-tags="t-medicamento" data-has-nota="0">
+      <td>37</td>
+      <td>
+        <div class="name">Elisabeth Ximenes Pecly</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
+      <td>
+        <div class="reason">Hipertensão com uso contínuo de Losartana e Anlodipino.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;37&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;37&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;37&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;37&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="38" data-orig-status="nao" data-tags="t-medicamento t-grave" data-current-status="nao" data-current-tags="t-medicamento t-grave" data-has-nota="0">
+      <td>38</td>
+      <td>
+        <div class="name">Edilamar Duarte Dias</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
+      <td>
+        <div class="reason">Dissecção da aorta (condição cardiovascular grave), uso de Atenolol, Losartana, Hidroclorotiazida e Anlodipino. Acompanhamento cardiológico contínuo.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;38&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;38&#39;,&#39;nao&#39;)">NÃO</button>
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;38&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;38&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="39" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>39</td>
+      <td>
+        <div class="name">Murilo Terra de Siqueira</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;39&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;39&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;39&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;39&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+    <tr data-id="40" data-orig-status="nao" data-tags="t-sem" data-current-status="nao" data-current-tags="t-sem" data-has-nota="0" class="">
+      <td>40</td>
+      <td>
+        <div class="name">Raimundo José de Santana</div>
+        <div class="paciente-label">RJ · Amil S380</div>
+      </td>
+      <td class="td-status"><span class="badge nao">NÃO</span></td>
+      <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
+      <td>
+        <div class="reason">Uso apenas de anti-inflamatório pontual. Sem condição crônica, cirurgia futura, gestação ou oncológico.</div>
+        <div class="edit-panel">
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle" onclick="toggleStatus(&#39;40&#39;,&#39;sim&#39;)">SIM</button>
+        <button class="btn-nao-toggle sel" onclick="toggleStatus(&#39;40&#39;,&#39;nao&#39;)">NÃO</button>
+        
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo(&#39;40&#39;, this)" multiple="" size="1" style="min-width:200px">
+          <option value="t-cirurgia">Cirurgia futura</option><option value="t-gestante">Gestante</option><option value="t-medicamento">Medicamento</option><option value="t-oncologico">Oncológico</option><option value="t-grave">Condição grave</option><option value="t-sem">Sem critério</option>
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota(&#39;40&#39;, this.value)"></textarea>
+      </div>
+    </div>
+      </td>
+    
+      <td class="td-acomp"></td>
+    </tr>
+
+  </tbody>
+</table>
+<p id="no-results" style="display: none;">Nenhum paciente encontrado com os filtros selecionados.</p>
+</div>
+
+<script>
+// ── State (persisted in localStorage) ──────────────────────────────────────
+const STORE_KEY = 'acolhimento_overrides_v3';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveState(s) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(s));
+}
+
+let state = loadState(); // { "1": { status, motivos:[], nota }, ... }
+
+// Tag labels for display
+const TAG_LABELS = {
+  't-cirurgia':    'Cirurgia futura',
+  't-gestante':    'Gestante',
+  't-medicamento': 'Medicamento',
+  't-oncologico':  'Oncológico',
+  't-grave':       'Condição grave',
+  't-sem':         'Sem critério'
+};
+
+// ── Build edit panels ────────────────────────────────────────────────────────
+function buildEditPanels() {
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const panel = tr.querySelector('.edit-panel');
+    const origStatus = tr.dataset.origStatus;
+    const s = state[id] || {};
+
+    panel.innerHTML = `
+      <div class="edit-row" style="margin-top:6px">
+        <label>Reclassificar:</label>
+        <button class="btn-sim-toggle${(s.status||origStatus)==='sim'?' sel':''}" onclick="toggleStatus('${id}','sim')">SIM</button>
+        <button class="btn-nao-toggle${(s.status||origStatus)==='nao'?' sel':''}" onclick="toggleStatus('${id}','nao')">NÃO</button>
+        ${s.status && s.status !== origStatus ? '<span style="font-size:0.74rem;color:#f59e0b;margin-left:4px">● alterado</span>' : ''}
+      </div>
+      <div class="edit-row">
+        <label>Motivo:</label>
+        <select class="motivo-select" onchange="changeMotivo('${id}', this)" multiple size="1" style="min-width:200px">
+          ${Object.entries(TAG_LABELS).map(([k,v]) => `<option value="${k}"${(s.motivos||[]).includes(k)?' selected':''}>${v}</option>`).join('')}
+        </select>
+        <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
+      </div>
+      <div class="edit-row" style="flex-direction:column;align-items:stretch;gap:3px">
+        <label>Anotação:</label>
+        <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota('${id}', this.value)">${s.nota||''}</textarea>
+      </div>
+      <div class="edit-row" style="margin-top:4px">
+        <label>Status:</label>
+        <select class="status-select" onchange="saveStatus('${id}', this.value)">
+          <option value="nao-iniciado"${(s.status_acomp||'nao-iniciado')==='nao-iniciado'?' selected':''}>Não iniciado</option>
+          <option value="andamento"${(s.status_acomp||'')==='andamento'?' selected':''}>Em andamento</option>
+          <option value="aguardando"${(s.status_acomp||'')==='aguardando'?' selected':''}>Aguardando retorno membro</option>
+          <option value="relacionamento"${(s.status_acomp||'')==='relacionamento'?' selected':''}>Em andamento relacionamento</option>
+          <option value="encaminhado"${(s.status_acomp||'')==='encaminhado'?' selected':''}>Encaminhado operadora</option>
+          <option value="finalizado"${(s.status_acomp||'')==='finalizado'?' selected':''}>Finalizado</option>
+          <option value="concluido"${(s.status_acomp||'')==='concluido'?' selected':''}>Concluído</option>
+        </select>
+      </div>
+    `;
+
+    const statusMap = {
+      'nao-iniciado':'Não iniciado','andamento':'Em andamento','aguardando':'Aguardando retorno',
+      'relacionamento':'Em andamento relacionamento','encaminhado':'Encaminhado operadora',
+      'finalizado':'Finalizado','concluido':'Concluído'
+    };
+    const stClass = {'nao-iniciado':'st-nao-iniciado','andamento':'st-andamento','aguardando':'st-aguardando',
+      'relacionamento':'st-relacionamento','encaminhado':'st-encaminhado','finalizado':'st-finalizado','concluido':'st-concluido'};
+    const sa = s.status_acomp || 'nao-iniciado';
+    const acompTd = tr.querySelector('.td-acomp');
+    if(acompTd) acompTd.innerHTML = `<span class="status-badge ${stClass[sa]}">${statusMap[sa]}</span>`;
+  });
+}
+
+function toggleStatus(id, newStatus) {
+  if (!state[id]) state[id] = {};
+  const tr = document.querySelector(`tr[data-id="${id}"]`);
+  const origStatus = tr.dataset.origStatus;
+  state[id].status = newStatus;
+  saveState(state);
+  applyRowState(tr);
+  buildEditPanels();
+  applyFilters();
+  updateCounts();
+}
+
+function changeMotivo(id, sel) {
+  if (!state[id]) state[id] = {};
+  const chosen = Array.from(sel.selectedOptions).map(o => o.value);
+  state[id].motivos = chosen;
+  saveState(state);
+  applyRowState(document.querySelector(`tr[data-id="${id}"]`));
+  applyFilters();
+}
+
+function saveNota(id, val) {
+  if (!state[id]) state[id] = {};
+  state[id].nota = val;
+  saveState(state);
+  applyRowState(document.querySelector(`tr[data-id="${id}"]`));
+  applyFilters();
+  updateCounts();
+}
+
+function saveStatus(id, val) {
+  if (!state[id]) state[id] = {};
+  state[id].status_acomp = val;
+  saveState(state);
+  buildEditPanels();
+}
+
+function applyRowState(tr) {
+  const id = tr.dataset.id;
+  const origStatus = tr.dataset.origStatus;
+  const s = state[id] || {};
+  const curStatus = s.status || origStatus;
+
+  // Update badge
+  const badge = tr.querySelector('.td-status .badge');
+  badge.className = `badge ${curStatus}`;
+  badge.textContent = curStatus === 'sim' ? 'SIM' : 'NÃO';
+  if (s.status && s.status !== origStatus) badge.classList.add('alterado');
+
+  // Update tags
+  const motivos = s.motivos && s.motivos.length ? s.motivos : null;
+  const tagTd = tr.querySelector('.td-tags');
+  const origTags = tr.dataset.tags || '';
+  const activeTags = motivos || origTags.split(' ').filter(Boolean);
+  tagTd.innerHTML = activeTags.map(t =>
+    `<span class="tag ${t}">${TAG_LABELS[t] || t}</span>`
+  ).join('');
+
+  // Update data-tags for filtering
+  tr.dataset.currentTags = activeTags.join(' ');
+  tr.dataset.currentStatus = curStatus;
+  tr.dataset.hasNota = (s.nota && s.nota.trim()) ? '1' : '0';
+
+  // Visual modified indicator
+  tr.classList.toggle('row-modified', !!(s.status && s.status !== origStatus));
+}
+
+// ── Filtering ────────────────────────────────────────────────────────────────
+function applyFilters() {
+  const fElegivel = document.getElementById('f-elegivel').value;
+  const fMotivo   = document.getElementById('f-motivo').value;
+  const fNome     = document.getElementById('f-nome').value.toLowerCase().trim();
+  const fNota     = document.getElementById('f-nota').value;
+  const fStatus   = document.getElementById('f-status').value;
+
+  let visible = 0;
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const status   = tr.dataset.currentStatus || tr.dataset.origStatus;
+    const tags     = tr.dataset.currentTags || tr.dataset.tags || '';
+    const nome     = tr.querySelector('.name').textContent.toLowerCase();
+    const hasNota  = tr.dataset.hasNota === '1';
+
+    let show = true;
+    if (fElegivel && status !== fElegivel) show = false;
+    if (fMotivo   && !tags.includes(fMotivo)) show = false;
+    if (fNome     && !nome.includes(fNome))   show = false;
+    if (fNota === 'com' && !hasNota) show = false;
+    if (fNota === 'sem' && hasNota)  show = false;
+    if (fStatus) {
+      const sa = (state[tr.dataset.id]||{}).status_acomp || 'nao-iniciado';
+      if (sa !== fStatus) show = false;
+    }
+
+    tr.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  document.getElementById('filter-count').textContent =
+    visible < 40 ? `Exibindo ${visible} de 40` : '';
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  updateCounts();
+}
+
+function resetFiltros() {
+  document.getElementById('f-elegivel').value = '';
+  document.getElementById('f-motivo').value   = '';
+  document.getElementById('f-nome').value     = '';
+  document.getElementById('f-nota').value     = '';
+  document.getElementById('f-status').value  = '';
+  applyFilters();
+}
+
+// ── Counts ───────────────────────────────────────────────────────────────────
+function updateCounts() {
+  let sim = 0, nao = 0, alterados = 0;
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    if (tr.classList.contains('hidden')) return;
+    const status = tr.dataset.currentStatus || tr.dataset.origStatus;
+    if (status === 'sim') sim++; else nao++;
+  });
+  document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const s = state[id] || {};
+    if (s.status && s.status !== tr.dataset.origStatus) alterados++;
+  });
+  document.getElementById('count-sim').textContent = sim;
+  document.getElementById('count-nao').textContent = nao;
+  document.getElementById('count-total').textContent = sim + nao;
+  document.getElementById('count-alterados').textContent = alterados;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll('tr[data-id]').forEach(tr => {
+  tr.dataset.currentStatus = tr.dataset.origStatus;
+  tr.dataset.currentTags   = tr.dataset.tags || '';
+  tr.dataset.hasNota       = '0';
+  applyRowState(tr);
+});
+
+buildEditPanels();
+updateCounts();
+
+['f-elegivel','f-motivo','f-nota','f-status'].forEach(id =>
+  document.getElementById(id).addEventListener('change', applyFilters)
+);
+document.getElementById('f-nome').addEventListener('input', applyFilters);
+</script>
+
+
+
+</body></html>

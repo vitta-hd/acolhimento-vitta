@@ -101,6 +101,17 @@
     .name { font-weight: 600; color: #1a3a5c; }
     .paciente-label { font-size: 0.75rem; color: #888; }
     .paciente-contact { font-size: 0.71rem; color: #9ca3af; margin-top: 1px; }
+    .extra-info { margin-top: 8px; border-top: 1px dashed #e5e7eb; padding-top: 7px; display: flex; flex-direction: column; gap: 3px; }
+    .extra-row { font-size: 0.78rem; color: #555; line-height: 1.45; }
+    .extra-label { font-weight: 600; color: #374151; }
+    /* Status chart */
+    #status-chart-wrap { background:#fff; border-radius:12px; padding:20px 24px; box-shadow:0 1px 4px rgba(0,0,0,.08); margin-bottom:24px; }
+    #status-chart-wrap h3 { font-size:.85rem; font-weight:700; color:#1a3a5c; margin-bottom:14px; text-transform:uppercase; letter-spacing:.04em; }
+    .sbar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:.8rem; }
+    .sbar-label { width:210px; flex-shrink:0; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sbar-track { flex:1; background:#f3f4f6; border-radius:6px; height:16px; overflow:hidden; }
+    .sbar-fill { height:100%; border-radius:6px; transition:width .4s; }
+    .sbar-count { width:28px; text-align:right; font-weight:700; color:#374151; flex-shrink:0; }
 
     /* Edit controls in each row */
     .edit-panel {
@@ -231,6 +242,12 @@
   </div>
 </div>
 
+<!-- Status chart -->
+<div id="status-chart-wrap">
+  <h3>📊 Distribuição por Status de Acompanhamento</h3>
+  <div id="status-chart"></div>
+</div>
+
 <!-- Filter bar -->
 <div class="filter-bar">
   <div class="filter-group">
@@ -311,6 +328,12 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Faz uso contínuo de Desvenlafaxina (antidepressivo/ansiolítico) com acompanhamento psiquiátrico ativo.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Ricardo Silva Oliveira</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Neuro clínica · (84) 3222-2764</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Sim</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> 26/06</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -347,6 +370,14 @@
       <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Câncer de mama (C50), acompanhamento oncológico ativo. Procedimentos cirúrgicos na coluna e joelhos pendentes. Múltiplos medicamentos em uso.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Elayne _ mariana - fernanda _ daniel cunha</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Rede dor _ caxias dor · (21) 2460-3600</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Ainda não possui agendamento</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Ressonancia mamografia ultra limpeza cateter</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Ainda nao marcado. Procedimento na coluna e joelhos por motivo ter afetado o cancer</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Preciso de acompanhamento dos meus médicos por causa do cancer</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -384,6 +415,13 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Apenas acompanhamento psicológico. Sem medicamentos, sem cirurgia futura, sem condição grave ou oncológica.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Giovanni</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Clinica Amoreira · (11) 5549-7894</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Até a migração não.</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Até a migração não.</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Não possuo</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -421,6 +459,11 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-oncologico">Oncológico</span></td>
       <td>
         <div class="reason">Salpingooforectomia esquerda agendada para 08/06/2026. Teratoma no ovário com biópsia pós-cirúrgica pendente.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Priscila Fonseca de Sousa</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Hospital Pan Americano · (21) 96709-6645</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim. Salpingooforectomia esquerda. 08/06/2026</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -458,6 +501,13 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Múltiplos medicamentos psiquiátricos: Fluoxetina, Duloxetina, Carbolitium, Bupropiona e Risperidona. Diagnóstico de Burnout/Depressão/Ansiedade.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Paulo Vitor</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Nossa Clínica · 32404700</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Psiquiatra e psicólogo (fisioterapia o plano não fez o repasse)</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Sangue- acompanhamento do Carbolitium</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> O plano não fez o repasse das fisioterapias. Foi solicitado relatório, foi feito, enviado, mas mesmo assim, até o momento não foi liberado. Entramos em contato e não nos deram retorno , nem prazo.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -494,6 +544,12 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Hipertensão e Arritmia Cardíaca com uso contínuo de Losartana, Carvedilol, Espironolactona e Dapagliflozina.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dr Elias</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Centrocor, Campos dos Goytacazes · (22) 2733-7306</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Urologista 30/05/2026, Cardiologista 03/06/2026</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Não há</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -530,6 +586,12 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Procedimento cirúrgico bucomaxilofacial em planejamento, aguardando autorização de materiais pelo plano.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Thiago Aragon Zanella</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Daniel e Zanella CBM Ltda · (27) 99901-6454</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Planejamento de procedimento cirúrgico em andamento, aguardando liberação dos materiais pelo plano de saúde.</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Meus procedimentos foram autorizados pela sul a américa e esta pendente somente a autorização formalizada dos materiais cirúrgicos para a clinica fornecedora, e estou aguardando essa liberação para poder marcar a cirurgia</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -567,6 +629,13 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Apenas consulta com gastroenterologista e exames agendados. Sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> nao sei</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> hospistal Advetista</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> gastro dia 29/05/2026</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> sim, 29/05/2026</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> nenhum</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -604,6 +673,14 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Hipertireoidismo com uso contínuo de Levotiroxina. Acompanhamento endocrinológico periódico.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dr. Hércules de Oliveira Marques Júnior</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> ONCOCLÍNICAS INSTITUTO DE CÂNCER DE MANAUS · (92) 3042-0345</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Sim, endocrinologista. 17/08/2026</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Sim, exames da tireoide. 06/07/2026.</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Não.</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Avaliar a possibilidade de manter a realização dos exames de sangue no laboratório SABIN, considerando que possuo histórico de acompanhamento e exames anteriores já realizados nesse laboratório.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -640,6 +717,14 @@
       <td class="td-tags"><span class="tag t-grave">Condição grave</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Retocolite Ulcerativa Severa (K51) com medicamento biológico intravenoso (Mezalazina, Imusuprex + biológico na veia). Alta complexidade.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Rodolpho</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Hospital Beda · (22) 2737-1500</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Medicação Biológica</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Medicação Biológica</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Medicação Biológica</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Retocolite Ulcerativa Severa , com necessidade de  acompanhamento médico e medicamento continuo.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -677,6 +762,14 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Suspeita de TEA e TDAH. Sem medicamentos prescritos, apenas terapias (psicólogo, fonoaudióloga, terapeuta ocupacional).</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Juliana Baltazar</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Ser Humano Clínica da Aprendizagem · (22) 99752-2998</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Não, apenas as terapias já programadas.</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> N/A</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> N/A</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> O Plano Amil em Macaé, não possui hospital de atendimento de emergência. Favor analisar novamente a possibilidade de continuar com o Sul América para colaboradores lotados na cidade de Macaé RJ</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -714,6 +807,14 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Artrite Idiopática Juvenil (M08.0) com Etanercepte semanal (biológico). Recebimento e aplicação da medicação é procedimento recorrente agendado.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Luis Fernando Barros Dutra Santos</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Rios Dor Freguesia/Jacarepagua · (21) 2448-3600</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Sim, reumatologista pediátrico 08-06-26</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Sim. Exame de sangue 23-05-26</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim. Recebimento da medicação de uso semanal</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Recebimento e aplicação do medicamento em casa</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -751,6 +852,9 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Sem condição crônica, medicamentos, cirurgia futura, gestação ou oncológico declarado.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Nada</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -788,6 +892,10 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Cirurgia no joelho em 2019. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Nenhum</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Nenhum</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -825,6 +933,14 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Cirurgia de catarata agendada para 13/07. Uso contínuo de Benicar 40mg (hipertensão).</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Otávio Moura Brasil</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Clínica Oftalmologica Moura Brasil · (21) 3515-9811</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Possuo cirurgia agendada para 13/07</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Já fiz todos os exames</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim dia 13/07</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Apenas q é a terceira vez que narco a cirurgia e tenho q mudar por mudança de plano</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -899,6 +1015,11 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Apendicite na adolescência. Sem condição ativa, sem medicamentos, sem cirurgia futura.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Não Aplicável</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Não Aplicável</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Não Aplicável</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -936,6 +1057,11 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Diabetes com uso contínuo de Metformina XR 500mg. Acompanhamento com endocrinologista/gastroenterologista.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dra Claudia Valeria T Lemos</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> SaraClin · (22) 2764-2073</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Não, estou tentando consulta</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -972,6 +1098,13 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Cirurgia de retirada da vesícula prevista para agosto/setembro. Uso de Alenia, Losartana, Escitalopram e Clonazepam. Asma, pânico e colelitíase.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dr. Lucas Missiba Brandão / Dr Otávio Costa Ribeiro Moraes / Dra Mona Lisa Medeiros de Araújo / Dra Sarah Jenner Nogueira Kruger</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Clínica Medic Class / Clínica Metaboliclin / Clínica São Lucas (Rede D’or) / Hospital Rede D’or · 552299888440155229972164755522981080121</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Psicóloga: 26/05 toda terça-feira 15:40h / Cirugião aparelho digestivo: 09/06 - 16:20h</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Já fiz alguns, outros ainda conseguirei encaixe</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> No mês de Agosto ou Setembro. Dependendo da quantidade de exames pré operatórios que o médico solicitar fazer.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1009,6 +1142,12 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">TEA + TDAH diagnosticados, uso de Canabidiol prescrito e acompanhamento psiquiátrico/psicológico contínuo.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Henrique Zanon / CRM 271144</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Blis</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Tenho terapia agendada toda semana</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Fui diagnosticada com Transtorno Espectro Autista e TDHA devido as crises de ansiedade diária, com isso faço as terapias semanais e acompanhamento com o psiquiatra sempre que necessário, pois como ja estou sendo medicada as consultas passam a ser mais longas.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1046,6 +1185,11 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Apenas uso de anticoncepcional. Cesarianas no passado sem continuidade. Sem condição ativa.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Não se aplica</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Não se aplica</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Não se aplica</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1083,6 +1227,12 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Aguardando infiltração e bloqueio tibial. Limitação física (dificuldade de andar). Uso de medicamentos para dor.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Doutor  Flavio de F. Bezerra</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Hospital  adventista  de Manaus · (92) 2123-1313</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Dia 1 de junho  2026</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Esperando</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1120,6 +1270,14 @@
       <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Câncer de mama (C50). Aguardando cirurgia de reconstrução pelo INCA + simetrização posterior. Uso de ferro e B12.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dr Frederico Nunes</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Thais Brasileiro, rede dor e Américas · (11) 91202-6880</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Oncológica a cada 3 meses</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Farei em julho/agosto</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim, pelo inca aguardando agendamento a qualquer momento e 4 meses depois dessa cirurgia precisarei fazer a reconstrução pelo plano</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Farei a próxima cirurgia redutora de risco pelo inca e preciso de suporte do pós operatório, bem como reposição de ferro sob demanda contínua e cirurgias de reconstrução, eh importante ter o apoio do RH para essa mudança o não precificar meu planejamento e saúde física e emocional</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1157,6 +1315,12 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Cirurgia de varizes futura prevista. Endometriose profunda com acompanhamento pós-operatório contínuo.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Renato Fernandes da Silva</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Hospital Rio Barra · 30033230</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Cirurgião Ginecológico dia 25/05</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim Varizes</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1194,6 +1358,14 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
       <td>
         <div class="reason">Osteossíntese de tornozelo, escleroterapia futura (3 sessões), fisioterapia diária, uso de Dobeven. Investigação de encondroma na tíbia.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> leopoldo Augusto scheifer/ Rafael Avancini e Luciano josé Bazzanella</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Pronto Trauma/ Hospital Mon Porto/ Clínica luciano Bazzanela · 533233482753991594588539848149315332318686</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> sim amanha dia 21/05/2023 e daqui duas semanas faço outra de 15 em 15b dias para evolução do quadro</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> amanha tenho exames e estou esperandeo resposta doescleroterapia 3 sessões membro inferior direito e esquerdeo</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> escleroterapia 3 sessões membro inferior direito e esquerdeo</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> necessito de procedimento com angiologista, tratamanto diario de fisioterapia e acompanhamento traumatologista</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1231,6 +1403,13 @@
       <td class="td-tags"><span class="tag t-oncologico">Oncológico</span><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Câncer de mama em remissão (C50), uso contínuo de Tamoxifeno. Exames de imagem periódicos para monitoramento.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> VICTOR MARCONDES</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Onconlmed · (21) 2715-2500</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> ONCOLOGIA</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> EXAMES DE IMAGEM</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> SÃO NECESSÁRIOS EXAMES DE IMAGEM COMO MAMOGRAFIA E RESSONÂNCIA MAGNÉTICA PARA ACOMPANHAMENTO DEVIDO A REMISSÃO DO CÂNCER DE MAMA.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1268,6 +1447,11 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">TDAH com uso de Imipramina (psicotrópico contínuo) e acompanhamento psicológico semanal.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> KATIANE SAYÃO SOUZA CABRAL</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> KSNEURPS SERVIÇOS MÉDICOS LTDA · (21) 97255-0460</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> ATENDIMENTO PSICÓLOLO INFANTIL SEMANAL</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1304,6 +1488,12 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Adenoidectomia agendada para 02/06/2026.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Sávio Barbosa Raposo</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Hospital Macaé · 022997444006</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Cirurgia 02/06/2026</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim, adenoidectomia no dia 02/06/2026</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1341,6 +1531,9 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Cesariana no passado. Sem condição ativa, sem medicamentos contínuos, sem cirurgia futura.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Não se aplica</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1378,6 +1571,10 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">TEA diagnosticado com uso contínuo de Risperidona e acompanhamento neurológico.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Solange da Costa Silva</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Solange da Costa Silva · (21) 99989-8053</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1414,6 +1611,14 @@
       <td class="td-tags"><span class="tag t-cirurgia">Cirurgia futura</span></td>
       <td>
         <div class="reason">Miomectomia aguardando data final (autorização em andamento). Pré-operatórios já concluídos.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Marcelo Neves</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Consultório DR Marcelo Neves · (22) 99262-1014</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Sim, aguardando data final.</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Não. Já realizei todos pré operatórios</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Sim, aguardando data final.</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Não. So reforçando, irei fazer uma miomictomia, está aguardando liberação pela Sulamerica, somente aguardando isso para o procedimento ser feito.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1451,6 +1656,13 @@
       <td class="td-tags"><span class="tag t-gestante">Gestante</span><span class="tag t-medicamento">Medicamento</span><span class="tag t-oncologico">Oncológico</span></td>
       <td>
         <div class="reason">Gestante (28 semanas e 5 dias), parto previsto para agosto. Ausência de tireoide com Levotiroxina contínua. Histórico de câncer de tireoide e pele em monitoramento.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dra Juliana Brazil/ Dra Izabella Nogueira/ Dra Thais Paes/ Dra Renata T. Borges</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> MedClinic (Rio das Ostras-RJ), Clínica São Lucas (Macaé), Hospital São Paulo (Muirae -MG), Casa de Saúde Santa Lúcia (Muriae - MG) · 22276340003237222988323729370022999297775</div>
+          <div class="extra-row"><span class="extra-label">📅 Consulta agendada:</span> Sim. Endocrinologista 03/06/2026, obstetra 08/06/2026 e 11/06/2026.</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Ultrassonografia 15/06/2026.</div>
+          <div class="extra-row"><span class="extra-label">🔪 Cirurgia/Proc.:</span> Previsão do parto para início de agosto.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1488,6 +1700,10 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Sem condição de saúde, sem medicamentos, sem cirurgia futura, sem gestação.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> N/A</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> N/A</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1525,6 +1741,12 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Diabetes com uso contínuo de Glifage (metformina) e vitaminas. Acompanhamento endocrinológico e ginecológico.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Raquel Rocha e Mayara Barcelos Tavares</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Clinica Tostes · (22) 99605-0061</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Exames ginecológicos e Laboratoriais durante o mês de junho.</div>
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Verificar a abrangência do Plano Amil na cidade de Macaé.</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1561,6 +1783,10 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Hipertensão e colesterol com Losartana, Anlodipino, Rosuvastatina e Ezetimiba.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> PAULO PAES BARRETO</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> TOTAL+ CLÍNICA MÉDICA · (22) 98846-9436</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1597,6 +1823,10 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Sequelas neurológicas pós-tumor cerebral. Sem medicamentos declarados. Apenas fisioterapia, fonoaudiologia e psicologia.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> Dr. José Francisco Salomao</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> Clinica Vital · (22) 99903-8180</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1634,6 +1864,10 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span></td>
       <td>
         <div class="reason">Hipertensão com uso contínuo de Losartana e Anlodipino.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> PAULO PAES BARRETO</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> TOTAL+ CLÍNICA MÉDICA · (22) 98846-9436</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1670,6 +1904,11 @@
       <td class="td-tags"><span class="tag t-medicamento">Medicamento</span><span class="tag t-grave">Condição grave</span></td>
       <td>
         <div class="reason">Dissecção da aorta (condição cardiovascular grave), uso de Atenolol, Losartana, Hidroclorotiazida e Anlodipino. Acompanhamento cardiológico contínuo.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">👨‍⚕️ Médico:</span> PAULO PAES BARRETO</div>
+          <div class="extra-row"><span class="extra-label">🏥 Local:</span> TOTAL + CLÍNICA MÉDICA · (22) 98846-9436</div>
+          <div class="extra-row"><span class="extra-label">🧪 Exames:</span> Sim. 25/05/2026</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1706,6 +1945,9 @@
       <td class="td-tags"><span class="tag t-sem">Sem critério</span></td>
       <td>
         <div class="reason">Sem condição de saúde declarada, sem medicamentos, sem cirurgia futura.</div>
+        <div class="extra-info">
+          <div class="extra-row"><span class="extra-label">💬 Obs.:</span> Nenhuma</div>
+        </div>
         <div class="edit-panel">
       <div class="edit-row" style="margin-top:6px">
         <label>Reclassificar:</label>
@@ -1962,9 +2204,27 @@ function resetFiltros() {
 }
 
 // ── Counts ───────────────────────────────────────────────────────────────────
+const STATUS_CHART_CFG = [
+  { key:'nao-iniciado',   label:'Não iniciado',                  color:'#9ca3af' },
+  { key:'andamento',      label:'Em andamento',                   color:'#3b82f6' },
+  { key:'aguardando',     label:'Aguardando retorno membro',      color:'#f59e0b' },
+  { key:'relacionamento', label:'Em andamento relacionamento',    color:'#8b5cf6' },
+  { key:'encaminhado',    label:'Encaminhado operadora',          color:'#ec4899' },
+  { key:'finalizado',     label:'Finalizado',                     color:'#10b981' },
+  { key:'concluido',      label:'Concluído',                      color:'#059669' },
+];
+
 function updateCounts() {
   let sim = 0, nao = 0, alterados = 0;
+  const statusCounts = {};
+  STATUS_CHART_CFG.forEach(s => statusCounts[s.key] = 0);
+
   document.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const s = state[id] || {};
+    const sa = s.status_acomp || 'nao-iniciado';
+    statusCounts[sa] = (statusCounts[sa] || 0) + 1;
+
     if (tr.classList.contains('hidden')) return;
     const status = tr.dataset.currentStatus || tr.dataset.origStatus;
     if (status === 'sim') sim++; else nao++;
@@ -1978,6 +2238,21 @@ function updateCounts() {
   document.getElementById('count-nao').textContent = nao;
   document.getElementById('count-total').textContent = sim + nao;
   document.getElementById('count-alterados').textContent = alterados;
+
+  // Render status bar chart
+  const total = 40;
+  const chart = document.getElementById('status-chart');
+  if (chart) {
+    chart.innerHTML = STATUS_CHART_CFG.map(cfg => {
+      const n = statusCounts[cfg.key] || 0;
+      const pct = Math.round((n / total) * 100);
+      return `<div class="sbar-row">
+        <div class="sbar-label">${cfg.label}</div>
+        <div class="sbar-track"><div class="sbar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
+        <div class="sbar-count" style="color:${cfg.color}">${n}</div>
+      </div>`;
+    }).join('');
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

@@ -168,6 +168,15 @@
       display: none; font-size: 0.95rem;
     }
   </style>
+  <script>
+    // Bloqueia imediatamente antes de renderizar qualquer conteúdo
+    if(sessionStorage.getItem('eleg-auth')!=='1'){
+      document.addEventListener('DOMContentLoaded',function(){
+        var mc=document.getElementById('main-content');
+        if(mc) mc.style.display='none';
+      });
+    }
+  </script>
 </head>
 <body>
 
@@ -1865,7 +1874,11 @@ updateCounts();
   document.getElementById(id).addEventListener('change', applyFilters)
 );
 document.getElementById('f-nome').addEventListener('input', applyFilters);
+</script>
 
+</div><!-- /main-content -->
+
+<script>
 function checkPass(){
   var v=document.getElementById('lock-input').value;
   if(v==='Deivid16@'){
@@ -1883,6 +1896,4 @@ if(sessionStorage.getItem('eleg-auth')==='1'){
   document.getElementById('main-content').style.display='block';
 }
 </script>
-
-</div>
 </body></html>

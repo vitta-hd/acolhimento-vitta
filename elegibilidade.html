@@ -248,7 +248,6 @@
       <span class="col-total num-nao" id="count-nao">0</span>
     </div>
     <div class="crit-row"><span class="crit-label">💬 Apenas dúvidas ou consultas</span><span class="crit-count" id="crit-sem">0</span></div>
-    <div class="crit-row"><span class="crit-label">📋 Cirurgias passadas sem continuidade</span><span class="crit-count-sub" id="crit-sem-sub"></span></div>
   </div>
   <div class="criteria-col col-info">
     <div class="col-header" style="border-color:#e5e7eb">
@@ -2243,7 +2242,8 @@ function updateCounts() {
   let sim = 0, nao = 0, alterados = 0;
   const statusCounts = {};
   STATUS_CHART_CFG.forEach(s => statusCounts[s.key] = 0);
-  const tagCounts = { 't-cirurgia':0, 't-gestante':0, 't-medicamento':0, 't-oncologico':0, 't-grave':0, 't-sem':0 };
+  const simTags = { 't-cirurgia':0, 't-gestante':0, 't-medicamento':0, 't-oncologico':0, 't-grave':0 };
+  const naoTags = { 't-sem':0 };
 
   document.querySelectorAll('tr[data-id]').forEach(tr => {
     const id = tr.dataset.id;
@@ -2256,7 +2256,11 @@ function updateCounts() {
     if (curStatus === 'sim') sim++; else nao++;
 
     const tags = (tr.dataset.currentTags || tr.dataset.tags || '').split(' ').filter(Boolean);
-    tags.forEach(t => { if (tagCounts[t] !== undefined) tagCounts[t]++; });
+    if (curStatus === 'sim') {
+      tags.forEach(t => { if (simTags[t] !== undefined) simTags[t]++; });
+    } else {
+      tags.forEach(t => { if (naoTags[t] !== undefined) naoTags[t]++; });
+    }
   });
 
   document.querySelectorAll('tr[data-id]').forEach(tr => {
@@ -2270,11 +2274,14 @@ function updateCounts() {
   document.getElementById('count-total').textContent = sim + nao;
   document.getElementById('count-alterados').textContent = alterados;
 
-  // Tag counts
-  ['cirurgia','gestante','medicamento','oncologico','grave','sem'].forEach(k => {
+  // Tag counts — SIM column
+  ['cirurgia','gestante','medicamento','oncologico','grave'].forEach(k => {
     const el = document.getElementById('crit-' + k);
-    if (el) el.textContent = tagCounts['t-' + k] || 0;
+    if (el) el.textContent = simTags['t-' + k] || 0;
   });
+  // Tag counts — NÃO column
+  const elSem = document.getElementById('crit-sem');
+  if (elSem) elSem.textContent = naoTags['t-sem'] || 0;
 
   // Render status bar chart
   const total = 40;

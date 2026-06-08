@@ -104,6 +104,20 @@
     .extra-info { margin-top: 8px; border-top: 1px dashed #e5e7eb; padding-top: 7px; display: flex; flex-direction: column; gap: 3px; }
     .extra-row { font-size: 0.78rem; color: #555; line-height: 1.45; }
     .extra-label { font-weight: 600; color: #374151; }
+    /* Criteria columns */
+    .criteria-cols { display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+    .criteria-col { flex:1; min-width:220px; background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+    .col-header { display:flex; align-items:center; gap:8px; font-weight:700; font-size:.88rem; margin-bottom:12px; padding-bottom:10px; border-bottom:2px solid #e8f0fc; }
+    .col-sim .col-header { border-color:#d4f0e2; color:#186b47; }
+    .col-nao .col-header { border-color:#fde8e7; color:#a02020; }
+    .col-total { margin-left:auto; font-size:1.5rem; font-weight:800; }
+    .crit-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f3f4f6; font-size:.82rem; }
+    .crit-row:last-child { border-bottom:none; }
+    .crit-label { color:#374151; }
+    .crit-count { font-weight:700; font-size:1rem; min-width:24px; text-align:right; }
+    .col-sim .crit-count { color:#186b47; }
+    .col-nao .crit-count { color:#a02020; }
+    .crit-count-sub { font-size:.75rem; color:#9ca3af; min-width:24px; text-align:right; }
     /* Status chart */
     #status-chart-wrap { background:#fff; border-radius:12px; padding:20px 24px; box-shadow:0 1px 4px rgba(0,0,0,.08); margin-bottom:24px; }
     #status-chart-wrap h3 { font-size:.85rem; font-weight:700; color:#1a3a5c; margin-bottom:14px; text-transform:uppercase; letter-spacing:.04em; }
@@ -214,32 +228,43 @@
 <h1>Elegibilidade para Acolhimento Vitta</h1>
 <p class="subtitle">Análise baseada nos critérios definidos pela equipe — Amil Saúde / Vitta · Carga: maio 2026</p>
 
-<div class="criteria">
-  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Cirurgia futura agendada</div>
-  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Gestante</div>
-  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Toma medicamentos contínuos</div>
-  <div class="criteria-item"><span class="dot dot-sim"></span><strong>SIM</strong> — Caso oncológico ou tratamento grave</div>
-  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas dúvidas ou consultas</div>
-  <div class="criteria-item"><span class="dot dot-nao"></span><strong>NÃO</strong> — Apenas cirurgias passadas (sem continuidade)</div>
+<div class="criteria-cols">
+  <div class="criteria-col col-sim">
+    <div class="col-header">
+      <span class="dot dot-sim"></span>
+      <span>Elegíveis ao Acolhimento</span>
+      <span class="col-total num-sim" id="count-sim">0</span>
+    </div>
+    <div class="crit-row"><span class="crit-label">🔪 Cirurgia futura agendada</span><span class="crit-count" id="crit-cirurgia">0</span></div>
+    <div class="crit-row"><span class="crit-label">🤰 Gestante</span><span class="crit-count" id="crit-gestante">0</span></div>
+    <div class="crit-row"><span class="crit-label">💊 Medicamentos contínuos</span><span class="crit-count" id="crit-medicamento">0</span></div>
+    <div class="crit-row"><span class="crit-label">🎗️ Oncológico ou tratamento grave</span><span class="crit-count" id="crit-oncologico">0</span></div>
+    <div class="crit-row"><span class="crit-label">⚠️ Condição grave</span><span class="crit-count" id="crit-grave">0</span></div>
+  </div>
+  <div class="criteria-col col-nao">
+    <div class="col-header">
+      <span class="dot dot-nao"></span>
+      <span>Não Elegíveis</span>
+      <span class="col-total num-nao" id="count-nao">0</span>
+    </div>
+    <div class="crit-row"><span class="crit-label">💬 Apenas dúvidas ou consultas</span><span class="crit-count" id="crit-sem">0</span></div>
+    <div class="crit-row"><span class="crit-label">📋 Cirurgias passadas sem continuidade</span><span class="crit-count-sub" id="crit-sem-sub"></span></div>
+  </div>
+  <div class="criteria-col col-info">
+    <div class="col-header" style="border-color:#e5e7eb">
+      <span style="font-size:1.1rem">📊</span>
+      <span style="color:#374151">Totais</span>
+    </div>
+    <div class="crit-row"><span class="crit-label">Total visíveis</span><span class="crit-count" style="color:#1a3a5c" id="count-total">0</span></div>
+    <div class="crit-row"><span class="crit-label">Reclassificados</span><span class="crit-count" style="color:#f59e0b" id="count-alterados">0</span></div>
+  </div>
 </div>
 
-<div class="summary">
-  <div class="summary-card">
-    <div class="num num-sim" id="count-sim">16</div>
-    <div class="label">Elegíveis (SIM)</div>
-  </div>
-  <div class="summary-card">
-    <div class="num num-nao" id="count-nao">24</div>
-    <div class="label">Não elegíveis (NÃO)</div>
-  </div>
-  <div class="summary-card">
-    <div class="num" style="color:#1a3a5c" id="count-total">40</div>
-    <div class="label">Total visíveis</div>
-  </div>
-  <div class="summary-card">
-    <div class="num" style="color:#f59e0b" id="count-alterados">11</div>
-    <div class="label">Reclassificados</div>
-  </div>
+<div class="summary" style="display:none">
+  <div class="summary-card"><div class="num num-sim" id="count-sim-old">0</div><div class="label">Elegíveis (SIM)</div></div>
+  <div class="summary-card"><div class="num num-nao" id="count-nao-old">0</div><div class="label">Não elegíveis (NÃO)</div></div>
+  <div class="summary-card"><div class="num" style="color:#1a3a5c" id="count-total-old">0</div><div class="label">Total</div></div>
+  <div class="summary-card"><div class="num" style="color:#f59e0b" id="count-alterados-old">0</div><div class="label">Reclassificados</div></div>
 </div>
 
 <!-- Status chart -->
@@ -2218,6 +2243,7 @@ function updateCounts() {
   let sim = 0, nao = 0, alterados = 0;
   const statusCounts = {};
   STATUS_CHART_CFG.forEach(s => statusCounts[s.key] = 0);
+  const tagCounts = { 't-cirurgia':0, 't-gestante':0, 't-medicamento':0, 't-oncologico':0, 't-grave':0, 't-sem':0 };
 
   document.querySelectorAll('tr[data-id]').forEach(tr => {
     const id = tr.dataset.id;
@@ -2226,18 +2252,29 @@ function updateCounts() {
     statusCounts[sa] = (statusCounts[sa] || 0) + 1;
 
     if (tr.classList.contains('hidden')) return;
-    const status = tr.dataset.currentStatus || tr.dataset.origStatus;
-    if (status === 'sim') sim++; else nao++;
+    const curStatus = tr.dataset.currentStatus || tr.dataset.origStatus;
+    if (curStatus === 'sim') sim++; else nao++;
+
+    const tags = (tr.dataset.currentTags || tr.dataset.tags || '').split(' ').filter(Boolean);
+    tags.forEach(t => { if (tagCounts[t] !== undefined) tagCounts[t]++; });
   });
+
   document.querySelectorAll('tr[data-id]').forEach(tr => {
     const id = tr.dataset.id;
     const s = state[id] || {};
     if (s.status && s.status !== tr.dataset.origStatus) alterados++;
   });
+
   document.getElementById('count-sim').textContent = sim;
   document.getElementById('count-nao').textContent = nao;
   document.getElementById('count-total').textContent = sim + nao;
   document.getElementById('count-alterados').textContent = alterados;
+
+  // Tag counts
+  ['cirurgia','gestante','medicamento','oncologico','grave','sem'].forEach(k => {
+    const el = document.getElementById('crit-' + k);
+    if (el) el.textContent = tagCounts['t-' + k] || 0;
+  });
 
   // Render status bar chart
   const total = 40;

@@ -1,18 +1,4 @@
-// ─────────────────────────────────────────────────────────────
-// SCRIPT GOOGLE SHEETS — Envio de email para membros NÃO
-//
-// COMO USAR:
-// 1. Abra a planilha no Google Sheets
-// 2. Clique em "Extensões" → "Apps Script"
-// 3. Cole TODO este código, substituindo o que tiver lá
-// 4. Clique em 💾 Salvar
-// 5. No menu acima, selecione "enviarPrevia" e clique ▶ Executar
-//    → Chegará 1 email de teste para você
-// 6. Quando estiver ok, selecione "enviarParaTodos" e clique ▶ Executar
-// ─────────────────────────────────────────────────────────────
-
 var ASSUNTO = "Acolhimento Vitta | Transição para o Plano AMIL — Informações Importantes";
-var SEU_EMAIL = "andressa.matias@vitta.me"; // email de prévia
 
 function corpEmail(primeiroNome) {
   return "Olá, " + primeiroNome + "!\n\n" +
@@ -40,31 +26,15 @@ function corpEmail(primeiroNome) {
 "Equipe de Acolhimento Vitta";
 }
 
-// ── PRÉVIA: envia só para você ──────────────────────────────
-function enviarPrevia() {
-  var corpo = corpEmail("Andressa");
-  GmailApp.sendEmail(SEU_EMAIL, "[PRÉVIA] " + ASSUNTO, corpo);
-  SpreadsheetApp.getUi().alert("✅ Prévia enviada para " + SEU_EMAIL + "!\n\nVerifique sua caixa de entrada e, se estiver ok, rode 'enviarParaTodos'.");
-}
-
-// ── ENVIO REAL: envia para todos os da planilha ─────────────
-function enviarParaTodos() {
-  var ui = SpreadsheetApp.getUi();
-  var resposta = ui.alert(
-    "Confirmar envio",
-    "Isso vai enviar emails para TODOS os membros da planilha.\nTem certeza?",
-    ui.ButtonSet.YES_NO
-  );
-  if (resposta !== ui.Button.YES) return;
-
+function enviarEmails() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var dados = sheet.getDataRange().getValues();
   var enviados = 0;
   var erros = [];
 
-  for (var i = 1; i < dados.length; i++) { // pula cabeçalho
-    var nome  = dados[i][0];
-    var email = dados[i][1];
+  for (var i = 1; i < dados.length; i++) {
+    var nome      = dados[i][0];
+    var email     = dados[i][1];
     var jaEnviado = dados[i][2];
 
     if (!email || jaEnviado === "SIM") continue;
@@ -74,16 +44,16 @@ function enviarParaTodos() {
 
     try {
       GmailApp.sendEmail(email, ASSUNTO, corpEmail(primeiroNome));
-      sheet.getRange(i + 1, 3).setValue("SIM"); // marca coluna Enviado
+      sheet.getRange(i + 1, 3).setValue("SIM");
       enviados++;
-      Utilities.sleep(500); // pausa entre envios
+      Utilities.sleep(500);
     } catch(e) {
       erros.push(nome + " (" + email + "): " + e.message);
       sheet.getRange(i + 1, 3).setValue("ERRO");
     }
   }
 
-  var msg = "✅ " + enviados + " emails enviados com sucesso!";
+  var msg = "✅ " + enviados + " emails enviados!";
   if (erros.length > 0) msg += "\n\n⚠️ Erros:\n" + erros.join("\n");
-  ui.alert(msg);
+  SpreadsheetApp.getUi().alert(msg);
 }

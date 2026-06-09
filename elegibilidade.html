@@ -2325,6 +2325,13 @@ function checkPass(){
     document.getElementById('lock-screen').style.display='none';
     document.getElementById('main-content').style.display='block';
     sessionStorage.setItem('eleg-auth','1');
+    sessionStorage.removeItem('eleg-cta');
+  } else if(v==='CTA2026'){
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    sessionStorage.setItem('eleg-auth','1');
+    sessionStorage.setItem('eleg-cta','1');
+    ativarModoCTA();
   } else {
     document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
     document.getElementById('lock-input').value='';
@@ -2334,6 +2341,114 @@ function checkPass(){
 if(sessionStorage.getItem('eleg-auth')==='1'){
   document.getElementById('lock-screen').style.display='none';
   document.getElementById('main-content').style.display='block';
+  if(sessionStorage.getItem('eleg-cta')==='1') ativarModoCTA();
+}
+
+function ativarModoCTA(){
+  // Esconde filtros e tabela
+  var filterBar = document.querySelector('.filter-bar');
+  var tableWrap = document.querySelector('.table-wrap');
+  var noResults = document.getElementById('no-results');
+  var editPanels = document.getElementById('edit-panels');
+  if(filterBar) filterBar.style.display='none';
+  if(tableWrap) tableWrap.style.display='none';
+  if(noResults) noResults.style.display='none';
+  if(editPanels) editPanels.style.display='none';
+
+  // Renderiza o breakdown por critério × status
+  renderBreakdown();
+}
+
+function renderBreakdown(){
+  var existente = document.getElementById('cta-breakdown');
+  if(existente) existente.remove();
+
+  var STATUS_CFG = [
+    { key:'nao-iniciado',   label:'Não iniciado',                 color:'#6b7280' },
+    { key:'andamento',      label:'Em andamento',                 color:'#1d4ed8' },
+    { key:'aguardando',     label:'Aguardando retorno membro',    color:'#d97706' },
+    { key:'relacionamento', label:'Em andamento relacionamento',  color:'#7c3aed' },
+    { key:'encaminhado',    label:'Encaminhado operadora',        color:'#be185d' },
+    { key:'finalizado',     label:'Finalizado',                   color:'#0e7490' },
+    { key:'concluido',      label:'Concluído',                    color:'#059669' },
+  ];
+
+  var CRITERIOS = [
+    { tag:'t-cirurgia',    label:'🏥 Cirurgia futura agendada' },
+    { tag:'t-gestante',    label:'🤰 Gestante' },
+    { tag:'t-medicamento', label:'💊 Medicamentos contínuos' },
+    { tag:'t-oncologico',  label:'🎗️ Tratamento oncológico' },
+    { tag:'t-grave',       label:'🩺 Tratamento específico' },
+    { tag:'t-sem',         label:'💬 Sem critério de elegibilidade' },
+  ];
+
+  // Monta contagem: { tag: { statusKey: count } }
+  var counts = {};
+  CRITERIOS.forEach(function(c){ counts[c.tag] = {}; });
+
+  var state = loadState();
+  document.querySelectorAll('tr[data-id]').forEach(function(tr){
+    var id = tr.dataset.id;
+    var sa = (state[id] && state[id].status_acomp) || 'nao-iniciado';
+    var tags = (tr.dataset.currentTags || tr.dataset.tags || '').split(' ').filter(Boolean);
+    tags.forEach(function(t){
+      if(counts[t] !== undefined){
+        counts[t][sa] = (counts[t][sa] || 0) + 1;
+      }
+    });
+  });
+
+  var wrap = document.createElement('div');
+  wrap.id = 'cta-breakdown';
+  wrap.style.cssText = 'max-width:900px;margin:0 auto 40px;';
+
+  var titulo = document.createElement('h2');
+  titulo.style.cssText = 'font-size:1rem;font-weight:700;color:#1a3a5c;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;';
+  titulo.textContent = 'Distribuição por Critério e Status de Acolhimento';
+  wrap.appendChild(titulo);
+
+  CRITERIOS.forEach(function(crit){
+    var total = Object.values(counts[crit.tag]).reduce(function(a,b){return a+b;},0);
+    if(total === 0) return;
+
+    var card = document.createElement('div');
+    card.style.cssText = 'background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #f3f4f6;';
+    header.innerHTML = '<span style="font-weight:700;font-size:.92rem;color:#1a3a5c">'+crit.label+'</span>'+
+                       '<span style="font-size:1.1rem;font-weight:800;color:#1a3a5c">'+total+'</span>';
+    card.appendChild(header);
+
+    var rows = document.createElement('div');
+    rows.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
+
+    STATUS_CFG.forEach(function(s){
+      var n = counts[crit.tag][s.key] || 0;
+      if(n === 0) return;
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:10px;font-size:.82rem;';
+      var pct = Math.round((n/total)*100);
+      row.innerHTML =
+        '<span style="min-width:220px;color:#374151">'+s.label+'</span>'+
+        '<div style="flex:1;height:8px;background:#f3f4f6;border-radius:4px;overflow:hidden;">'+
+          '<div style="height:100%;width:'+pct+'%;background:'+s.color+';border-radius:4px;transition:width .4s"></div>'+
+        '</div>'+
+        '<span style="min-width:28px;text-align:right;font-weight:700;color:'+s.color+'">'+n+'</span>';
+      rows.appendChild(row);
+    });
+
+    card.appendChild(rows);
+    wrap.appendChild(card);
+  });
+
+  // Insere após o status-chart-wrap
+  var chartWrap = document.getElementById('status-chart-wrap');
+  if(chartWrap && chartWrap.nextSibling){
+    chartWrap.parentNode.insertBefore(wrap, chartWrap.nextSibling);
+  } else {
+    document.getElementById('main-content').appendChild(wrap);
+  }
 }
 </script>
 </body></html>

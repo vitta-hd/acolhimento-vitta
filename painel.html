@@ -1631,17 +1631,23 @@ function buscarCep(){
   result.innerHTML='';
   loading.style.display='inline';
 
-  var url = 'https://script.google.com/a/macros/vitta.me/s/AKfycbw2rGDXzdcYTbDoGaJET27vDI7-ioe8Q1MeGNkxkcEYocY1OSuUTWhucTVeMqpfaoM/exec?cep=' + raw;
+  var url = 'https://script.google.com/macros/s/AKfycbwtQjU3hWiVSstM1_rnSaqhZqwbNW8wp62YKECSziOQHxhOzJkgFyCEmZ_7GhlMjt8/exec?cep=' + raw;
 
   fetch(url)
     .then(function(r){ return r.text(); })
     .then(function(html){
       loading.style.display='none';
-      result.innerHTML = html || '<span style="color:#dc2626">Nenhum resultado encontrado.</span>';
+      if(!html || html.trim()===''){
+        result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
+      } else if(html.indexOf('Nenhum resultado')!==-1 || html.indexOf('não disponível')!==-1 || html.indexOf('indisponível')!==-1){
+        result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
+      } else {
+        result.innerHTML='<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin-bottom:8px;color:#166534;font-weight:600">✅ CEP coberto para coleta domiciliar</div>' + html;
+      }
     })
     .catch(function(){
       loading.style.display='none';
-      result.innerHTML='<span style="color:#dc2626">Erro ao consultar. Tente novamente.</span>';
+      result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
     });
 }
 

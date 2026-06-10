@@ -1626,37 +1626,13 @@ function buscarCep(){
     document.getElementById('cep-result').innerHTML='<span style="color:#dc2626">Digite um CEP válido com 8 dígitos.</span>';
     return;
   }
-  var result = document.getElementById('cep-result');
-  var loading = document.getElementById('cep-loading');
-  result.innerHTML='';
-  loading.style.display='inline';
-
-  var cbName = 'vittaLabiCb_' + Date.now();
-  var script = document.createElement('script');
-  var timeout = setTimeout(function(){
-    loading.style.display='none';
-    result.innerHTML='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;color:#92400e">⚠️ Não foi possível consultar. <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" style="color:#1d4ed8;text-decoration:underline">Clique aqui para buscar no site.</a></div>';
-    delete window[cbName];
-    if(script.parentNode) script.parentNode.removeChild(script);
-  }, 30000);
-
-  window[cbName] = function(data){
-    clearTimeout(timeout);
-    loading.style.display='none';
-    delete window[cbName];
-    if(script.parentNode) script.parentNode.removeChild(script);
-    var html = (data && data.html) ? data.html : '';
-    if(!html || html.trim()===''){
-      result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
-    } else if(html.indexOf('Nenhum resultado encontrado')!==-1){
-      result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
-    } else {
-      result.innerHTML='<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin-bottom:8px;color:#166534;font-weight:600">✅ CEP coberto para coleta domiciliar</div>' + html;
-    }
-  };
-
-  script.src = 'https://script.google.com/macros/s/AKfycbwtQjU3hWiVSstM1_rnSaqhZqwbNW8wp62YKECSziOQHxhOzJkgFyCEmZ_7GhlMjt8/exec?cep=' + raw + '&callback=' + cbName;
-  document.head.appendChild(script);
+  var url = 'https://script.google.com/macros/s/AKfycbwtQjU3hWiVSstM1_rnSaqhZqwbNW8wp62YKECSziOQHxhOzJkgFyCEmZ_7GhlMjt8/exec?cep=' + raw;
+  var popup = window.open(url, 'ceplabi', 'width=700,height=600,scrollbars=yes,resizable=yes');
+  if(!popup){
+    document.getElementById('cep-result').innerHTML='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;color:#92400e">⚠️ Popup bloqueado. <a href="'+url+'" target="_blank" style="color:#1d4ed8;text-decoration:underline">Clique aqui para abrir.</a></div>';
+  } else {
+    document.getElementById('cep-result').innerHTML='<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;color:#0369a1">🔍 Resultado aberto na janela popup.</div>';
+  }
 }
 
 function loadExamesDB(cb){

@@ -1,1 +1,262 @@
-{}
+{
+  "1": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "2": {
+    "status_acomp": "andamento",
+    "motivos": [
+      "t-oncologico"
+    ],
+    "nota": "Não tem cirurgias agendadas, apenas consultas para acompanhamento pos tratamento oncologico, quer confirmar a rede credenciada, porém pelo que vimos os médicos atendem o novo plano, a mesma quer saber nome do seu plano para confirmar redes\n"
+  },
+  "3": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "4": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "status": "sim",
+    "status_acomp": "aguardando",
+    "nota": "Tentamos contato com membro por telefone e email , porém como cirurgia da mesma sera antes do dia 10 enviamos orientações que sera realizada pelo plano antigo."
+  },
+  "5": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "6": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "7": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "nota": "Tentamos contato com membro por telefone e email , para entender local de cirurgia e para quando esta agendado, aguardando retorno do mesmo. ",
+    "status_acomp": "aguardando"
+  },
+  "8": {
+    "motivos": [
+      "t-sem"
+    ],
+    "status_acomp": "finalizado",
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano."
+  },
+  "9": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "10": {
+    "motivos": [
+      "t-medicamento"
+    ],
+    "status_acomp": "encaminhado",
+    "nota": "Caso esta sendo acolhido pela AMIL, em verificação com time de implantação se membro enviou relatorio para que amil siga com liberação do medicamento."
+  },
+  "11": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "12": {
+    "nota": "Paciente menor de idade em contato com a mãe Tania, para auxilio com a solicitação da medicação pelo plano,  contato sem sucesso enviamos mensagem para ela para aguardar o retorno com documentação dos medicamentos.",
+    "status_acomp": "aguardando"
+  },
+  "13": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "14": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "15": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "nota": "Agendado Amor e Brasil com Dr Otavio Moura Brasil, já fez todas as consultas e todos os exames esta apenas aguardando a liberação, porém o mesmo já tem o plano da AMIL, aguardando o retorno de implantação se o plano seguira o mesmo?",
+    "status_acomp": "andamento"
+  },
+  "16": {
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "17": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "18": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "19": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "status_acomp": "aguardando",
+    "nota": "Tentamos contato com ela via email e ligação e whatsapp para orientações aguardando retorno da mesma."
+  },
+  "20": {
+    "status_acomp": "encaminhado",
+    "nota": "O ",
+    "motivos": [
+      "t-grave"
+    ]
+  },
+  "21": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "22": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "nota": "Médico aceita o novo plano, porém não conseguimos contato com a mesma aguardando retorno dela. ",
+    "status_acomp": "aguardando"
+  },
+  "23": {
+    "nota": "Já tem o plano da AMIL, aguardando o retorno de implantação se o plano seguira o mesmo",
+    "status_acomp": "relacionamento"
+  },
+  "24": {
+    "nota": "Já tem o plano da AMIL, aguardando o retorno de implantação se o plano seguira o mesmo",
+    "status_acomp": "andamento"
+  },
+  "25": {
+    "motivos": [
+      "t-cirurgia"
+    ],
+    "status_acomp": "aguardando",
+    "nota": "tentamos contato telefone e wpp"
+  },
+  "26": {
+    "nota": "Já tem o plano da AMIL, aguardando o retorno de implantação se o plano seguira o mesmo",
+    "status_acomp": "relacionamento"
+  },
+  "27": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "28": {
+    "nota": "Cirurgia já ocorreu antes da troca do plano, enviado email e whatsapp com orientações para os mesmos referente a proximos procedimentos",
+    "status_acomp": "concluido"
+  },
+  "29": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "30": {
+    "motivos": [
+      "t-sem"
+    ],
+    "status_acomp": "finalizado",
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano."
+  },
+  "31": {
+    "nota": "Aguardando retorno da mesma com informações da cirurgia e local agendado.\n\nCirurgia sera segunda antes da troca no plano antigo da sulamerica",
+    "status_acomp": "concluido"
+  },
+  "32": {
+    "motivos": [
+      "t-gestante"
+    ],
+    "status_acomp": "aguardando",
+    "nota": "Tentamos contaot ligação e whatsapp com orientações para entender quem é o obstetrar para orientações de rede aguardando retorno membro. "
+  },
+  "33": {
+    "motivos": [
+      "t-sem"
+    ],
+    "status_acomp": "finalizado",
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano."
+  },
+  "34": {
+    "motivos": [
+      "t-sem"
+    ],
+    "status_acomp": "finalizado",
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano."
+  },
+  "35": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "36": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "37": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "38": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "39": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  },
+  "40": {
+    "motivos": [
+      "t-sem"
+    ],
+    "nota": "Não necessita de acolhimento nesse caso foi enviado apenas email com orientações da rede e da troca de plano.",
+    "status_acomp": "finalizado"
+  }
+}

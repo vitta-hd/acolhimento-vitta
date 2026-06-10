@@ -1638,7 +1638,7 @@ function buscarCep(){
     result.innerHTML='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;color:#92400e">⚠️ Não foi possível consultar. <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" style="color:#1d4ed8;text-decoration:underline">Clique aqui para buscar no site.</a></div>';
     delete window[cbName];
     if(script.parentNode) script.parentNode.removeChild(script);
-  }, 15000);
+  }, 30000);
 
   window[cbName] = function(data){
     clearTimeout(timeout);

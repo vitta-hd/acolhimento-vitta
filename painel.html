@@ -1633,13 +1633,13 @@ function buscarCep(){
 
   var url = 'https://script.google.com/macros/s/AKfycbwtQjU3hWiVSstM1_rnSaqhZqwbNW8wp62YKECSziOQHxhOzJkgFyCEmZ_7GhlMjt8/exec?cep=' + raw;
 
-  fetch(url)
+  fetch(url, {redirect:'follow'})
     .then(function(r){ return r.text(); })
     .then(function(html){
       loading.style.display='none';
       if(!html || html.trim()===''){
         result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
-      } else if(html.indexOf('Nenhum resultado')!==-1 || html.indexOf('não disponível')!==-1 || html.indexOf('indisponível')!==-1){
+      } else if(html.indexOf('Nenhum resultado encontrado')!==-1){
         result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
       } else {
         result.innerHTML='<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin-bottom:8px;color:#166534;font-weight:600">✅ CEP coberto para coleta domiciliar</div>' + html;
@@ -1647,7 +1647,7 @@ function buscarCep(){
     })
     .catch(function(){
       loading.style.display='none';
-      result.innerHTML='<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c">❌ CEP não coberto para coleta domiciliar.</div>';
+      result.innerHTML='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;color:#92400e">⚠️ Não foi possível consultar. <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" style="color:#1d4ed8;text-decoration:underline">Clique aqui para buscar no site.</a></div>';
     });
 }
 

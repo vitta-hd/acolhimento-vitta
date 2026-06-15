@@ -2455,6 +2455,18 @@ function ativarModoView(){
   document.getElementById('modo-badge').style.display='inline';
   // Esconde todos os controles de edição
   document.querySelectorAll('.edit-only').forEach(function(el){ el.style.display='none'; });
+  // Esconde CPF (📋) e telefone (📱)
+  document.querySelectorAll('.paciente-contact').forEach(function(el){
+    var t = el.textContent.trim();
+    if(t.startsWith('📋') || t.startsWith('📱')) el.style.display='none';
+  });
+  // Substitui nome completo por iniciais
+  document.querySelectorAll('.name').forEach(function(el){
+    var nome = el.textContent.trim();
+    var partes = nome.split(' ').filter(function(p){ return p.length > 0; });
+    var iniciais = partes.map(function(p){ return p[0].toUpperCase() + '.'; }).join(' ');
+    el.textContent = iniciais;
+  });
 }
 
 function ativarModoCTA(){

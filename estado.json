@@ -161,11 +161,11 @@
       "t-cirurgia"
     ],
     "status_acomp": "aguardando",
-    "nota": "tentamos contato telefone e wpp"
+    "nota": "Na cidade dela não tem prestadores que atendam o plano, a mesma já nao tinha esses prestadores na SAS, portanto foi liberado o reembolso excepicional para ela pela amil, enviamos a documentação. "
   },
   "26": {
     "nota": "Plano seguira o mesmo, enviado orientações apenas sobre troca de carteirinha",
-    "status_acomp": "encaminhado"
+    "status_acomp": "finalizado"
   },
   "27": {
     "motivos": [

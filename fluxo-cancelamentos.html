@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fluxo • Cancelamentos | Vitta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;overflow:hidden;color:#161616}
+  #toolbar{
+    position:fixed;top:0;left:0;right:0;height:56px;background:#0a4dbe;color:#fff;
+    display:flex;align-items:center;padding:0 14px;gap:6px;z-index:100;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);flex-wrap:wrap;
+  }
+  #toolbar h1{font-size:15px;margin:0 14px 0 0;font-weight:600;letter-spacing:.2px}
+  .btn{
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;
+    padding:7px 11px;cursor:pointer;font-size:13px;font-family:inherit;
+    display:inline-flex;align-items:center;gap:6px;line-height:1;
+  }
+  .btn:hover{background:rgba(255,255,255,.24)}
+  .btn.active{background:#fff;color:#0a4dbe;font-weight:600}
+  .btn.danger{background:#da1e28;border-color:#da1e28}
+  .btn.danger:hover{background:#b81921}
+  .sep{width:1px;background:rgba(255,255,255,.3);height:28px;margin:0 4px}
+  #canvas-wrap{position:absolute;top:56px;left:0;right:0;bottom:0;overflow:hidden;background:#f4f4f4;cursor:grab}
+  #canvas-wrap.panning{cursor:grabbing}
+  #canvas-wrap.connecting{cursor:crosshair}
+  #canvas{width:100%;height:100%;display:block}
+  .node{cursor:move}
+  .node.selected .shape{stroke:#0a4dbe;stroke-width:3}
+  .node.connect-src .shape{stroke:#ffb000;stroke-width:3;stroke-dasharray:6 4}
+  .shape{fill:#fff;stroke:#525252;stroke-width:1.5}
+  .shape.start{fill:#d0e2ff;stroke:#0a4dbe}
+  .shape.decision{fill:#fff8e1;stroke:#b28704}
+  .shape.end{fill:#defbe6;stroke:#0e6027}
+  .node-text{
+    font-size:13px;line-height:1.3;color:#161616;text-align:center;padding:8px;
+    display:flex;align-items:center;justify-content:center;width:100%;height:100%;
+    user-select:none;overflow:hidden;word-break:break-word;
+  }
+  .node-text[contenteditable=true]{background:#fff;outline:2px solid #0a4dbe;cursor:text;user-select:text}
+  .edge{fill:none;stroke:#525252;stroke-width:1.8}
+  .edge.selected{stroke:#0a4dbe;stroke-width:3}
+  .edge-hit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+  #status{
+    position:fixed;bottom:14px;left:14px;padding:7px 12px;background:rgba(22,22,22,.85);
+    color:#fff;font-size:12px;z-index:100;pointer-events:none;transition:opacity .3s
+  }
+  #help{
+    position:fixed;bottom:14px;right:14px;max-width:280px;background:#fff;border:1px solid #c6c6c6;
+    padding:11px 13px;font-size:12px;line-height:1.55;z-index:90;
+  }
+  #help h3{margin:0 0 6px;font-size:13px;color:#0a4dbe}
+  #help kbd{background:#f4f4f4;border:1px solid #c6c6c6;padding:1px 5px;font-family:monospace;font-size:11px}
+  #help .close{position:absolute;top:6px;right:8px;background:none;border:0;cursor:pointer;font-size:16px;color:#6f6f6f}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>Fluxo • Cancelamentos</h1>
+  <button class="btn" id="add-box" title="Adicionar caixa de processo">▭ Caixa</button>
+  <button class="btn" id="add-diamond" title="Adicionar losango de decisão">◇ Losango</button>
+  <button class="btn" id="add-text" title="Adicionar texto livre">T Texto</button>
+  <button class="btn" id="connect-btn" title="Criar seta entre dois itens">↗ Conectar</button>
+  <div class="sep"></div>
+  <button class="btn danger" id="delete-btn" title="Excluir item selecionado (Delete)">✕ Excluir</button>
+  <div class="sep"></div>
+  <button class="btn" id="zoom-out" title="Zoom −">−</button>
+  <button class="btn" id="zoom-in" title="Zoom +">+</button>
+  <button class="btn" id="zoom-fit" title="Ajustar tudo na tela">⤧ Ajustar</button>
+  <div class="sep"></div>
+  <button class="btn" id="save-btn" title="Salvar no navegador">💾 Salvar</button>
+  <button class="btn" id="export-btn" title="Baixar JSON">⬇ JSON</button>
+  <button class="btn" id="load-btn" title="Carregar JSON">📂 Carregar</button>
+  <button class="btn" id="reset-btn" title="Restaurar fluxo inicial">↺ Reset</button>
+  <input type="file" id="file-input" accept=".json" style="display:none">
+</div>
+
+<div id="canvas-wrap">
+  <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#525252"/>
+      </marker>
+      <marker id="arrowhead-selected" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#0a4dbe"/>
+      </marker>
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M40 0 L0 0 0 40" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <g id="root">
+      <rect id="grid-bg" x="-5000" y="-5000" width="10000" height="10000" fill="url(#grid)"/>
+      <g id="edges-layer"></g>
+      <g id="nodes-layer"></g>
+    </g>
+  </svg>
+</div>
+
+<div id="status">Pronto</div>
+
+<div id="help">
+  <button class="close" onclick="this.parentNode.style.display='none'">×</button>
+  <h3>Como usar (estilo Miro)</h3>
+  <strong>Arrastar:</strong> clique e segure no item<br>
+  <strong>Editar texto:</strong> duplo-clique<br>
+  <strong>Conectar:</strong> <em>Conectar</em> → clique origem → clique destino<br>
+  <strong>Rótulo da seta (Sim/Não):</strong> duplo-clique na seta<br>
+  <strong>Mover tela:</strong> arrastar área vazia<br>
+  <strong>Zoom:</strong> scroll do mouse<br>
+  <strong>Excluir:</strong> selecione + <kbd>Delete</kbd><br>
+  Salvamento automático no navegador.
+</div>
+
+<script>
+/* =========================================================
+   Estado e dados iniciais (fluxo de Cancelamentos da Vitta)
+   ========================================================= */
+const STORAGE_KEY = 'fluxo-cancelamentos-vitta-v1';
+
+const INITIAL = {
+  nodes: [
+    {id:1,  type:'rect',    x:420, y:40,   w:300, h:70,  text:'1 — Profissional pede o cancelamento da agenda', variant:'start'},
+    {id:2,  type:'rect',    x:420, y:150,  w:300, h:80,  text:'2 — Rede recebe a solicitação e pede uma reposição ao profissional'},
+    {id:3,  type:'diamond', x:420, y:270,  w:300, h:120, text:'Profissional traz horário de fechamento?', variant:'decision'},
+    {id:4,  type:'rect',    x:80,  y:440,  w:280, h:90,  text:'Time de credenciamento abre horários e os deixa bloqueados'},
+    {id:5,  type:'rect',    x:780, y:440,  w:300, h:90,  text:'Time de rede usa outras opções já disponíveis na agenda e as deixa bloqueadas'},
+    {id:6,  type:'rect',    x:420, y:570,  w:300, h:100, text:'3 — Time de rede extrai relatório de membros agendados, cancela as agendas e bloqueia o dia do profissional'},
+    {id:7,  type:'rect',    x:420, y:710,  w:300, h:90,  text:'4 — Time de rede envia mensagem avisando do cancelamento e oferece 2 opções de horário'},
+    {id:8,  type:'diamond', x:420, y:840,  w:300, h:120, text:'5 — Membro respondeu em até 24h?', variant:'decision'},
+    {id:9,  type:'diamond', x:80,  y:1000, w:300, h:120, text:'Aceitou uma das opções sugeridas?', variant:'decision'},
+    {id:10, type:'rect',    x:-260,y:1170, w:280, h:90,  text:'Front desbloqueia o horário escolhido e faz o agendamento', variant:'end'},
+    {id:11, type:'rect',    x:80,  y:1170, w:300, h:100, text:'Front utiliza outra opção de horário livre ou direciona o membro ao app', variant:'end'},
+    {id:12, type:'rect',    x:780, y:1000, w:300, h:100, text:'Horário é desbloqueado pelo time de gestão de agendas', variant:'end'}
+  ],
+  edges: [
+    {id:100, from:1,  to:2},
+    {id:101, from:2,  to:3},
+    {id:102, from:3,  to:4,  label:'Sim'},
+    {id:103, from:3,  to:5,  label:'Não'},
+    {id:104, from:4,  to:6},
+    {id:105, from:5,  to:6},
+    {id:106, from:6,  to:7},
+    {id:107, from:7,  to:8},
+    {id:108, from:8,  to:9,  label:'Sim'},
+    {id:109, from:8,  to:12, label:'Não'},
+    {id:110, from:9,  to:10, label:'Sim'},
+    {id:111, from:9,  to:11, label:'Não'}
+  ]
+};
+
+const state = {
+  nodes: [], edges: [], nextId: 1,
+  selected: null,           // {type:'node'|'edge', id}
+  connecting: null,         // null | 'await-source' | <sourceNodeId>
+  pan: {x:0, y:0}, zoom: 1
+};
+
+/* =========================================================
+   Persistência
+   ========================================================= */
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges})); }
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ try{ applyData(JSON.parse(raw)); return; }catch(e){} }
+  applyData(INITIAL);
+}
+function applyData(d){
+  state.nodes = (d.nodes||[]).map(n=>({...n}));
+  state.edges = (d.edges||[]).map(e=>({...e}));
+  state.nextId = Math.max(0, ...state.nodes.map(n=>n.id||0), ...state.edges.map(e=>e.id||0)) + 1;
+  state.selected = null;
+  render();
+}
+
+/* =========================================================
+   Render
+   ========================================================= */
+const svg = document.getElementById('canvas');
+const root = document.getElementById('root');
+const nodesLayer = document.getElementById('nodes-layer');
+const edgesLayer = document.getElementById('edges-layer');
+const wrap = document.getElementById('canvas-wrap');
+
+function updateTransform(){
+  root.setAttribute('transform', `translate(${state.pan.x},${state.pan.y}) scale(${state.zoom})`);
+}
+function nodeById(id){ return state.nodes.find(n=>n.id===id); }
+function center(n){ return {x:n.x + n.w/2, y:n.y + n.h/2}; }
+
+function rectIntersect(node, fx, fy){
+  const c = center(node);
+  const dx = fx - c.x, dy = fy - c.y;
+  if(dx===0 && dy===0) return c;
+  const hw = node.w/2, hh = node.h/2;
+  const sx = dx===0 ? Infinity : hw/Math.abs(dx);
+  const sy = dy===0 ? Infinity : hh/Math.abs(dy);
+  const s = Math.min(sx, sy);
+  return {x:c.x + dx*s, y:c.y + dy*s};
+}
+function diamondIntersect(node, fx, fy){
+  const c = center(node);
+  const dx = fx - c.x, dy = fy - c.y;
+  if(dx===0 && dy===0) return c;
+  const hw = node.w/2, hh = node.h/2;
+  const t = 1/(Math.abs(dx)/hw + Math.abs(dy)/hh);
+  return {x:c.x + dx*t, y:c.y + dy*t};
+}
+function endpoint(node, fx, fy){
+  if(node.type==='diamond') return diamondIntersect(node, fx, fy);
+  if(node.type==='text')    return {x: fx>center(node).x?node.x+node.w:node.x, y: center(node).y};
+  return rectIntersect(node, fx, fy);
+}
+
+function render(){
+  // Edges
+  edgesLayer.innerHTML = '';
+  for(const e of state.edges){
+    const a = nodeById(e.from), b = nodeById(e.to);
+    if(!a || !b) continue;
+    const ca = center(a), cb = center(b);
+    const p1 = endpoint(a, cb.x, cb.y);
+    const p2 = endpoint(b, ca.x, ca.y);
+    const isSel = state.selected && state.selected.type==='edge' && state.selected.id===e.id;
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('data-edge-id', e.id);
+
+    const hit = document.createElementNS('http://www.w3.org/2000/svg','line');
+    hit.setAttribute('x1',p1.x); hit.setAttribute('y1',p1.y);
+    hit.setAttribute('x2',p2.x); hit.setAttribute('y2',p2.y);
+    hit.setAttribute('class','edge-hit');
+    hit.addEventListener('mousedown', ev=>{ ev.stopPropagation(); selectEdge(e.id); });
+    hit.addEventListener('dblclick', ev=>{ ev.stopPropagation(); editEdgeLabel(e.id); });
+    g.appendChild(hit);
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
+    line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+    line.setAttribute('class','edge' + (isSel?' selected':''));
+    line.setAttribute('marker-end', `url(#arrowhead${isSel?'-selected':''})`);
+    line.setAttribute('pointer-events','none');
+    g.appendChild(line);
+
+    if(e.label){
+      const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+      const tw = Math.max(40, e.label.length*8 + 16), th = 24;
+      const fo = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
+      fo.setAttribute('x', mx-tw/2); fo.setAttribute('y', my-th/2);
+      fo.setAttribute('width', tw); fo.setAttribute('height', th);
+      fo.setAttribute('pointer-events','none');
+      const div = document.createElement('div');
+      div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+      div.style.cssText='background:#fff;border:1px solid #c6c6c6;text-align:center;font-size:12px;font-weight:600;color:#0a4dbe;line-height:22px;height:24px;font-family:inherit';
+      div.textContent = e.label;
+      fo.appendChild(div);
+      g.appendChild(fo);
+    }
+    edgesLayer.appendChild(g);
+  }
+
+  // Nodes
+  nodesLayer.innerHTML = '';
+  for(const n of state.nodes){
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    const isSel = state.selected && state.selected.type==='node' && state.selected.id===n.id;
+    g.setAttribute('class','node' + (isSel?' selected':'') + (state.connecting===n.id?' connect-src':''));
+    g.setAttribute('transform', `translate(${n.x},${n.y})`);
+    g.setAttribute('data-node-id', n.id);
+
+    let shape;
+    if(n.type==='rect'){
+      shape = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      shape.setAttribute('x',0); shape.setAttribute('y',0);
+      shape.setAttribute('width',n.w); shape.setAttribute('height',n.h);
+      shape.setAttribute('rx',4); shape.setAttribute('ry',4);
+    } else if(n.type==='diamond'){
+      shape = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      const hw=n.w/2, hh=n.h/2;
+      shape.setAttribute('points', `${hw},0 ${n.w},${hh} ${hw},${n.h} 0,${hh}`);
+    } else { // text
+      shape = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      shape.setAttribute('x',0); shape.setAttribute('y',0);
+      shape.setAttribute('width',n.w); shape.setAttribute('height',n.h);
+      shape.setAttribute('fill','rgba(255,255,255,.01)');
+      shape.setAttribute('stroke','transparent');
+    }
+    shape.setAttribute('class','shape ' + (n.variant||''));
+    g.appendChild(shape);
+
+    const fo = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
+    fo.setAttribute('x',0); fo.setAttribute('y',0);
+    fo.setAttribute('width',n.w); fo.setAttribute('height',n.h);
+    const div = document.createElement('div');
+    div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+    div.className = 'node-text';
+    if(n.type==='text'){ div.style.fontWeight='600'; div.style.color='#0a4dbe'; }
+    div.textContent = n.text;
+    fo.appendChild(div);
+    g.appendChild(fo);
+
+    g.addEventListener('mousedown', ev=>onNodeMouseDown(ev, n.id));
+    g.addEventListener('dblclick', ev=>{ ev.stopPropagation(); editNodeText(n.id); });
+    nodesLayer.appendChild(g);
+  }
+}
+
+/* =========================================================
+   Selection
+   ========================================================= */
+function selectNode(id){ state.selected={type:'node',id}; render(); }
+function selectEdge(id){ state.selected={type:'edge',id}; render(); }
+function clearSelection(){ state.selected=null; render(); }
+
+/* =========================================================
+   Coords e drag/pan/zoom
+   ========================================================= */
+function clientToSvg(cx, cy){
+  const pt = svg.createSVGPoint(); pt.x=cx; pt.y=cy;
+  const ctm = root.getScreenCTM();
+  if(!ctm) return {x:cx,y:cy};
+  const p = pt.matrixTransform(ctm.inverse());
+  return {x:p.x, y:p.y};
+}
+
+let drag = null;
+let pan  = null;
+
+function onNodeMouseDown(ev, id){
+  // não atrapalhar a edição
+  if(ev.target && ev.target.isContentEditable) return;
+  ev.stopPropagation();
+  const n = nodeById(id);
+  if(!n) return;
+
+  if(state.connecting !== null){
+    if(state.connecting === 'await-source'){
+      state.connecting = id;
+      setStatus('Agora clique no DESTINO (ou Esc para cancelar)');
+      render();
+    } else {
+      if(state.connecting !== id){
+        state.edges.push({id: state.nextId++, from: state.connecting, to: id});
+        save();
+        setStatus('Conexão criada');
+      } else {
+        setStatus('Cancelado');
+      }
+      setConnectingMode(false);
+      render();
+    }
+    return;
+  }
+
+  selectNode(id);
+  const p = clientToSvg(ev.clientX, ev.clientY);
+  drag = {id, offsetX: p.x - n.x, offsetY: p.y - n.y};
+}
+
+window.addEventListener('mousemove', ev=>{
+  if(drag){
+    const n = nodeById(drag.id); if(!n) return;
+    const p = clientToSvg(ev.clientX, ev.clientY);
+    n.x = Math.round((p.x - drag.offsetX)/5)*5;
+    n.y = Math.round((p.y - drag.offsetY)/5)*5;
+    render();
+  } else if(pan){
+    state.pan.x = pan.basePanX + (ev.clientX - pan.startX);
+    state.pan.y = pan.basePanY + (ev.clientY - pan.startY);
+    updateTransform();
+  }
+});
+window.addEventListener('mouseup', ()=>{
+  if(drag){ drag=null; save(); }
+  if(pan){ pan=null; wrap.classList.remove('panning'); }
+});
+
+svg.addEventListener('mousedown', ev=>{
+  if(ev.target===svg || ev.target.id==='grid-bg' || ev.target.id==='root'){
+    if(state.connecting!==null){ setConnectingMode(false); setStatus('Cancelado'); return; }
+    clearSelection();
+    pan = {startX:ev.clientX, startY:ev.clientY, basePanX:state.pan.x, basePanY:state.pan.y};
+    wrap.classList.add('panning');
+  }
+});
+
+wrap.addEventListener('wheel', ev=>{
+  ev.preventDefault();
+  const r = wrap.getBoundingClientRect();
+  const mx = ev.clientX - r.left, my = ev.clientY - r.top;
+  const oldZ = state.zoom;
+  const factor = ev.deltaY > 0 ? 0.9 : 1.1;
+  const newZ = Math.min(3, Math.max(0.2, oldZ * factor));
+  const svgX = (mx - state.pan.x)/oldZ;
+  const svgY = (my - state.pan.y)/oldZ;
+  state.zoom = newZ;
+  state.pan.x = mx - svgX*newZ;
+  state.pan.y = my - svgY*newZ;
+  updateTransform();
+}, {passive:false});
+
+/* =========================================================
+   Edição de texto
+   ========================================================= */
+function editNodeText(id){
+  const g = nodesLayer.querySelector(`[data-node-id="${id}"]`);
+  if(!g) return;
+  const div = g.querySelector('.node-text');
+  div.setAttribute('contenteditable','true');
+  div.focus();
+  // seleciona todo o conteúdo
+  const range = document.createRange(); range.selectNodeContents(div);
+  const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+
+  const finish = ()=>{
+    const n = nodeById(id); if(!n) return;
+    n.text = div.innerText.trim();
+    save(); render();
+  };
+  div.addEventListener('blur', finish, {once:true});
+  div.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){ e.preventDefault(); div.blur(); }
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); div.blur(); }
+  });
+}
+
+function editEdgeLabel(id){
+  const e = state.edges.find(x=>x.id===id); if(!e) return;
+  const v = prompt('Rótulo da seta (Sim, Não, etc). Deixe vazio para remover:', e.label||'');
+  if(v===null) return;
+  const t = v.trim();
+  if(t) e.label = t; else delete e.label;
+  save(); render();
+}
+
+/* =========================================================
+   Toolbar
+   ========================================================= */
+function setStatus(msg){
+  const s = document.getElementById('status');
+  s.textContent = msg; s.style.opacity='1';
+  clearTimeout(setStatus._t);
+  setStatus._t = setTimeout(()=>{ s.style.opacity='.35'; }, 2500);
+}
+
+function addNode(type){
+  const r = wrap.getBoundingClientRect();
+  const c = clientToSvg(r.left + r.width/2, r.top + r.height/2);
+  const w = type==='text' ? 200 : 240;
+  const h = type==='diamond' ? 110 : (type==='text' ? 44 : 80);
+  const n = {
+    id: state.nextId++, type,
+    x: Math.round((c.x - w/2)/5)*5, y: Math.round((c.y - h/2)/5)*5,
+    w, h,
+    text: type==='text' ? 'Texto' : (type==='diamond' ? 'Decisão?' : 'Nova etapa'),
+    variant: type==='diamond' ? 'decision' : undefined
+  };
+  state.nodes.push(n);
+  selectNode(n.id);
+  save();
+  setStatus('Criado. Duplo-clique para editar.');
+}
+
+document.getElementById('add-box').onclick      = ()=>addNode('rect');
+document.getElementById('add-diamond').onclick  = ()=>addNode('diamond');
+document.getElementById('add-text').onclick     = ()=>addNode('text');
+
+function setConnectingMode(on){
+  const btn = document.getElementById('connect-btn');
+  if(on){
+    state.connecting = 'await-source';
+    btn.classList.add('active'); wrap.classList.add('connecting');
+    setStatus('Clique na caixa de ORIGEM');
+  } else {
+    state.connecting = null;
+    btn.classList.remove('active'); wrap.classList.remove('connecting');
+  }
+  render();
+}
+document.getElementById('connect-btn').onclick = ()=>setConnectingMode(state.connecting===null);
+
+function deleteSelected(){
+  if(!state.selected){ setStatus('Nada selecionado'); return; }
+  if(state.selected.type==='node'){
+    const id = state.selected.id;
+    state.nodes = state.nodes.filter(n=>n.id!==id);
+    state.edges = state.edges.filter(e=>e.from!==id && e.to!==id);
+  } else {
+    state.edges = state.edges.filter(e=>e.id!==state.selected.id);
+  }
+  state.selected = null;
+  save(); render();
+  setStatus('Excluído');
+}
+document.getElementById('delete-btn').onclick = deleteSelected;
+
+window.addEventListener('keydown', e=>{
+  if(e.target && (e.target.isContentEditable || e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA')) return;
+  if(e.key==='Delete' || e.key==='Backspace'){ if(state.selected){ e.preventDefault(); deleteSelected(); } }
+  if(e.key==='Escape'){ if(state.connecting!==null) setConnectingMode(false); clearSelection(); }
+});
+
+document.getElementById('zoom-in').onclick  = ()=>{ state.zoom = Math.min(3, state.zoom*1.2); updateTransform(); };
+document.getElementById('zoom-out').onclick = ()=>{ state.zoom = Math.max(0.2, state.zoom/1.2); updateTransform(); };
+document.getElementById('zoom-fit').onclick = ()=>{
+  if(!state.nodes.length) return;
+  const pad = 40;
+  const minX = Math.min(...state.nodes.map(n=>n.x)) - pad;
+  const minY = Math.min(...state.nodes.map(n=>n.y)) - pad;
+  const maxX = Math.max(...state.nodes.map(n=>n.x+n.w)) + pad;
+  const maxY = Math.max(...state.nodes.map(n=>n.y+n.h)) + pad;
+  const ww = wrap.clientWidth, wh = wrap.clientHeight;
+  const z = Math.min(ww/(maxX-minX), wh/(maxY-minY), 1);
+  state.zoom = z;
+  state.pan.x = (ww - (maxX-minX)*z)/2 - minX*z;
+  state.pan.y = (wh - (maxY-minY)*z)/2 - minY*z;
+  updateTransform();
+};
+
+document.getElementById('save-btn').onclick   = ()=>{ save(); setStatus('Salvo no navegador'); };
+document.getElementById('export-btn').onclick = ()=>{
+  const data = JSON.stringify({nodes:state.nodes, edges:state.edges}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'fluxo-cancelamentos.json'; a.click();
+  URL.revokeObjectURL(url);
+  setStatus('JSON baixado');
+};
+document.getElementById('load-btn').onclick   = ()=>document.getElementById('file-input').click();
+document.getElementById('file-input').onchange= ev=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{ try{ applyData(JSON.parse(r.result)); save(); setStatus('Carregado'); }catch(e){ alert('Arquivo inválido'); } };
+  r.readAsText(f);
+  ev.target.value = '';
+};
+document.getElementById('reset-btn').onclick = ()=>{
+  if(confirm('Restaurar o fluxo inicial? Suas alterações serão perdidas.')){
+    applyData(INITIAL); save(); setStatus('Fluxo restaurado');
+    setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
+  }
+};
+
+/* =========================================================
+   Boot
+   ========================================================= */
+load();
+updateTransform();
+setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
+</script>
+</body>
+</html>

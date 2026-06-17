@@ -77,51 +77,14 @@
   .custom-row input[type=color]{width:34px;height:30px;border:1px solid #c6c6c6;background:#fff;cursor:pointer;padding:0}
   .btn b{font-family:serif;font-style:normal}
 
-  /* ===== Tela de senha (igual elegibilidade) ===== */
-  #lock-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)}
-  #lock-screen .box{width:100%;max-width:380px;padding:0 24px;text-align:center}
-  #lock-screen h1{color:#fff;font-size:1.4rem;font-weight:700;margin:28px 0;font-family:'IBM Plex Sans',sans-serif}
-  #lock-screen input{width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;font-family:inherit;margin-bottom:10px}
-  #lock-screen input::placeholder{color:rgba(255,255,255,.5)}
-  #lock-screen .help{color:#93c5fd;font-size:.72rem;margin-top:6px}
-  #lock-screen .err{color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px}
-  #lock-screen .btns{display:flex;gap:10px;margin-top:16px}
-  #lock-screen button{flex:1;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer;font-family:inherit}
-  #lock-screen button:hover{background:#083a91}
-  #lock-screen button.ghost{background:transparent;border:1px solid rgba(255,255,255,.4)}
-  #lock-screen button.ghost:hover{background:rgba(255,255,255,.1)}
-  #lock-screen .logo{height:36px;margin:0 auto;filter:brightness(0) invert(1)}
-
-  /* ===== Indicador de sync e modo ===== */
-  #top-status{position:fixed;top:6px;right:14px;display:flex;align-items:center;gap:10px;z-index:101;font-size:12px}
-  #sync-indicator{color:#fff;font-weight:600}
-  #modo-badge{display:none;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:20px;padding:3px 12px}
-  #trocar-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit}
-  #trocar-btn:hover{background:rgba(255,255,255,.28)}
-  body.view-mode #toolbar .btn:not(#trocar-btn):not(#zoom-in):not(#zoom-out):not(#zoom-fit){display:none}
-  body.view-mode #toolbar .sep{display:none}
-  body.view-mode .node{cursor:default}
+  /* ===== Indicador de sync ===== */
+  #sync-indicator{color:#fff;font-weight:600;font-size:12px;margin-left:auto}
+  #token-btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;padding:7px 10px;cursor:pointer;font-size:13px;font-family:inherit}
+  #token-btn:hover{background:rgba(255,255,255,.24)}
+  #token-btn.on{background:#16a34a;border-color:#16a34a}
 </style>
 </head>
 <body>
-
-<!-- ===== TELA DE SENHA ===== -->
-<div id="lock-screen">
-  <div class="box">
-    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png" class="logo" alt="Vitta"/>
-    <h1>Fluxo de Cancelamentos</h1>
-    <input id="lock-input" type="password" placeholder="Digite a senha" autocomplete="off" />
-    <div id="token-wrap" style="display:none">
-      <input id="token-input" type="text" placeholder="Cole seu token GitHub (ghp_...)" autocomplete="off" />
-      <p class="help">🔒 Token fica só na memória desta sessão</p>
-    </div>
-    <p id="lock-err" class="err"></p>
-    <div class="btns">
-      <button class="ghost" id="lock-view-btn">👁 Só visualizar</button>
-      <button id="lock-enter-btn">Entrar</button>
-    </div>
-  </div>
-</div>
 
 <div id="toolbar">
   <h1>Fluxo • Cancelamentos</h1>
@@ -146,10 +109,8 @@
   <button class="btn" id="load-btn">📂 Carregar</button>
   <button class="btn" id="reset-btn">↺ Reset</button>
   <input type="file" id="file-input" accept=".json" style="display:none">
-  <div style="flex:1"></div>
   <span id="sync-indicator"></span>
-  <span id="modo-badge">👁️ Modo visualização</span>
-  <button id="trocar-btn" title="Trocar usuário / Sair">🔄 Trocar</button>
+  <button id="token-btn" title="Configurar publicação para todos">🔑</button>
 </div>
 
 <div class="popover" id="emoji-pop">
@@ -282,14 +243,14 @@ const state = {
 const GH_RAW = 'https://raw.githubusercontent.com/vitta-hd/acolhimento-vitta/main/fluxo-cancelamentos.json';
 const GH_API = 'https://api.github.com/repos/vitta-hd/acolhimento-vitta/contents/fluxo-cancelamentos.json';
 
-function isAdmin(){ return sessionStorage.getItem('fluxo-admin')==='1'; }
-function isView(){  return sessionStorage.getItem('fluxo-view')==='1'; }
+function getToken(){ return localStorage.getItem('fluxo-gh-token') || ''; }
+function hasToken(){ return !!getToken(); }
 
 function persist(){
-  // cópia local sempre
+  // cópia local sempre (para offline)
   localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
-  // admin publica no GitHub (debounced)
-  if(isAdmin()) pushToGitHub();
+  // se tem token configurado, publica no GitHub
+  if(hasToken()) pushToGitHub();
 }
 
 let _ghPushTimer = null;
@@ -297,23 +258,24 @@ function pushToGitHub(){
   clearTimeout(_ghPushTimer);
   setSyncStatus('⏳ Salvando…', '#fbbf24');
   _ghPushTimer = setTimeout(()=>{
-    const token = sessionStorage.getItem('fluxo-gh-token');
-    if(!token){ setSyncStatus('⚠ Sem token', '#fca5a5'); return; }
+    const token = getToken();
+    if(!token){ setSyncStatus('', ''); return; }
     const payload = JSON.stringify({nodes:state.nodes, edges:state.edges}, null, 2);
     const content = btoa(unescape(encodeURIComponent(payload)));
     fetch(GH_API, { headers:{'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json'} })
-      .then(r => r.json())
+      .then(r => r.ok ? r.json() : {})
       .then(f => fetch(GH_API, {
         method:'PUT',
         headers:{'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json'},
         body: JSON.stringify({
           message: 'Atualizar fluxo de cancelamentos',
           content,
-          sha: f.sha
+          ...(f && f.sha ? {sha: f.sha} : {})
         })
       }))
       .then(r => {
-        if(r.ok){ setSyncStatus('✅ Salvo para todos', '#16a34a'); setTimeout(()=>setSyncStatus('',''), 3500); }
+        if(r.ok){ setSyncStatus('✅ Salvo para todos', '#86efac'); setTimeout(()=>setSyncStatus('',''), 3500); }
+        else if(r.status===401){ setSyncStatus('❌ Token inválido', '#fca5a5'); }
         else { setSyncStatus('❌ Erro ao salvar', '#fca5a5'); }
       })
       .catch(()=>setSyncStatus('❌ Sem conexão', '#fca5a5'));
@@ -329,7 +291,7 @@ async function loadFromGitHub(){
       if(remote && Array.isArray(remote.nodes)){
         localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
         applyData(remote);
-        setSyncStatus(isAdmin()?'🟢 Conectado':'👁 Visualização', isAdmin()?'#86efac':'#fde68a');
+        setSyncStatus(hasToken()?'🟢 Conectado (publicando)':'👁 Conectado (somente leitura)', hasToken()?'#86efac':'#fde68a');
         setTimeout(()=>setSyncStatus('',''), 3500);
         return;
       }
@@ -1017,97 +979,44 @@ window.addEventListener('keydown', e=>{
 });
 
 /* =========================================================
-   Tela de senha (replicando elegibilidade)
+   Botão 🔑 — configurar token uma vez por navegador
    ========================================================= */
-const lockInput  = document.getElementById('lock-input');
-const tokenWrap  = document.getElementById('token-wrap');
-const tokenInput = document.getElementById('token-input');
-const lockErr    = document.getElementById('lock-err');
+function refreshTokenButton(){
+  const b = document.getElementById('token-btn');
+  if(hasToken()){
+    b.classList.add('on');
+    b.title = 'Publicação ativa (clique para trocar/remover o token)';
+    b.textContent = '🔑 publicando';
+  } else {
+    b.classList.remove('on');
+    b.title = 'Configurar token GitHub para publicar para todos';
+    b.textContent = '🔑';
+  }
+}
+document.getElementById('token-btn').onclick = ()=>{
+  const cur = getToken();
+  const v = prompt(
+    cur
+      ? 'Token atual configurado. Cole um novo para trocar, ou deixe vazio para REMOVER (e voltar a só visualizar).'
+      : 'Cole seu token do GitHub (ghp_...) para publicar suas alterações para todos.\nO token fica salvo só neste navegador.',
+    cur
+  );
+  if(v === null) return;
+  const t = v.trim();
+  if(t){ localStorage.setItem('fluxo-gh-token', t); setSyncStatus('🔑 Token salvo', '#86efac'); }
+  else  { localStorage.removeItem('fluxo-gh-token'); setSyncStatus('🔑 Token removido', '#fbbf24'); }
+  refreshTokenButton();
+  setTimeout(()=>setSyncStatus('',''), 2500);
+};
+refreshTokenButton();
 
-lockInput.addEventListener('input', ()=>{
-  tokenWrap.style.display = (lockInput.value === 'Admin2026') ? 'block' : 'none';
+/* =========================================================
+   Boot — entra direto no fluxograma
+   ========================================================= */
+loadFromGitHub().then(()=>{
+  updateTransform();
+  setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
 });
-lockInput.addEventListener('keydown', e=>{ if(e.key==='Enter') checkPass(); });
-tokenInput.addEventListener('keydown', e=>{ if(e.key==='Enter') checkPass(); });
-document.getElementById('lock-enter-btn').onclick = checkPass;
-document.getElementById('lock-view-btn').onclick = ()=>{
-  sessionStorage.setItem('fluxo-view','1');
-  sessionStorage.removeItem('fluxo-admin');
-  sessionStorage.removeItem('fluxo-gh-token');
-  openApp();
-};
-
-function checkPass(){
-  const v = lockInput.value;
-  if(v === 'Admin2026'){
-    const tok = tokenInput.value.trim();
-    if(!tok){ lockErr.textContent = 'Cole o token GitHub para continuar.'; return; }
-    sessionStorage.setItem('fluxo-admin','1');
-    sessionStorage.setItem('fluxo-gh-token', tok);
-    sessionStorage.removeItem('fluxo-view');
-    openApp();
-  } else if(v === 'Vitta@2026'){
-    sessionStorage.setItem('fluxo-view','1');
-    sessionStorage.removeItem('fluxo-admin');
-    sessionStorage.removeItem('fluxo-gh-token');
-    openApp();
-  } else {
-    lockErr.textContent = 'Senha incorreta.';
-    lockInput.value = '';
-    tokenWrap.style.display = 'none';
-    lockInput.focus();
-  }
-}
-
-function openApp(){
-  document.getElementById('lock-screen').style.display = 'none';
-  if(isView()){
-    document.body.classList.add('view-mode');
-    document.getElementById('modo-badge').style.display = 'inline-block';
-  } else {
-    document.body.classList.remove('view-mode');
-    document.getElementById('modo-badge').style.display = 'none';
-  }
-  loadFromGitHub().then(()=>{
-    updateTransform();
-    setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
-  });
-}
-
-document.getElementById('trocar-btn').onclick = ()=>{
-  sessionStorage.removeItem('fluxo-admin');
-  sessionStorage.removeItem('fluxo-view');
-  sessionStorage.removeItem('fluxo-gh-token');
-  document.getElementById('lock-screen').style.display = 'flex';
-  document.body.classList.remove('view-mode');
-  lockInput.value = '';
-  tokenInput.value = '';
-  tokenWrap.style.display = 'none';
-  lockErr.textContent = '';
-  lockInput.focus();
-};
-
-/* =========================================================
-   Bloqueio de edição em modo visualização
-   ========================================================= */
-function blockIfView(handler){
-  return function(...args){
-    if(isView()){ setStatus('Modo visualização — sem permissão de edição'); return; }
-    return handler.apply(this, args);
-  };
-}
-// reembrulha persist para não publicar se for view (segurança extra)
-const _persist = persist;
-persist = function(){ if(isView()) return; _persist(); };
-
-/* =========================================================
-   Boot
-   ========================================================= */
-if(isAdmin() || isView()){
-  openApp();
-} else {
-  lockInput.focus();
-}
 </script>
 </body>
 </html>

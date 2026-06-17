@@ -28,6 +28,7 @@
   #canvas-wrap{position:absolute;top:56px;left:0;right:0;bottom:0;overflow:hidden;background:#f4f4f4;cursor:grab}
   #canvas-wrap.panning{cursor:grabbing}
   #canvas-wrap.connecting{cursor:crosshair}
+  #canvas-wrap.lassoing{cursor:crosshair}
   #canvas{width:100%;height:100%;display:block}
   .node{cursor:move}
   .node.selected .shape{stroke:#0a4dbe !important;stroke-width:3 !important}
@@ -48,12 +49,19 @@
   .edge{fill:none;stroke:#525252;stroke-width:1.8}
   .edge.selected{stroke:#0a4dbe !important;stroke-width:3 !important}
   .edge-hit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+  .resize-handle{fill:#fff;stroke:#0a4dbe;stroke-width:1.5;cursor:nwse-resize}
+  .resize-handle.h-n,.resize-handle.h-s{cursor:ns-resize}
+  .resize-handle.h-e,.resize-handle.h-w{cursor:ew-resize}
+  .resize-handle.h-ne,.resize-handle.h-sw{cursor:nesw-resize}
+  .resize-handle.h-nw,.resize-handle.h-se{cursor:nwse-resize}
+  .guide{stroke:#fa4d56;stroke-width:1;stroke-dasharray:4 3;pointer-events:none}
+  .lasso{fill:rgba(10,77,190,.1);stroke:#0a4dbe;stroke-width:1;stroke-dasharray:5 3;pointer-events:none}
   #status{
     position:fixed;bottom:14px;left:14px;padding:7px 12px;background:rgba(22,22,22,.85);
     color:#fff;font-size:12px;z-index:100;pointer-events:none;transition:opacity .3s
   }
   #help{
-    position:fixed;bottom:14px;right:14px;max-width:300px;background:#fff;border:1px solid #c6c6c6;
+    position:fixed;bottom:14px;right:14px;max-width:310px;background:#fff;border:1px solid #c6c6c6;
     padding:11px 13px;font-size:12px;line-height:1.55;z-index:90;
   }
   #help h3{margin:0 0 6px;font-size:13px;color:#0a4dbe}
@@ -77,7 +85,6 @@
   .custom-row input[type=color]{width:34px;height:30px;border:1px solid #c6c6c6;background:#fff;cursor:pointer;padding:0}
   .btn b{font-family:serif;font-style:normal}
 
-  /* ===== Indicador de sync ===== */
   #sync-indicator{color:#fff;font-weight:600;font-size:12px;margin-left:auto}
   #token-btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;padding:7px 10px;cursor:pointer;font-size:13px;font-family:inherit}
   #token-btn:hover{background:rgba(255,255,255,.24)}
@@ -90,12 +97,14 @@
   <h1>Fluxo • Cancelamentos</h1>
   <button class="btn" id="add-box">▭ Caixa</button>
   <button class="btn" id="add-diamond">◇ Losango</button>
+  <button class="btn" id="add-circle">◯ Círculo</button>
   <button class="btn" id="add-text">T Texto</button>
-  <button class="btn" id="connect-btn">↗ Conectar</button>
+  <button class="btn" id="connect-btn" title="Conectar com seta reta">↗ Seta reta</button>
+  <button class="btn" id="connect-ortho-btn" title="Conectar com seta em L (90°)">┐ Seta L</button>
   <div class="sep"></div>
   <button class="btn" id="bold-btn" title="Negrito (Ctrl+B no modo edição)"><b>N</b></button>
   <button class="btn" id="emoji-btn" title="Inserir emoji">😀 Emoji</button>
-  <button class="btn" id="fill-btn" title="Cor de fundo da caixa / cor da seta">🎨 Cor</button>
+  <button class="btn" id="fill-btn" title="Cor de fundo / cor da seta">🎨 Cor</button>
   <button class="btn" id="text-color-btn" title="Cor do texto"><span style="border-bottom:3px solid #ffb000;padding-bottom:1px">A</span></button>
   <div class="sep"></div>
   <button class="btn danger" id="delete-btn">✕ Excluir</button>
@@ -119,7 +128,7 @@
 </div>
 
 <div class="popover" id="fill-pop">
-  <div class="popover-title">Cor (fundo da caixa / cor da seta)</div>
+  <div class="popover-title">Cor (fundo da forma / cor da seta)</div>
   <div class="color-grid" id="fill-grid"></div>
   <div class="custom-row">
     <input type="color" id="fill-custom" value="#0a4dbe">
@@ -153,6 +162,9 @@
       <rect id="grid-bg" x="-5000" y="-5000" width="10000" height="10000" fill="url(#grid)"/>
       <g id="edges-layer"></g>
       <g id="nodes-layer"></g>
+      <g id="handles-layer"></g>
+      <g id="guides-layer"></g>
+      <g id="lasso-layer"></g>
     </g>
   </svg>
 </div>
@@ -161,13 +173,14 @@
 
 <div id="help">
   <button class="close" onclick="this.parentNode.style.display='none'">×</button>
-  <h3>Como usar (estilo Miro)</h3>
-  <strong>Arrastar:</strong> clique e segure no item<br>
+  <h3>Como usar</h3>
+  <strong>Selecionar vários:</strong> <kbd>Shift</kbd>+clique, ou arraste com <kbd>Shift</kbd> no fundo (laço)<br>
+  <strong>Mover/pintar em grupo:</strong> selecione vários e arraste / aplique cor<br>
+  <strong>Redimensionar:</strong> selecione 1 item e arraste as alças azuis<br>
   <strong>Editar texto:</strong> duplo-clique<br>
-  <strong>Negrito:</strong> selecione um trecho + <b>N</b> (ou Ctrl+B)<br>
-  <strong>Emoji / Cor / Cor do texto:</strong> selecione o item + botão<br>
-  <strong>Conectar:</strong> <em>Conectar</em> → origem → destino<br>
-  <strong>Rótulo seta:</strong> duplo-clique na seta<br>
+  <strong>Negrito:</strong> selecione um trecho + <b>N</b><br>
+  <strong>Seta reta / Seta L:</strong> botão → origem → destino<br>
+  <strong>Rótulo da seta:</strong> duplo-clique na seta<br>
   <strong>Mover tela:</strong> arrastar fundo · <strong>Zoom:</strong> scroll<br>
   <strong>Excluir:</strong> selecione + <kbd>Delete</kbd>
 </div>
@@ -176,7 +189,7 @@
 /* =========================================================
    Estado e dados iniciais
    ========================================================= */
-const STORAGE_KEY = 'fluxo-cancelamentos-vitta-v3';
+const STORAGE_KEY = 'fluxo-cancelamentos-vitta-v4';
 
 const INITIAL = {
   nodes: [
@@ -229,16 +242,19 @@ const EMOJIS = [
   '🚀','🎉','💯','👍','👎','🙌','🙏','❤️','💙','💚','💛','🧡'
 ];
 
+const SNAP_TOL = 6;     // tolerância em px (em coordenadas do svg) para snap nas guias
+const MIN_W = 40, MIN_H = 30;
+
 const state = {
   nodes: [], edges: [], nextId: 1,
-  selected: null,         // {type:'node'|'edge', id}
-  connecting: null,       // null | 'await-source' | <nodeId>
+  selected: [],            // array de {type, id}
+  connecting: null,        // null | 'await-source-straight' | 'await-source-ortho' | {sourceId, routing}
   pan: {x:0, y:0}, zoom: 1,
-  editing: null           // nodeId atualmente em edição (ou null)
+  editing: null            // nodeId atualmente em edição (ou null)
 };
 
 /* =========================================================
-   Persistência + Sincronização GitHub (mesmo padrão do elegibilidade)
+   Persistência + GitHub sync
    ========================================================= */
 const GH_RAW = 'https://raw.githubusercontent.com/vitta-hd/acolhimento-vitta/main/fluxo-cancelamentos.json';
 const GH_API = 'https://api.github.com/repos/vitta-hd/acolhimento-vitta/contents/fluxo-cancelamentos.json';
@@ -247,9 +263,7 @@ function getToken(){ return localStorage.getItem('fluxo-gh-token') || ''; }
 function hasToken(){ return !!getToken(); }
 
 function persist(){
-  // cópia local sempre (para offline)
   localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
-  // se tem token configurado, publica no GitHub
   if(hasToken()) pushToGitHub();
 }
 
@@ -297,7 +311,6 @@ async function loadFromGitHub(){
       }
     }
   }catch(e){}
-  // fallback: localStorage > INITIAL
   loadLocal();
   setSyncStatus('⚠ Offline (cópia local)', '#fbbf24');
 }
@@ -314,11 +327,12 @@ function setSyncStatus(text, color){
   el.textContent = text;
   if(color) el.style.color = color;
 }
+
 function applyData(d){
   state.nodes = (d.nodes||[]).map(n=>({...n}));
   state.edges = (d.edges||[]).map(e=>({...e}));
   state.nextId = Math.max(0, ...state.nodes.map(n=>n.id||0), ...state.edges.map(e=>e.id||0)) + 1;
-  state.selected = null;
+  state.selected = [];
   state.editing = null;
   fullRender();
 }
@@ -331,6 +345,9 @@ const root = document.getElementById('root');
 const defs = svg.querySelector('defs');
 const nodesLayer = document.getElementById('nodes-layer');
 const edgesLayer = document.getElementById('edges-layer');
+const handlesLayer = document.getElementById('handles-layer');
+const guidesLayer = document.getElementById('guides-layer');
+const lassoLayer = document.getElementById('lasso-layer');
 const wrap = document.getElementById('canvas-wrap');
 
 function updateTransform(){
@@ -340,6 +357,19 @@ const nodeById = id => state.nodes.find(n=>n.id===id);
 const edgeById = id => state.edges.find(e=>e.id===id);
 const center   = n  => ({x:n.x + n.w/2, y:n.y + n.h/2});
 
+/* ----- seleção ----- */
+const isSelected     = (type,id)=>state.selected.some(s=>s.type===type && s.id===id);
+const selectedNodes  = ()=>state.selected.filter(s=>s.type==='node').map(s=>nodeById(s.id)).filter(Boolean);
+const selectedEdges  = ()=>state.selected.filter(s=>s.type==='edge').map(s=>edgeById(s.id)).filter(Boolean);
+function selectOne(type,id){ state.selected=[{type,id}]; }
+function addSel(type,id){ if(!isSelected(type,id)) state.selected.push({type,id}); }
+function toggleSel(type,id){
+  if(isSelected(type,id)) state.selected = state.selected.filter(s=>!(s.type===type && s.id===id));
+  else state.selected.push({type,id});
+}
+function clearSelection(){ state.selected=[]; }
+
+/* ----- interseções de linha com a forma ----- */
 function rectIntersect(node, fx, fy){
   const c = center(node);
   const dx = fx - c.x, dy = fy - c.y;
@@ -358,8 +388,17 @@ function diamondIntersect(node, fx, fy){
   const t = 1/(Math.abs(dx)/hw + Math.abs(dy)/hh);
   return {x:c.x + dx*t, y:c.y + dy*t};
 }
+function ellipseIntersect(node, fx, fy){
+  const c = center(node);
+  const dx = fx - c.x, dy = fy - c.y;
+  if(dx===0 && dy===0) return c;
+  const rx = node.w/2, ry = node.h/2;
+  const t = 1/Math.sqrt((dx*dx)/(rx*rx) + (dy*dy)/(ry*ry));
+  return {x:c.x + dx*t, y:c.y + dy*t};
+}
 function endpoint(node, fx, fy){
   if(node.type==='diamond') return diamondIntersect(node, fx, fy);
+  if(node.type==='ellipse') return ellipseIntersect(node, fx, fy);
   if(node.type==='text')    return {x: fx>center(node).x?node.x+node.w:node.x, y: center(node).y};
   return rectIntersect(node, fx, fy);
 }
@@ -386,32 +425,58 @@ function ensureMarker(color){
 /* =========================================================
    Render
    ========================================================= */
-function fullRender(){ renderEdges(); renderNodes(); }
+function fullRender(){ renderEdges(); renderNodes(); renderHandles(); }
+
+function pathForEdge(e){
+  // retorna {d, mid:{x,y}} para path; também usado para o label
+  const a = nodeById(e.from), b = nodeById(e.to);
+  if(!a || !b) return null;
+  const ca = center(a), cb = center(b);
+
+  if(e.routing === 'ortho'){
+    // L em duas pernas - escolhe primeiro horizontal ou vertical baseado em qual eixo é maior
+    const dx = cb.x - ca.x, dy = cb.y - ca.y;
+    let p1, corner, p2;
+    if(Math.abs(dx) >= Math.abs(dy)){
+      // H-V: horizontal primeiro, depois vertical
+      p1 = endpoint(a, cb.x, ca.y);
+      corner = {x: cb.x, y: ca.y};
+      p2 = endpoint(b, cb.x, ca.y);
+    } else {
+      // V-H: vertical primeiro
+      p1 = endpoint(a, ca.x, cb.y);
+      corner = {x: ca.x, y: cb.y};
+      p2 = endpoint(b, ca.x, cb.y);
+    }
+    return {
+      d: `M ${p1.x} ${p1.y} L ${corner.x} ${corner.y} L ${p2.x} ${p2.y}`,
+      mid: corner
+    };
+  }
+  // straight
+  const p1 = endpoint(a, cb.x, cb.y);
+  const p2 = endpoint(b, ca.x, ca.y);
+  return { d: `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`, mid:{x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2} };
+}
 
 function renderEdges(){
   edgesLayer.innerHTML = '';
   for(const e of state.edges){
-    const a = nodeById(e.from), b = nodeById(e.to);
-    if(!a || !b) continue;
-    const ca = center(a), cb = center(b);
-    const p1 = endpoint(a, cb.x, cb.y);
-    const p2 = endpoint(b, ca.x, ca.y);
-    const isSel  = state.selected && state.selected.type==='edge' && state.selected.id===e.id;
+    const path = pathForEdge(e); if(!path) continue;
+    const isSel  = isSelected('edge', e.id);
     const stroke = isSel ? '#0a4dbe' : (e.color || '#525252');
     const marker = isSel ? 'arrowhead-selected' : ensureMarker(stroke);
 
     const g = document.createElementNS('http://www.w3.org/2000/svg','g');
     g.setAttribute('data-edge-id', e.id);
 
-    const hit = document.createElementNS('http://www.w3.org/2000/svg','line');
-    hit.setAttribute('x1',p1.x); hit.setAttribute('y1',p1.y);
-    hit.setAttribute('x2',p2.x); hit.setAttribute('y2',p2.y);
+    const hit = document.createElementNS('http://www.w3.org/2000/svg','path');
+    hit.setAttribute('d', path.d);
     hit.setAttribute('class','edge-hit');
     g.appendChild(hit);
 
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
-    line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','path');
+    line.setAttribute('d', path.d);
     line.setAttribute('class','edge' + (isSel?' selected':''));
     line.setAttribute('stroke', stroke);
     line.setAttribute('marker-end', `url(#${marker})`);
@@ -419,7 +484,7 @@ function renderEdges(){
     g.appendChild(line);
 
     if(e.label){
-      const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+      const mx=path.mid.x, my=path.mid.y;
       const tw = Math.max(40, e.label.length*9 + 18), th = 24;
       const fo = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
       fo.setAttribute('x', mx-tw/2); fo.setAttribute('y', my-th/2);
@@ -443,8 +508,8 @@ function renderNodes(){
 
 function buildNode(n){
   const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-  const isSel = state.selected && state.selected.type==='node' && state.selected.id===n.id;
-  g.setAttribute('class','node' + (isSel?' selected':'') + (state.connecting===n.id?' connect-src':''));
+  const sel = isSelected('node', n.id);
+  g.setAttribute('class','node' + (sel?' selected':'') + (isConnectSource(n.id)?' connect-src':''));
   g.setAttribute('transform', `translate(${n.x},${n.y})`);
   g.setAttribute('data-node-id', n.id);
 
@@ -458,6 +523,10 @@ function buildNode(n){
     shape = document.createElementNS('http://www.w3.org/2000/svg','polygon');
     const hw=n.w/2, hh=n.h/2;
     shape.setAttribute('points', `${hw},0 ${n.w},${hh} ${hw},${n.h} 0,${hh}`);
+  } else if(n.type==='ellipse'){
+    shape = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    shape.setAttribute('cx', n.w/2); shape.setAttribute('cy', n.h/2);
+    shape.setAttribute('rx', n.w/2); shape.setAttribute('ry', n.h/2);
   } else { // text
     shape = document.createElementNS('http://www.w3.org/2000/svg','rect');
     shape.setAttribute('x',0); shape.setAttribute('y',0);
@@ -466,8 +535,9 @@ function buildNode(n){
     shape.setAttribute('stroke','transparent');
   }
   shape.setAttribute('class','shape ' + (n.variant||''));
-  if(n.fill)   shape.setAttribute('fill', n.fill);
-  if(n.stroke) shape.setAttribute('stroke', n.stroke);
+  // Usa style.* para vencer o CSS de variante (.shape.start etc.)
+  if(n.fill)   shape.style.fill   = n.fill;
+  if(n.stroke) shape.style.stroke = n.stroke;
   g.appendChild(shape);
 
   const fo = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
@@ -484,6 +554,10 @@ function buildNode(n){
   return g;
 }
 
+function isConnectSource(id){
+  return state.connecting && typeof state.connecting === 'object' && state.connecting.sourceId === id;
+}
+
 function refreshNode(id){
   const old = nodesLayer.querySelector(`[data-node-id="${id}"]`);
   const n = nodeById(id);
@@ -496,15 +570,43 @@ function refreshNode(id){
 function refreshSelectionClasses(){
   nodesLayer.querySelectorAll('.node').forEach(g=>{
     const id = +g.dataset.nodeId;
-    const sel = state.selected && state.selected.type==='node' && state.selected.id===id;
-    g.classList.toggle('selected', sel);
-    g.classList.toggle('connect-src', state.connecting===id);
+    g.classList.toggle('selected', isSelected('node', id));
+    g.classList.toggle('connect-src', isConnectSource(id));
   });
   renderEdges();
+  renderHandles();
+}
+
+/* ----- alças de redimensionamento (só com 1 nó selecionado) ----- */
+function renderHandles(){
+  handlesLayer.innerHTML = '';
+  if(state.selected.length !== 1 || state.selected[0].type !== 'node') return;
+  const n = nodeById(state.selected[0].id); if(!n) return;
+  const s = 10; // tamanho do handle (lado)
+  const half = s/2;
+  const positions = [
+    {key:'nw', x:n.x,         y:n.y},
+    {key:'n',  x:n.x+n.w/2,   y:n.y},
+    {key:'ne', x:n.x+n.w,     y:n.y},
+    {key:'e',  x:n.x+n.w,     y:n.y+n.h/2},
+    {key:'se', x:n.x+n.w,     y:n.y+n.h},
+    {key:'s',  x:n.x+n.w/2,   y:n.y+n.h},
+    {key:'sw', x:n.x,         y:n.y+n.h},
+    {key:'w',  x:n.x,         y:n.y+n.h/2}
+  ];
+  for(const p of positions){
+    const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    r.setAttribute('x', p.x-half); r.setAttribute('y', p.y-half);
+    r.setAttribute('width', s); r.setAttribute('height', s);
+    r.setAttribute('class', 'resize-handle h-'+p.key);
+    r.setAttribute('data-handle', p.key);
+    r.setAttribute('data-node-id', n.id);
+    handlesLayer.appendChild(r);
+  }
 }
 
 /* =========================================================
-   Edição de texto (HTML — preserva negrito/itálico/cor)
+   Edição de texto
    ========================================================= */
 function sanitize(html){
   return html
@@ -515,7 +617,6 @@ function sanitize(html){
     .replace(/javascript:/gi,'')
     .trim();
 }
-
 function startEdit(id){
   if(state.editing !== null && state.editing !== id){
     const prev = state.editing; commitEdit(); refreshNode(prev);
@@ -528,9 +629,8 @@ function startEdit(id){
   div.focus();
   const range = document.createRange(); range.selectNodeContents(div);
   const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-  setStatus('Edição: Enter salva · Esc cancela · selecione + N/A/🎨');
+  setStatus('Editando: Enter salva · Esc cancela');
 }
-
 function commitEdit(){
   if(state.editing === null) return null;
   const id = state.editing;
@@ -542,10 +642,10 @@ function commitEdit(){
     div.removeAttribute('contenteditable');
   }
   state.editing = null;
-  persist();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
+  if(hasToken()) pushToGitHub();
   return id;
 }
-
 function editEdgeLabel(id){
   const e = edgeById(id); if(!e) return;
   const v = prompt('Rótulo da seta (Sim, Não, etc). Vazio remove:', e.label||'');
@@ -556,7 +656,7 @@ function editEdgeLabel(id){
 }
 
 /* =========================================================
-   Coordenadas / drag / pan / zoom
+   Coordenadas / drag / pan / zoom / resize / lasso
    ========================================================= */
 function clientToSvg(cx, cy){
   const pt = svg.createSVGPoint(); pt.x=cx; pt.y=cy;
@@ -566,72 +666,99 @@ function clientToSvg(cx, cy){
   return {x:p.x, y:p.y};
 }
 
-let drag = null;
-let pan  = null;
+let drag   = null;   // {ids:[...], start:{[id]:{x,y}}, anchorOffset, moved}
+let resize = null;   // {id, key, orig:{x,y,w,h}, anchor:{x,y}}
+let pan    = null;
+let lasso  = null;   // {startX, startY, curX, curY}
 
-/* Delegação: mousedown nos nós ---------------------------------- */
+/* ----- handles: clique inicia resize ----- */
+handlesLayer.addEventListener('mousedown', ev=>{
+  const target = ev.target.closest('[data-handle]');
+  if(!target) return;
+  ev.stopPropagation();
+  const id = +target.dataset.nodeId;
+  const key = target.dataset.handle;
+  const n = nodeById(id); if(!n) return;
+  resize = { id, key, orig:{x:n.x, y:n.y, w:n.w, h:n.h}, anchor: clientToSvg(ev.clientX, ev.clientY), moved:false };
+});
+
+/* ----- nodes: mousedown ----- */
 nodesLayer.addEventListener('mousedown', ev=>{
   const target = ev.target;
-  if(target && target.isContentEditable) return;  // não atrapalhar a edição
+  if(target && target.isContentEditable) return;
   const g = target.closest && target.closest('[data-node-id]');
   if(!g) return;
   ev.stopPropagation();
   const id = +g.dataset.nodeId;
 
-  // modo Conectar
-  if(state.connecting !== null){
-    if(state.connecting === 'await-source'){
-      state.connecting = id;
+  // modo conectar
+  if(state.connecting){
+    if(state.connecting === 'await-source-straight' || state.connecting === 'await-source-ortho'){
+      const routing = state.connecting === 'await-source-ortho' ? 'ortho' : 'straight';
+      state.connecting = { sourceId: id, routing };
       setStatus('Agora clique no DESTINO (Esc cancela)');
       refreshSelectionClasses();
-    } else {
-      if(state.connecting !== id){
-        state.edges.push({id: state.nextId++, from: state.connecting, to: id});
+    } else if(typeof state.connecting === 'object'){
+      const { sourceId, routing } = state.connecting;
+      if(sourceId !== id){
+        const newEdge = {id: state.nextId++, from: sourceId, to: id};
+        if(routing === 'ortho') newEdge.routing = 'ortho';
+        state.edges.push(newEdge);
         persist();
         setStatus('Conexão criada');
       } else setStatus('Cancelado');
-      setConnectingMode(false);
+      setConnectingMode(null);
       fullRender();
     }
     return;
   }
 
-  // se estava editando outro nó, salva
+  // se estava editando, salva
   if(state.editing !== null && state.editing !== id){
     const prev = state.editing; commitEdit(); refreshNode(prev);
   }
 
-  // seleção (sem rebuild completo)
-  if(!state.selected || state.selected.type!=='node' || state.selected.id!==id){
-    state.selected = {type:'node', id};
+  // seleção
+  if(ev.shiftKey){
+    toggleSel('node', id);
     refreshSelectionClasses();
+    // shift-click não inicia drag
+    return;
+  } else {
+    if(!isSelected('node', id)){
+      selectOne('node', id);
+      refreshSelectionClasses();
+    }
   }
 
-  // pega para arrastar (a edição inicia só com dblclick)
+  // inicia drag de todos os nós selecionados
   const p = clientToSvg(ev.clientX, ev.clientY);
-  const n = nodeById(id);
-  drag = {id, offsetX: p.x - n.x, offsetY: p.y - n.y, moved:false};
+  const ids = selectedNodes().map(n=>n.id);
+  const start = {};
+  for(const nid of ids){ const nn = nodeById(nid); start[nid] = {x:nn.x, y:nn.y}; }
+  drag = { ids, start, anchor:{x:p.x, y:p.y}, moved:false };
 });
 
-/* Delegação: dblclick nos nós ----------------------------------- */
+/* ----- nodes: dblclick ----- */
 nodesLayer.addEventListener('dblclick', ev=>{
   const g = ev.target.closest && ev.target.closest('[data-node-id]');
   if(!g) return;
   ev.stopPropagation();
   const id = +g.dataset.nodeId;
-  drag = null;   // desarma o drag iniciado pelo segundo mousedown
+  drag = null;
   startEdit(id);
 });
 
-/* Delegação nas setas ------------------------------------------- */
+/* ----- edges: mousedown / dblclick ----- */
 edgesLayer.addEventListener('mousedown', ev=>{
   const g = ev.target.closest && ev.target.closest('[data-edge-id]');
   if(!g) return;
   ev.stopPropagation();
   const id = +g.dataset.edgeId;
-  if(state.connecting !== null){ setConnectingMode(false); return; }
+  if(state.connecting){ setConnectingMode(null); return; }
   if(state.editing !== null){ const prev = state.editing; commitEdit(); refreshNode(prev); }
-  state.selected = {type:'edge', id};
+  if(ev.shiftKey){ toggleSel('edge', id); }
+  else if(!isSelected('edge', id)){ selectOne('edge', id); }
   refreshSelectionClasses();
 });
 edgesLayer.addEventListener('dblclick', ev=>{
@@ -641,41 +768,111 @@ edgesLayer.addEventListener('dblclick', ev=>{
   editEdgeLabel(+g.dataset.edgeId);
 });
 
-/* Movimento global ----------------------------------------------- */
+/* ----- mousemove global ----- */
 window.addEventListener('mousemove', ev=>{
+  const p = clientToSvg(ev.clientX, ev.clientY);
+
+  if(resize){
+    const o = resize.orig;
+    let nx=o.x, ny=o.y, nw=o.w, nh=o.h;
+    const dx = p.x - resize.anchor.x;
+    const dy = p.y - resize.anchor.y;
+    if(resize.key.includes('e')) nw = Math.max(MIN_W, o.w + dx);
+    if(resize.key.includes('s')) nh = Math.max(MIN_H, o.h + dy);
+    if(resize.key.includes('w')){ const newW = Math.max(MIN_W, o.w - dx); nx = o.x + (o.w - newW); nw = newW; }
+    if(resize.key.includes('n')){ const newH = Math.max(MIN_H, o.h - dy); ny = o.y + (o.h - newH); nh = newH; }
+    const n = nodeById(resize.id);
+    n.x=Math.round(nx/5)*5; n.y=Math.round(ny/5)*5;
+    n.w=Math.round(nw/5)*5; n.h=Math.round(nh/5)*5;
+    resize.moved = true;
+    refreshNode(n.id); renderEdges(); renderHandles();
+    return;
+  }
+
   if(drag){
-    const n = nodeById(drag.id); if(!n) return;
-    const p = clientToSvg(ev.clientX, ev.clientY);
-    const nx = Math.round((p.x - drag.offsetX)/5)*5;
-    const ny = Math.round((p.y - drag.offsetY)/5)*5;
-    if(nx!==n.x || ny!==n.y) drag.moved = true;
-    n.x = nx; n.y = ny;
-    const g = nodesLayer.querySelector(`[data-node-id="${drag.id}"]`);
-    if(g) g.setAttribute('transform', `translate(${n.x},${n.y})`);
-    renderEdges();
-  } else if(pan){
+    let dx = p.x - drag.anchor.x;
+    let dy = p.y - drag.anchor.y;
+
+    // snap & guides para o primeiro nó do drag
+    const firstId = drag.ids[0];
+    if(firstId !== undefined){
+      const startN = drag.start[firstId];
+      const n0 = nodeById(firstId);
+      const target = {x: startN.x + dx, y: startN.y + dy, w:n0.w, h:n0.h};
+      const snap = computeSnapAndGuides(target, drag.ids);
+      dx += snap.dx;
+      dy += snap.dy;
+      renderGuides(snap.guides);
+    }
+
+    for(const id of drag.ids){
+      const n = nodeById(id); if(!n) continue;
+      const s = drag.start[id];
+      const nx = Math.round((s.x + dx)/5)*5;
+      const ny = Math.round((s.y + dy)/5)*5;
+      if(nx!==n.x || ny!==n.y) drag.moved = true;
+      n.x = nx; n.y = ny;
+      const g = nodesLayer.querySelector(`[data-node-id="${id}"]`);
+      if(g) g.setAttribute('transform', `translate(${n.x},${n.y})`);
+    }
+    renderEdges(); renderHandles();
+    return;
+  }
+
+  if(lasso){
+    lasso.curX = p.x; lasso.curY = p.y;
+    renderLasso();
+    return;
+  }
+
+  if(pan){
     state.pan.x = pan.basePanX + (ev.clientX - pan.startX);
     state.pan.y = pan.basePanY + (ev.clientY - pan.startY);
     updateTransform();
   }
 });
-window.addEventListener('mouseup', ()=>{
-  if(drag){ if(drag.moved) persist(); drag=null; }
+
+/* ----- mouseup global ----- */
+window.addEventListener('mouseup', ev=>{
+  if(resize){ if(resize.moved){ persist(); } resize=null; }
+  if(drag){ if(drag.moved){ persist(); } drag=null; }
   if(pan){ pan=null; wrap.classList.remove('panning'); }
+  if(lasso){
+    // seleciona tudo dentro do laço
+    const x1 = Math.min(lasso.startX, lasso.curX);
+    const y1 = Math.min(lasso.startY, lasso.curY);
+    const x2 = Math.max(lasso.startX, lasso.curX);
+    const y2 = Math.max(lasso.startY, lasso.curY);
+    const inside = state.nodes.filter(n => n.x >= x1 && n.x+n.w <= x2 && n.y >= y1 && n.y+n.h <= y2);
+    // se shift, agrega; senão substitui
+    if(!ev.shiftKey) clearSelection();
+    inside.forEach(n => addSel('node', n.id));
+    lasso=null; wrap.classList.remove('lassoing');
+    renderLasso(); refreshSelectionClasses();
+    setStatus(`${inside.length} selecionado(s)`);
+  }
+  guidesLayer.innerHTML = '';
 });
 
-/* Clique no fundo: deseleciona / encerra edição / inicia pan ----- */
+/* ----- clique no fundo: deseleciona / pan / lasso ----- */
 svg.addEventListener('mousedown', ev=>{
   if(ev.target===svg || ev.target.id==='grid-bg' || ev.target.id==='root'){
     if(state.editing !== null){ const prev = state.editing; commitEdit(); refreshNode(prev); }
-    if(state.connecting!==null){ setConnectingMode(false); setStatus('Cancelado'); return; }
-    if(state.selected){ state.selected = null; refreshSelectionClasses(); }
+    if(state.connecting){ setConnectingMode(null); setStatus('Cancelado'); return; }
+    if(ev.shiftKey){
+      // inicia LASSO
+      const p = clientToSvg(ev.clientX, ev.clientY);
+      lasso = {startX:p.x, startY:p.y, curX:p.x, curY:p.y};
+      wrap.classList.add('lassoing');
+      return;
+    }
+    if(state.selected.length){ clearSelection(); refreshSelectionClasses(); }
     pan = {startX:ev.clientX, startY:ev.clientY, basePanX:state.pan.x, basePanY:state.pan.y};
     wrap.classList.add('panning');
   }
 });
 
-/* Zoom com scroll ----------------------------------------------- */
+/* ----- zoom ----- */
 wrap.addEventListener('wheel', ev=>{
   ev.preventDefault();
   const r = wrap.getBoundingClientRect();
@@ -692,6 +889,95 @@ wrap.addEventListener('wheel', ev=>{
 }, {passive:false});
 
 /* =========================================================
+   Snap + Guias de alinhamento
+   ========================================================= */
+function computeSnapAndGuides(target, draggedIds){
+  // candidatos = bordas + centros de TODOS os outros nós
+  const draggedSet = new Set(draggedIds);
+  const tCenters = {
+    x: [target.x, target.x + target.w/2, target.x + target.w],
+    y: [target.y, target.y + target.h/2, target.y + target.h]
+  };
+  const candidates = { x:[], y:[] };
+  for(const o of state.nodes){
+    if(draggedSet.has(o.id)) continue;
+    candidates.x.push(o.x, o.x + o.w/2, o.x + o.w);
+    candidates.y.push(o.y, o.y + o.h/2, o.y + o.h);
+  }
+  let bestDx = null, bestDy = null;
+  const guides = [];
+  for(let i=0;i<3;i++){
+    for(const cx of candidates.x){
+      const d = cx - tCenters.x[i];
+      if(Math.abs(d) <= SNAP_TOL && (bestDx===null || Math.abs(d) < Math.abs(bestDx))){
+        bestDx = d;
+      }
+    }
+    for(const cy of candidates.y){
+      const d = cy - tCenters.y[i];
+      if(Math.abs(d) <= SNAP_TOL && (bestDy===null || Math.abs(d) < Math.abs(bestDy))){
+        bestDy = d;
+      }
+    }
+  }
+  const dx = bestDx ?? 0;
+  const dy = bestDy ?? 0;
+  // depois do snap, desenha guias para cada alinhamento exato (tolerância <=0.5)
+  const finalCenters = {
+    x: [target.x + dx, target.x + dx + target.w/2, target.x + dx + target.w],
+    y: [target.y + dy, target.y + dy + target.h/2, target.y + dy + target.h]
+  };
+  for(const cx of candidates.x){
+    for(const fx of finalCenters.x){
+      if(Math.abs(cx - fx) < 0.6) guides.push({type:'v', x:cx});
+    }
+  }
+  for(const cy of candidates.y){
+    for(const fy of finalCenters.y){
+      if(Math.abs(cy - fy) < 0.6) guides.push({type:'h', y:cy});
+    }
+  }
+  return {dx, dy, guides};
+}
+
+function renderGuides(guides){
+  guidesLayer.innerHTML = '';
+  // remove duplicatas
+  const seenV = new Set(), seenH = new Set();
+  for(const g of guides){
+    if(g.type==='v'){
+      if(seenV.has(g.x)) continue; seenV.add(g.x);
+      const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+      l.setAttribute('x1', g.x); l.setAttribute('x2', g.x);
+      l.setAttribute('y1', -5000); l.setAttribute('y2', 5000);
+      l.setAttribute('class','guide');
+      guidesLayer.appendChild(l);
+    } else {
+      if(seenH.has(g.y)) continue; seenH.add(g.y);
+      const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+      l.setAttribute('y1', g.y); l.setAttribute('y2', g.y);
+      l.setAttribute('x1', -5000); l.setAttribute('x2', 5000);
+      l.setAttribute('class','guide');
+      guidesLayer.appendChild(l);
+    }
+  }
+}
+
+function renderLasso(){
+  lassoLayer.innerHTML = '';
+  if(!lasso) return;
+  const x = Math.min(lasso.startX, lasso.curX);
+  const y = Math.min(lasso.startY, lasso.curY);
+  const w = Math.abs(lasso.curX - lasso.startX);
+  const h = Math.abs(lasso.curY - lasso.startY);
+  const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  r.setAttribute('x', x); r.setAttribute('y', y);
+  r.setAttribute('width', w); r.setAttribute('height', h);
+  r.setAttribute('class','lasso');
+  lassoLayer.appendChild(r);
+}
+
+/* =========================================================
    Toolbar
    ========================================================= */
 function setStatus(msg){
@@ -704,52 +990,63 @@ function setStatus(msg){
 function addNode(type){
   const r = wrap.getBoundingClientRect();
   const c = clientToSvg(r.left + r.width/2, r.top + r.height/2);
-  const w = type==='diamond' ? 200 : (type==='text' ? 200 : 240);
-  const h = type==='diamond' ? 170 : (type==='text' ? 44 : 80);
+  let w, h;
+  if(type==='diamond'){ w=200; h=170; }
+  else if(type==='ellipse'){ w=180; h=120; }
+  else if(type==='text'){ w=200; h=44; }
+  else { w=240; h=80; }
   const n = {
     id: state.nextId++, type,
     x: Math.round((c.x - w/2)/5)*5, y: Math.round((c.y - h/2)/5)*5,
     w, h,
-    text: type==='text' ? 'Texto' : (type==='diamond' ? 'Decisão?' : 'Nova etapa'),
+    text: type==='text' ? 'Texto' :
+          type==='diamond' ? 'Decisão?' :
+          type==='ellipse' ? 'Etapa' : 'Nova etapa',
     variant: type==='diamond' ? 'decision' : undefined
   };
   state.nodes.push(n);
-  state.selected = {type:'node', id:n.id};
+  selectOne('node', n.id);
   persist();
   fullRender();
   setStatus('Criado. Duplo-clique para editar.');
 }
 document.getElementById('add-box').onclick      = ()=>addNode('rect');
 document.getElementById('add-diamond').onclick  = ()=>addNode('diamond');
+document.getElementById('add-circle').onclick   = ()=>addNode('ellipse');
 document.getElementById('add-text').onclick     = ()=>addNode('text');
 
-function setConnectingMode(on){
-  const btn = document.getElementById('connect-btn');
-  if(on){
-    state.connecting = 'await-source';
-    btn.classList.add('active'); wrap.classList.add('connecting');
-    setStatus('Clique na caixa de ORIGEM');
+function setConnectingMode(mode){
+  // mode: null | 'straight' | 'ortho'
+  const sBtn = document.getElementById('connect-btn');
+  const oBtn = document.getElementById('connect-ortho-btn');
+  sBtn.classList.remove('active'); oBtn.classList.remove('active');
+  wrap.classList.remove('connecting');
+  if(mode === 'straight'){
+    state.connecting = 'await-source-straight';
+    sBtn.classList.add('active'); wrap.classList.add('connecting');
+    setStatus('Clique na forma de ORIGEM');
+  } else if(mode === 'ortho'){
+    state.connecting = 'await-source-ortho';
+    oBtn.classList.add('active'); wrap.classList.add('connecting');
+    setStatus('Clique na forma de ORIGEM (seta em L)');
   } else {
     state.connecting = null;
-    btn.classList.remove('active'); wrap.classList.remove('connecting');
   }
   refreshSelectionClasses();
 }
-document.getElementById('connect-btn').onclick = ()=>setConnectingMode(state.connecting===null);
+document.getElementById('connect-btn').onclick       = ()=>setConnectingMode(state.connecting==='await-source-straight'? null:'straight');
+document.getElementById('connect-ortho-btn').onclick = ()=>setConnectingMode(state.connecting==='await-source-ortho'?    null:'ortho');
 
 function deleteSelected(){
   if(state.editing !== null){ const prev = state.editing; commitEdit(); refreshNode(prev); }
-  if(!state.selected){ setStatus('Nada selecionado'); return; }
-  if(state.selected.type==='node'){
-    const id = state.selected.id;
-    state.nodes = state.nodes.filter(n=>n.id!==id);
-    state.edges = state.edges.filter(e=>e.from!==id && e.to!==id);
-  } else {
-    state.edges = state.edges.filter(e=>e.id!==state.selected.id);
-  }
-  state.selected = null;
+  if(!state.selected.length){ setStatus('Nada selecionado'); return; }
+  const nodeIds = new Set(state.selected.filter(s=>s.type==='node').map(s=>s.id));
+  const edgeIds = new Set(state.selected.filter(s=>s.type==='edge').map(s=>s.id));
+  state.nodes = state.nodes.filter(n => !nodeIds.has(n.id));
+  state.edges = state.edges.filter(e => !edgeIds.has(e.id) && !nodeIds.has(e.from) && !nodeIds.has(e.to));
+  clearSelection();
   persist(); fullRender();
-  setStatus('Excluído');
+  setStatus(`${nodeIds.size + edgeIds.size} excluído(s)`);
 }
 document.getElementById('delete-btn').onclick = deleteSelected;
 
@@ -772,7 +1069,7 @@ document.getElementById('zoom-fit').onclick = ()=>{
 
 document.getElementById('save-btn').onclick   = ()=>{
   if(state.editing!==null){ const prev=state.editing; commitEdit(); refreshNode(prev); }
-  persist(); setStatus('Salvo no navegador');
+  persist(); setStatus('Salvo');
 };
 document.getElementById('export-btn').onclick = ()=>{
   if(state.editing!==null){ const prev=state.editing; commitEdit(); refreshNode(prev); }
@@ -801,47 +1098,43 @@ document.getElementById('reset-btn').onclick = ()=>{
 };
 
 /* =========================================================
-   Negrito · Emoji · Cores (popovers)
+   Negrito · Emoji · Cores (popovers) — agora multi-seleção
    ========================================================= */
-
-// preservar o foco/seleção do contenteditable ao clicar nos botões
-function preserveFocus(el){
-  el.addEventListener('mousedown', e=>e.preventDefault());
-}
+function preserveFocus(el){ el.addEventListener('mousedown', e=>e.preventDefault()); }
 ['bold-btn','emoji-btn','fill-btn','text-color-btn'].forEach(id=>preserveFocus(document.getElementById(id)));
 document.querySelectorAll('.popover').forEach(p=>preserveFocus(p));
 
-// ----- Negrito -----
 document.getElementById('bold-btn').onclick = ()=>{
   if(state.editing !== null){
     document.execCommand('bold');
     const g = nodesLayer.querySelector(`[data-node-id="${state.editing}"]`);
     g?.querySelector('.node-text')?.focus();
-  } else if(state.selected && state.selected.type==='node'){
-    const n = nodeById(state.selected.id); if(!n) return;
+    return;
+  }
+  const ns = selectedNodes();
+  if(!ns.length){ setStatus('Selecione um item ou entre em edição'); return; }
+  for(const n of ns){
     const t = (n.text||'').trim();
     if(/^<(b|strong)\b[^>]*>[\s\S]*<\/(b|strong)>$/i.test(t)){
       n.text = t.replace(/^<(b|strong)\b[^>]*>([\s\S]*)<\/(b|strong)>$/i,'$2');
     } else {
       n.text = '<b>'+t+'</b>';
     }
-    persist(); refreshNode(n.id);
-  } else setStatus('Selecione um item ou entre em edição');
+    refreshNode(n.id);
+  }
+  persist();
 };
 
-// ----- Popovers (helper) -----
 function openPopover(popId, anchor){
   closePopovers();
   const pop = document.getElementById(popId);
   const r = anchor.getBoundingClientRect();
-  const w = 260;
+  const w = 280;
   pop.style.left = Math.min(window.innerWidth - w - 10, Math.max(10, r.left)) + 'px';
   pop.style.top = (r.bottom + 6) + 'px';
   pop.classList.add('open');
 }
-function closePopovers(){
-  document.querySelectorAll('.popover.open').forEach(p=>p.classList.remove('open'));
-}
+function closePopovers(){ document.querySelectorAll('.popover.open').forEach(p=>p.classList.remove('open')); }
 window.addEventListener('mousedown', ev=>{
   if(!ev.target.closest) return;
   if(ev.target.closest('.popover')) return;
@@ -849,7 +1142,6 @@ window.addEventListener('mousedown', ev=>{
   closePopovers();
 }, true);
 
-// ----- Emoji -----
 const emojiGrid = document.getElementById('emoji-grid');
 EMOJIS.forEach(e=>{
   const b = document.createElement('button');
@@ -858,7 +1150,7 @@ EMOJIS.forEach(e=>{
   b.onclick = ()=>insertEmoji(e);
   emojiGrid.appendChild(b);
 });
-document.getElementById('emoji-btn').onclick = (ev)=>{
+document.getElementById('emoji-btn').onclick = ev=>{
   const pop = document.getElementById('emoji-pop');
   if(pop.classList.contains('open')) closePopovers();
   else openPopover('emoji-pop', ev.currentTarget);
@@ -868,23 +1160,24 @@ function insertEmoji(e){
     const g = nodesLayer.querySelector(`[data-node-id="${state.editing}"]`);
     const div = g?.querySelector('.node-text');
     if(div){ div.focus(); document.execCommand('insertText', false, e); }
-  } else if(state.selected && state.selected.type==='node'){
-    const n = nodeById(state.selected.id); if(!n) return;
-    n.text = (n.text||'') + ' ' + e;
-    persist(); refreshNode(n.id);
-  } else {
-    // sem seleção: cria um texto livre com o emoji
-    const r = wrap.getBoundingClientRect();
-    const c = clientToSvg(r.left + r.width/2, r.top + r.height/2);
-    const w = 80, h = 60;
-    const n = {id: state.nextId++, type:'text', x:Math.round((c.x-w/2)/5)*5, y:Math.round((c.y-h/2)/5)*5, w, h, text:'<span style="font-size:32px">'+e+'</span>', textColor:'#161616'};
-    state.nodes.push(n);
-    state.selected = {type:'node', id:n.id};
-    persist(); fullRender();
+    return;
   }
+  const ns = selectedNodes();
+  if(ns.length){
+    for(const n of ns){ n.text = (n.text||'') + ' ' + e; refreshNode(n.id); }
+    persist();
+    return;
+  }
+  // sem seleção: cria um texto livre com o emoji
+  const r = wrap.getBoundingClientRect();
+  const c = clientToSvg(r.left + r.width/2, r.top + r.height/2);
+  const w = 80, h = 60;
+  const n = {id: state.nextId++, type:'text', x:Math.round((c.x-w/2)/5)*5, y:Math.round((c.y-h/2)/5)*5, w, h, text:'<span style="font-size:32px">'+e+'</span>', textColor:'#161616'};
+  state.nodes.push(n);
+  selectOne('node', n.id);
+  persist(); fullRender();
 }
 
-// ----- Cores -----
 function buildPalette(grid, onPick){
   grid.innerHTML='';
   const none = document.createElement('button');
@@ -902,35 +1195,36 @@ function buildPalette(grid, onPick){
 }
 buildPalette(document.getElementById('fill-grid'), applyFillColor);
 buildPalette(document.getElementById('text-grid'), applyTextColor);
-
 document.getElementById('fill-custom').addEventListener('mousedown', ev=>ev.preventDefault());
 document.getElementById('text-custom').addEventListener('mousedown', ev=>ev.preventDefault());
 document.getElementById('fill-custom').onchange = e=>applyFillColor(e.target.value);
 document.getElementById('text-custom').onchange = e=>applyTextColor(e.target.value);
 
-document.getElementById('fill-btn').onclick = (ev)=>{
+document.getElementById('fill-btn').onclick = ev=>{
   const pop = document.getElementById('fill-pop');
   if(pop.classList.contains('open')) closePopovers();
   else openPopover('fill-pop', ev.currentTarget);
 };
-document.getElementById('text-color-btn').onclick = (ev)=>{
+document.getElementById('text-color-btn').onclick = ev=>{
   const pop = document.getElementById('text-color-pop');
   if(pop.classList.contains('open')) closePopovers();
   else openPopover('text-color-pop', ev.currentTarget);
 };
 
 function applyFillColor(color){
-  if(!state.selected){ setStatus('Selecione uma caixa ou seta primeiro'); return; }
-  if(state.selected.type==='node'){
-    const n = nodeById(state.selected.id); if(!n) return;
-    if(color===null){ delete n.fill; delete n.stroke; }
-    else { n.fill = color; }
-    persist(); refreshNode(n.id); renderEdges();
-  } else {
-    const e = edgeById(state.selected.id); if(!e) return;
-    if(color===null) delete e.color; else e.color = color;
-    persist(); renderEdges();
+  if(!state.selected.length){ setStatus('Selecione um item primeiro'); return; }
+  for(const sel of state.selected){
+    if(sel.type==='node'){
+      const n = nodeById(sel.id); if(!n) continue;
+      if(color===null){ delete n.fill; delete n.stroke; }
+      else { n.fill = color; }
+      refreshNode(n.id);
+    } else {
+      const e = edgeById(sel.id); if(!e) continue;
+      if(color===null) delete e.color; else e.color = color;
+    }
   }
+  persist(); renderEdges();
 }
 function applyTextColor(color){
   if(state.editing !== null){
@@ -939,53 +1233,50 @@ function applyTextColor(color){
     document.execCommand('foreColor', false, color || '#161616');
     return;
   }
-  if(!state.selected || state.selected.type!=='node'){ setStatus('Selecione um item primeiro'); return; }
-  const n = nodeById(state.selected.id); if(!n) return;
-  if(color===null) delete n.textColor; else n.textColor = color;
-  persist(); refreshNode(n.id);
+  const ns = selectedNodes();
+  if(!ns.length){ setStatus('Selecione um item primeiro'); return; }
+  for(const n of ns){
+    if(color===null) delete n.textColor; else n.textColor = color;
+    refreshNode(n.id);
+  }
+  persist();
 }
 
 /* =========================================================
    Atalhos de teclado
    ========================================================= */
 window.addEventListener('keydown', e=>{
-  // Atalhos durante a edição
   if(state.editing !== null){
-    if(e.key==='Enter' && !e.shiftKey){
-      e.preventDefault();
-      const id = state.editing; commitEdit(); refreshNode(id);
-    } else if(e.key==='Escape'){
-      e.preventDefault();
-      const id = state.editing; commitEdit(); refreshNode(id);
-    } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='b'){
-      e.preventDefault(); document.execCommand('bold');
-    } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='i'){
-      e.preventDefault(); document.execCommand('italic');
-    } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='u'){
-      e.preventDefault(); document.execCommand('underline');
-    }
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); const id = state.editing; commitEdit(); refreshNode(id); }
+    else if(e.key==='Escape'){ e.preventDefault(); const id = state.editing; commitEdit(); refreshNode(id); }
+    else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='b'){ e.preventDefault(); document.execCommand('bold'); }
+    else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='i'){ e.preventDefault(); document.execCommand('italic'); }
+    else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='u'){ e.preventDefault(); document.execCommand('underline'); }
     return;
   }
-  // Atalhos fora de edição
   if(e.target && (e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA')) return;
-  if(e.key==='Delete' || e.key==='Backspace'){
-    if(state.selected){ e.preventDefault(); deleteSelected(); }
-  }
+  if(e.key==='Delete' || e.key==='Backspace'){ if(state.selected.length){ e.preventDefault(); deleteSelected(); } }
   if(e.key==='Escape'){
-    if(state.connecting!==null) setConnectingMode(false);
-    if(state.selected){ state.selected=null; refreshSelectionClasses(); }
+    if(state.connecting) setConnectingMode(null);
+    if(state.selected.length){ clearSelection(); refreshSelectionClasses(); }
     closePopovers();
+  }
+  // Ctrl+A = selecionar tudo
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='a'){
+    e.preventDefault();
+    state.selected = state.nodes.map(n=>({type:'node', id:n.id}));
+    refreshSelectionClasses();
   }
 });
 
 /* =========================================================
-   Botão 🔑 — configurar token uma vez por navegador
+   Botão 🔑 — token GitHub
    ========================================================= */
 function refreshTokenButton(){
   const b = document.getElementById('token-btn');
   if(hasToken()){
     b.classList.add('on');
-    b.title = 'Publicação ativa (clique para trocar/remover o token)';
+    b.title = 'Publicação ativa (clique para trocar/remover)';
     b.textContent = '🔑 publicando';
   } else {
     b.classList.remove('on');
@@ -997,7 +1288,7 @@ document.getElementById('token-btn').onclick = ()=>{
   const cur = getToken();
   const v = prompt(
     cur
-      ? 'Token atual configurado. Cole um novo para trocar, ou deixe vazio para REMOVER (e voltar a só visualizar).'
+      ? 'Token configurado. Cole um novo para trocar, ou deixe vazio para REMOVER.'
       : 'Cole seu token do GitHub (ghp_...) para publicar suas alterações para todos.\nO token fica salvo só neste navegador.',
     cur
   );
@@ -1011,7 +1302,7 @@ document.getElementById('token-btn').onclick = ()=>{
 refreshTokenButton();
 
 /* =========================================================
-   Boot — entra direto no fluxograma
+   Boot
    ========================================================= */
 loadFromGitHub().then(()=>{
   updateTransform();

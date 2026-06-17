@@ -76,9 +76,52 @@
   .custom-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:#525252}
   .custom-row input[type=color]{width:34px;height:30px;border:1px solid #c6c6c6;background:#fff;cursor:pointer;padding:0}
   .btn b{font-family:serif;font-style:normal}
+
+  /* ===== Tela de senha (igual elegibilidade) ===== */
+  #lock-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)}
+  #lock-screen .box{width:100%;max-width:380px;padding:0 24px;text-align:center}
+  #lock-screen h1{color:#fff;font-size:1.4rem;font-weight:700;margin:28px 0;font-family:'IBM Plex Sans',sans-serif}
+  #lock-screen input{width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;font-family:inherit;margin-bottom:10px}
+  #lock-screen input::placeholder{color:rgba(255,255,255,.5)}
+  #lock-screen .help{color:#93c5fd;font-size:.72rem;margin-top:6px}
+  #lock-screen .err{color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px}
+  #lock-screen .btns{display:flex;gap:10px;margin-top:16px}
+  #lock-screen button{flex:1;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer;font-family:inherit}
+  #lock-screen button:hover{background:#083a91}
+  #lock-screen button.ghost{background:transparent;border:1px solid rgba(255,255,255,.4)}
+  #lock-screen button.ghost:hover{background:rgba(255,255,255,.1)}
+  #lock-screen .logo{height:36px;margin:0 auto;filter:brightness(0) invert(1)}
+
+  /* ===== Indicador de sync e modo ===== */
+  #top-status{position:fixed;top:6px;right:14px;display:flex;align-items:center;gap:10px;z-index:101;font-size:12px}
+  #sync-indicator{color:#fff;font-weight:600}
+  #modo-badge{display:none;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:20px;padding:3px 12px}
+  #trocar-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit}
+  #trocar-btn:hover{background:rgba(255,255,255,.28)}
+  body.view-mode #toolbar .btn:not(#trocar-btn):not(#zoom-in):not(#zoom-out):not(#zoom-fit){display:none}
+  body.view-mode #toolbar .sep{display:none}
+  body.view-mode .node{cursor:default}
 </style>
 </head>
 <body>
+
+<!-- ===== TELA DE SENHA ===== -->
+<div id="lock-screen">
+  <div class="box">
+    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png" class="logo" alt="Vitta"/>
+    <h1>Fluxo de Cancelamentos</h1>
+    <input id="lock-input" type="password" placeholder="Digite a senha" autocomplete="off" />
+    <div id="token-wrap" style="display:none">
+      <input id="token-input" type="text" placeholder="Cole seu token GitHub (ghp_...)" autocomplete="off" />
+      <p class="help">🔒 Token fica só na memória desta sessão</p>
+    </div>
+    <p id="lock-err" class="err"></p>
+    <div class="btns">
+      <button class="ghost" id="lock-view-btn">👁 Só visualizar</button>
+      <button id="lock-enter-btn">Entrar</button>
+    </div>
+  </div>
+</div>
 
 <div id="toolbar">
   <h1>Fluxo • Cancelamentos</h1>
@@ -103,6 +146,10 @@
   <button class="btn" id="load-btn">📂 Carregar</button>
   <button class="btn" id="reset-btn">↺ Reset</button>
   <input type="file" id="file-input" accept=".json" style="display:none">
+  <div style="flex:1"></div>
+  <span id="sync-indicator"></span>
+  <span id="modo-badge">👁️ Modo visualização</span>
+  <button id="trocar-btn" title="Trocar usuário / Sair">🔄 Trocar</button>
 </div>
 
 <div class="popover" id="emoji-pop">
@@ -230,15 +277,80 @@ const state = {
 };
 
 /* =========================================================
-   Persistência
+   Persistência + Sincronização GitHub (mesmo padrão do elegibilidade)
    ========================================================= */
+const GH_RAW = 'https://raw.githubusercontent.com/vitta-hd/acolhimento-vitta/main/fluxo-cancelamentos.json';
+const GH_API = 'https://api.github.com/repos/vitta-hd/acolhimento-vitta/contents/fluxo-cancelamentos.json';
+
+function isAdmin(){ return sessionStorage.getItem('fluxo-admin')==='1'; }
+function isView(){  return sessionStorage.getItem('fluxo-view')==='1'; }
+
 function persist(){
+  // cópia local sempre
   localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
+  // admin publica no GitHub (debounced)
+  if(isAdmin()) pushToGitHub();
 }
-function load(){
+
+let _ghPushTimer = null;
+function pushToGitHub(){
+  clearTimeout(_ghPushTimer);
+  setSyncStatus('⏳ Salvando…', '#fbbf24');
+  _ghPushTimer = setTimeout(()=>{
+    const token = sessionStorage.getItem('fluxo-gh-token');
+    if(!token){ setSyncStatus('⚠ Sem token', '#fca5a5'); return; }
+    const payload = JSON.stringify({nodes:state.nodes, edges:state.edges}, null, 2);
+    const content = btoa(unescape(encodeURIComponent(payload)));
+    fetch(GH_API, { headers:{'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json'} })
+      .then(r => r.json())
+      .then(f => fetch(GH_API, {
+        method:'PUT',
+        headers:{'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json'},
+        body: JSON.stringify({
+          message: 'Atualizar fluxo de cancelamentos',
+          content,
+          sha: f.sha
+        })
+      }))
+      .then(r => {
+        if(r.ok){ setSyncStatus('✅ Salvo para todos', '#16a34a'); setTimeout(()=>setSyncStatus('',''), 3500); }
+        else { setSyncStatus('❌ Erro ao salvar', '#fca5a5'); }
+      })
+      .catch(()=>setSyncStatus('❌ Sem conexão', '#fca5a5'));
+  }, 1200);
+}
+
+async function loadFromGitHub(){
+  setSyncStatus('⏳ Carregando…', '#fff');
+  try{
+    const r = await fetch(GH_RAW + '?t=' + Date.now());
+    if(r.ok){
+      const remote = await r.json();
+      if(remote && Array.isArray(remote.nodes)){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+        applyData(remote);
+        setSyncStatus(isAdmin()?'🟢 Conectado':'👁 Visualização', isAdmin()?'#86efac':'#fde68a');
+        setTimeout(()=>setSyncStatus('',''), 3500);
+        return;
+      }
+    }
+  }catch(e){}
+  // fallback: localStorage > INITIAL
+  loadLocal();
+  setSyncStatus('⚠ Offline (cópia local)', '#fbbf24');
+}
+
+function loadLocal(){
   const raw = localStorage.getItem(STORAGE_KEY);
   if(raw){ try{ applyData(JSON.parse(raw)); return; }catch(e){} }
   applyData(INITIAL);
+}
+
+function setSyncStatus(text, color){
+  const el = document.getElementById('sync-indicator');
+  if(!el) return;
+  el.textContent = text;
+  if(color) el.style.color = color;
 }
 function applyData(d){
   state.nodes = (d.nodes||[]).map(n=>({...n}));
@@ -905,11 +1017,97 @@ window.addEventListener('keydown', e=>{
 });
 
 /* =========================================================
+   Tela de senha (replicando elegibilidade)
+   ========================================================= */
+const lockInput  = document.getElementById('lock-input');
+const tokenWrap  = document.getElementById('token-wrap');
+const tokenInput = document.getElementById('token-input');
+const lockErr    = document.getElementById('lock-err');
+
+lockInput.addEventListener('input', ()=>{
+  tokenWrap.style.display = (lockInput.value === 'Admin2026') ? 'block' : 'none';
+});
+lockInput.addEventListener('keydown', e=>{ if(e.key==='Enter') checkPass(); });
+tokenInput.addEventListener('keydown', e=>{ if(e.key==='Enter') checkPass(); });
+document.getElementById('lock-enter-btn').onclick = checkPass;
+document.getElementById('lock-view-btn').onclick = ()=>{
+  sessionStorage.setItem('fluxo-view','1');
+  sessionStorage.removeItem('fluxo-admin');
+  sessionStorage.removeItem('fluxo-gh-token');
+  openApp();
+};
+
+function checkPass(){
+  const v = lockInput.value;
+  if(v === 'Admin2026'){
+    const tok = tokenInput.value.trim();
+    if(!tok){ lockErr.textContent = 'Cole o token GitHub para continuar.'; return; }
+    sessionStorage.setItem('fluxo-admin','1');
+    sessionStorage.setItem('fluxo-gh-token', tok);
+    sessionStorage.removeItem('fluxo-view');
+    openApp();
+  } else if(v === 'Vitta@2026'){
+    sessionStorage.setItem('fluxo-view','1');
+    sessionStorage.removeItem('fluxo-admin');
+    sessionStorage.removeItem('fluxo-gh-token');
+    openApp();
+  } else {
+    lockErr.textContent = 'Senha incorreta.';
+    lockInput.value = '';
+    tokenWrap.style.display = 'none';
+    lockInput.focus();
+  }
+}
+
+function openApp(){
+  document.getElementById('lock-screen').style.display = 'none';
+  if(isView()){
+    document.body.classList.add('view-mode');
+    document.getElementById('modo-badge').style.display = 'inline-block';
+  } else {
+    document.body.classList.remove('view-mode');
+    document.getElementById('modo-badge').style.display = 'none';
+  }
+  loadFromGitHub().then(()=>{
+    updateTransform();
+    setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
+  });
+}
+
+document.getElementById('trocar-btn').onclick = ()=>{
+  sessionStorage.removeItem('fluxo-admin');
+  sessionStorage.removeItem('fluxo-view');
+  sessionStorage.removeItem('fluxo-gh-token');
+  document.getElementById('lock-screen').style.display = 'flex';
+  document.body.classList.remove('view-mode');
+  lockInput.value = '';
+  tokenInput.value = '';
+  tokenWrap.style.display = 'none';
+  lockErr.textContent = '';
+  lockInput.focus();
+};
+
+/* =========================================================
+   Bloqueio de edição em modo visualização
+   ========================================================= */
+function blockIfView(handler){
+  return function(...args){
+    if(isView()){ setStatus('Modo visualização — sem permissão de edição'); return; }
+    return handler.apply(this, args);
+  };
+}
+// reembrulha persist para não publicar se for view (segurança extra)
+const _persist = persist;
+persist = function(){ if(isView()) return; _persist(); };
+
+/* =========================================================
    Boot
    ========================================================= */
-load();
-updateTransform();
-setTimeout(()=>document.getElementById('zoom-fit').click(), 30);
+if(isAdmin() || isView()){
+  openApp();
+} else {
+  lockInput.focus();
+}
 </script>
 </body>
 </html>

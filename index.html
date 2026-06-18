@@ -22,138 +22,285 @@
   .opt:focus{outline:none;border-color:#0a4dbe;background:#e9f0fb;}
   input,textarea{caret-color:#0a4dbe;}
   ::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background:#c6c6c6}
+  .preamble{white-space:pre-line}
+  .preamble strong{color:#0a4dbe}
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-<!-- ============================================================
-  CONFIGURAÇÃO — onde salvar as respostas
-  Deixe ENDPOINT vazio para testar (as respostas aparecem no console
-  do navegador e podem ser baixadas). Para gravar numa planilha Google:
-   1. Crie uma planilha no Google (com sua conta).
-   2. Extensões > Apps Script, cole o código abaixo e troque SHEET_ID.
-   3. Implantar > Nova implantação > App da Web > Qualquer pessoa.
-   4. Copie a URL /exec e cole em ENDPOINT.
-
-   function doPost(e){
-     var sh = SpreadsheetApp.openById('SHEET_ID').getSheets()[0];
-     var d = e.parameter;
-     var keys = Object.keys(d);
-     if(sh.getLastRow()===0){ sh.appendRow(keys); }
-     sh.appendRow(keys.map(function(k){return d[k];}));
-     return ContentService.createTextOutput('ok');
-   }
-============================================================ -->
 <script>
-// ====== COLE AQUI A SUA CHAVE DO WEB3FORMS ======
+// ====== CHAVE WEB3FORMS — para onde os envios são enviados ======
 // 1) Acesse https://web3forms.com  2) digite seu e-mail  3) copie a "Access Key"
-// 4) cole a chave entre as aspas abaixo:
 const CONFIG = { WEB3FORMS_KEY: "COLE_SUA_ACCESS_KEY_AQUI" };
-// =================================================
+// =================================================================
 const LOGO = "https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png";
 
-// Mensagens por trilha — com empatia diferenciada
-const MSG_OK_G   = "Que alegria saber disso! 💙 Ficamos felizes em poder te acompanhar nesse momento tão especial. Desejamos que seu parto seja tranquilo, seguro e cheio de amor. Assim que o novo plano estiver disponível, seu médico e hospital poderão solicitar os atendimentos e procedimentos na nossa rede credenciada.";
-const MSG_OK_C   = "Ótima notícia! 💙 Ficamos aliviados em saber que está tudo certo. Desejamos que o procedimento corra muito bem e que sua recuperação seja tranquila e rápida. Assim que o novo plano estiver disponível, seu médico e hospital poderão solicitar os processos na nossa rede credenciada.";
-const MSG_PARC_G = "Entendemos, e estamos aqui para te apoiar! 💙 Assim que o novo plano estiver disponível, basta solicitar os processos, atendimentos e procedimentos na nossa rede credenciada. Sua tranquilidade e a do bebê são nossa prioridade.";
-const MSG_PARC_C = "Entendemos, e vamos trabalhar para encontrar a melhor solução! 💙 Assim que o novo plano estiver disponível, basta solicitar os processos, atendimentos e procedimentos na nossa rede credenciada. Estamos com você!";
-const MSG_OK     = "Perfeito! 💙 Você poderá confirmar com seu médico/hospital a aceitação do seu plano. Assim que o novo plano estiver disponível, ele poderá solicitar os processos, atendimentos e procedimentos na nossa rede credenciada.";
-const MSG_PARC   = "Ótimo! 💙 Assim que o novo plano estiver disponível, basta solicitar os processos, atendimentos e procedimentos na nossa rede credenciada.";
-const MSG_INT_OK = "Perfeito! 💙 Você poderá confirmar com o hospital/clínica a aceitação do seu plano. Assim que o novo plano estiver disponível, ele poderá solicitar os processos, atendimentos e procedimentos na nossa rede credenciada.";
-const MSG_ELET   = "Como o seu plano está passando por alteração, é necessário entrar em contato com o local onde sua consulta ou exame está agendado para confirmar se aceitam o novo plano. Caso aceitem, basta aguardar a carteirinha do novo plano e apresentá-la no dia do atendimento (ou enviar com antecedência para garantir a autorização). Se o local não aceitar o novo plano, será preciso aguardar a ativação do app e verificar a nova rede credenciada para ser atendido em outro local. Nesse caso, não cabe acolhimento por parte da Vitta, sendo você o responsável por seguir com as orientações acima.";
-const MSG_SEM_PLANO   = "Tudo bem, entendemos completamente! 💙 Caso ainda não tenha acesso ao novo plano, orientamos que aguarde a troca do mesmo e a nova disponibilização da carteirinha no App. Em caso de dúvidas sobre para qual plano você irá migrar, ou qualquer outra solicitação relacionada à migração, você também pode procurar o RH. Assim que tudo estiver disponível, estaremos prontos para te ajudar!";
-const MSG_INT_SEM_PLANO = "Tudo bem, entendemos! 💙 Sabemos que esse momento pode gerar incertezas. Assim que você tiver acesso ao novo plano, nossa equipe estará pronta para te apoiar da melhor forma. Se precisar de ajuda antes disso, não hesite em procurar o RH.";
+/* ---------- Mensagens (replicando o form 1:1) ---------- */
+
+// Seção 3 — Gestante: ✓ Tudo certo!
+const MSG_OK_G = `Que alegria saber disso! 💙
+
+Ficamos felizes em poder te acompanhar nesse momento tão especial. Desejamos que seu parto seja tranquilo, seguro e cheio de amor. Assim que o novo plano estiver disponível, seu médico e hospital poderão solicitar os atendimentos e procedimentos na nossa rede credenciada.
+
+Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me`;
+
+// Seção 4 — Gestante: Estamos aqui para ajudar! (preamble da Q10)
+const MSG_G_AJUDAR = `<strong>Importante:</strong> Caso seu médico e/ou maternidade não aceitem o novo plano, será necessário utilizar outra opção disponível na rede credenciada. Não conseguimos garantir que os prestadores atualmente utilizados atenderão o novo plano.
+
+<strong>Médico aceita o plano, mas a maternidade não:</strong>
+Se o seu médico aceitar o novo plano, mas a maternidade não, orientamos verificar com ele a possibilidade de realizar o parto em outra maternidade credenciada.
+
+<strong>Médico não aceita o plano, mas a maternidade sim:</strong>
+Nesse caso, será necessário escolher outro médico obstetra que atenda ao seu plano e realize os atendimentos na maternidade escolhida, conforme a rede credenciada disponível.
+
+<strong>Médico e maternidade não aceitam o plano:</strong>
+Se tanto o médico obstetra quanto a maternidade não atenderem o novo plano, será necessário buscar um novo profissional e uma nova maternidade dentro da rede credenciada disponível.`;
+
+// Seção 7 — Cirurgia: ✓ Tudo certo!
+const MSG_OK_C = `Ótima notícia! 💙
+
+Ficamos aliviados em saber que tudo está certo. Desejamos que tudo corra muito bem e que sua recuperação seja leve e tranquila. Assim que o novo plano estiver disponível, seu médico e hospital poderão solicitar os processos na nossa rede credenciada.
+
+Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me`;
+
+// Seção 8 — Cirurgia: ✓ Vamos encontrar a melhor solução!
+const MSG_PARC_C = `Entendemos, e vamos trabalhar para encontrar a melhor solução! 💙
+
+Assim que o novo plano estiver disponível, basta solicitar os processos, atendimentos e procedimentos na nossa rede credenciada. Estamos com você!
+
+Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me`;
+
+// Preamble da Seção 9 — Cirurgia — Informações adicionais
+const MSG_C_AJUDAR = `<strong>Cirurgia — Vamos encontrar a melhor solução!</strong>
+
+Em casos em que seu médico não aceite o novo plano, será necessário utilizar outra opção da rede credenciada. Não conseguimos garantir que os prestadores atualmente utilizados aceitarão o novo plano.`;
+
+// Preamble da Seção 10 — Tratamento Contínuo
+const MSG_T_INTRO = `<strong>Tratamento Contínuo</strong>
+
+Em casos de tratamento contínuo realizado pelo plano, como consultas, exames ou acompanhamentos recorrentes, orientamos que entre em contato com o local onde o atendimento está agendado para confirmar se o novo plano será aceito. Caso aceitem, basta aguardar a disponibilização da carteirinha do novo plano e a apresentá-la no dia do atendimento, ou encaminhá-la previamente para análise e autorização, quando necessário.
+
+Se o local não aceitar o novo plano, será necessário aguardar a ativação do aplicativo da nova operadora para consultar a rede credenciada disponível e dar continuidade ao tratamento em outro prestador habilitado.`;
+
+// Seção 13 — Internado: ✓ Tudo certo!
+const MSG_INT_OK = `Perfeito! 💙
+
+Você poderá confirmar com o hospital/clínica a aceitação do seu plano. Assim que o novo plano estiver disponível, ele poderá solicitar os processos, atendimentos e procedimentos na nossa rede credenciada.
+
+Nesse momento o mais importante é o seu bem-estar. Pode contar com a gente.
+
+Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me`;
+
+// Seção 18 — Eletivos: Orientações importantes
+const MSG_ELET_ORIENT = `<strong>Fique atento às orientações abaixo</strong> 💙
+
+Como o seu plano está passando por alteração, é importante entrar em contato com o local onde sua consulta ou exame está agendado para confirmar se o novo plano será aceito. Caso aceitem, basta aguardar a disponibilização da carteirinha do novo plano e a apresentá-la no dia do atendimento (ou encaminhá-la com antecedência para garantir a autorização, quando necessário).
+
+Se o local não aceitar o novo plano, será preciso aguardar a ativação do aplicativo da nova operadora e consultar a rede credenciada disponível para o seu atendimento em outro prestador. Nesses casos, a escolha do novo local de atendimento deverá ser realizada com base na rede credenciada do novo plano.`;
+
+// Seção 19 — Eletivos: Aguardando acesso ao plano
+const MSG_AGUARDA = `Tudo bem, entendemos completamente! 💙
+
+Caso ainda não tenha acesso ao novo plano, orientamos que aguarde a troca do mesmo e a nova disponibilização da carteirinha no App.
+
+Após a troca é importante entrar em contato com o local onde sua consulta ou exame está agendado para confirmar se o novo plano será aceito. Caso aceitem, basta aguardar a disponibilização da carteirinha do novo plano e a apresentá-la no dia do atendimento (ou encaminhá-la com antecedência para garantir a autorização, quando necessário).
+
+Se o local não aceitar o novo plano, será preciso aguardar a ativação do aplicativo da nova operadora e consultar a rede credenciada disponível para o seu atendimento em outro prestador.
+
+Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me`;
+
+// Seção 20 — Perfeito!
+const MSG_PERFEITO = `Perfeito! 💙
+
+Caso necessite de apoio durante a busca, basta retornar a este formulário e selecionar a opção "Preciso de apoio na localização de um prestador da rede credenciada".
+
+Nossa equipe ficará à disposição para auxiliá-la. Pedimos apenas que fique atenta ao prazo de encerramento deste formulário junto ao RH.
+
+Pensando em proporcionar mais agilidade ao seu processo de escolha e garantir informações mais assertivas, recomendamos que valide diretamente com seu obstetra e/ou com a maternidade de sua preferência se eles atendem pelo novo plano. Dessa forma, você conseguirá obter a confirmação de forma mais rápida e alinhada às suas necessidades.`;
+
+// Atenção comum (envio de documentos)
+const HINT_DOCS = 'Pode enviar o seu pedido médico ou documentos do tratamento? Envie por e-mail para sac@vitta.me, com o assunto (Troca de plano + "nome empresa" + "seu nome")';
+
+/* ---------- Mapa de passos (cada chave é uma "tela") ---------- */
+// Marcação `secao` é só pra rastreio/depuração — não muda comportamento.
+// Submit acontece apenas onde next() retorna 'SUBMIT' (seções 5, 9, 10, 11, 16).
 
 const STEPS = {
-  intro:    {type:'intro'},
-  nome:     {type:'text',  q:'Qual o nome completo do beneficiário?', req:true, next:()=>'cpf'},
-  cpf:      {type:'cpf',   q:'Qual o CPF do beneficiário?', req:true, next:()=>'email'},
-  email:    {type:'email', q:'Qual o seu e-mail?', req:true, next:()=>'telefone'},
-  telefone: {type:'tel',   q:'Qual o seu telefone? (informe com DDD)', req:true, hint:'Ex.: 11 98765-4321', next:()=>'canal'},
-  canal:    {type:'text',  q:'Qual o melhor canal e horário para contato?', req:true, next:()=>'situacao'},
-  situacao: {type:'choice', q:'Qual das opções abaixo descreve melhor a sua situação para acolhimento?',
+  intro: { type:'intro' },
+
+  /* ============================================================
+     SEÇÃO 1 — Dados básicos
+     ============================================================ */
+  nome:     { secao:1, type:'text',     q:'Qual o nome completo do beneficiário?', req:true, next:()=>'empresa' },
+  empresa:  { secao:1, type:'textarea', q:'Qual nome da sua empresa?',             next:()=>'cpf' },
+  cpf:      { secao:1, type:'cpf',      q:'Qual o CPF do beneficiário? (somente 11 dígitos numéricos)', req:true, next:()=>'email' },
+  email:    { secao:1, type:'email',    q:'Qual o seu e-mail?', req:true, next:()=>'telefone' },
+  telefone: { secao:1, type:'tel',      q:'Qual o seu telefone? (informe com DDD)', req:true, hint:'Ex.: 11 98765-4321', next:()=>'canal' },
+  canal:    { secao:1, type:'choice',   q:'Qual o melhor canal para contato?', req:true,
     options:[
-      {label:'Estou gestante', go:'g_verif'},
-      {label:'Tenho cirurgia ou procedimento cirúrgico agendado', go:'c_verif'},
-      {label:'Faço tratamento ou acompanhamento contínuo pelo convênio', go:'t_verif'},
-      {label:'Faço uso de medicamento contínuo ou exames pelo convênio', go:'m_qual'},
-      {label:'Estou internado(a) ou em home care', go:'i_verif'},
-      {label:'Tenho consultas/exames eletivos agendados (ex.: DIU, odontológico, consultas de rotina)', go:'f_verif'},
+      {label:'Whatsapp', go:'periodo'},
+      {label:'Ligação',  go:'periodo'},
+      {label:'E-mail',   go:'periodo'},
+    ]},
+  periodo:  { secao:1, type:'choice',   q:'Qual melhor periodo para contato?',
+    options:[
+      {label:'Manhã', go:'situacao'},
+      {label:'Tarde', go:'situacao'},
+      {label:'Noite', go:'situacao'},
+    ]},
+  situacao: { secao:1, type:'choice',   q:'Qual das opções abaixo descreve melhor a sua situação para acolhimento?', req:true,
+    options:[
+      {label:'Estou gestante',                                                                                go:'g_verif'},
+      {label:'Tenho cirurgia ou procedimento cirúrgico agendado',                                             go:'c_verif'},
+      {label:'Faço tratamento ou acompanhamento contínuo pelo convênio',                                      go:'t_intro'},
+      {label:'Faço uso de medicamento contínuo pelo convênio',                                                go:'m_qual'},
+      {label:'Estou internado(a) ou em home care',                                                            go:'i_verif'},
+      {label:'Tenho consultas/exames eletivos agendados (ex.: DIU, odontológico, consultas de rotina)',       go:'f_verif'},
     ]},
 
-  // Gestante
-  g_verif:{type:'choice', q:'Você já verificou com seu médico e com o hospital/maternidade se ambos aceitam o novo plano?',
+  /* ============================================================
+     SEÇÃO 2 — Gestante (Q9)
+     ============================================================ */
+  g_verif: { secao:2, type:'choice', q:'Você já verificou com seu médico e com o hospital/maternidade se ambos aceitam o novo plano?', req:true,
     options:[
-      {label:'Sim, e ambos já aceitam o novo plano', go:'msg_ok_g'},
-      {label:'Sim, mas um deles ainda não aceita', go:'msg_parc_g'},
-      {label:'Ainda não verifiquei / o novo plano ainda não está disponível', go:'g_semanas'},
-    ]},
-  g_semanas:{type:'text', q:'Com quantas semanas de gestação você está?', next:()=>'g_hosp'},
-  g_hosp:{type:'text', q:'Em qual hospital/maternidade e com qual médico o parto está agendado?', next:()=>'g_pref'},
-  g_pref:{type:'text', q:'Você tem alguma outra preferência de médico, maternidade ou bairro?', next:()=>'g_data'},
-  g_data:{type:'text', q:'O parto está previsto para quando?', next:()=>'g_info'},
-  g_info:{type:'textarea', q:'Há mais alguma informação importante para localizarmos um novo profissional?', next:()=>'SUBMIT'},
-
-  // Cirurgia
-  c_verif:{type:'choice', q:'Você já verificou com seu médico e hospital se aceitam o novo plano?',
-    options:[
-      {label:'Sim, e ambos já aceitam o novo plano', go:'msg_ok_c'},
-      {label:'Sim, mas um deles ainda não aceita', go:'msg_parc_c'},
-      {label:'Ainda não verifiquei / o novo plano ainda não está disponível', go:'c_qual'},
-    ]},
-  c_qual:{type:'text', q:'Qual cirurgia/procedimento está agendado e para quando?', next:()=>'c_hosp'},
-  c_hosp:{type:'text', q:'Em qual hospital e com qual médico?', next:()=>'c_pref'},
-  c_pref:{type:'text', q:'Caso seu médico/hospital não aceite o novo plano, você tem outra preferência de médico, hospital ou bairro?', next:()=>'c_doc'},
-  c_doc:{type:'textarea', q:'Pode enviar o seu pedido médico ou documentos do tratamento? (envie por WhatsApp no 11 49493-6663, pelo e-mail sac@vitta.me ou cole um link aqui)', next:()=>'c_info'},
-  c_info:{type:'textarea', q:'Deseja trazer mais alguma informação?', next:()=>'SUBMIT'},
-
-  // Tratamento contínuo
-  t_verif:{type:'text', q:'Você já verificou com seu médico/hospital se aceitam o novo plano?', next:()=>'t_qual'},
-  t_qual:{type:'text', q:'Qual tratamento você realiza atualmente?', next:()=>'t_data'},
-  t_data:{type:'text', q:'Qual a data do próximo tratamento?', next:()=>'t_local'},
-  t_local:{type:'text', q:'Em qual hospital ou com qual médico você realiza o tratamento?', next:()=>'t_doc'},
-  t_doc:{type:'textarea', q:'Pode enviar o seu pedido médico ou documentos do tratamento? (envie por WhatsApp no 11 49493-6663, pelo e-mail sac@vitta.me ou cole um link aqui)', next:()=>'t_info'},
-  t_info:{type:'textarea', q:'Deseja trazer mais alguma informação?', next:()=>'SUBMIT'},
-
-  // Medicamento
-  m_qual:{type:'text', q:'Quais medicamentos você utiliza atualmente com liberação da operadora?', next:()=>'m_local'},
-  m_local:{type:'text', q:'Em qual local você retira ou recebe a medicação?', next:()=>'m_data'},
-  m_data:{type:'text', q:'Qual é a data da próxima retirada ou aplicação da medicação?', next:()=>'m_doc'},
-  m_doc:{type:'textarea', q:'Consegue enviar a receita ou comprovante? (por WhatsApp no 11 49493-6663, pelo e-mail sac@vitta.me ou cole um link aqui)', next:()=>'m_info'},
-  m_info:{type:'textarea', q:'Deseja trazer mais alguma informação?', next:()=>'SUBMIT'},
-
-  // Internado / home care
-  i_verif:{type:'choice', q:'Você já verificou com o hospital/clínica se aceitam o novo plano?',
-    options:[
-      {label:'Sim, e o hospital/clínica já aceita o novo plano', go:'msg_int_ok'},
-      {label:'Sim, mas ainda não aceita', go:'msg_parc'},
-      {label:'Ainda não verifiquei / o novo plano ainda não está disponível', go:'i_hosp'},
-      {label:'Não sei informar, pois ainda não tenho acesso ao meu novo plano', go:'i_sem_plano'},
-    ]},
-  i_hosp:{type:'text', q:'Em qual hospital você está internado(a) ou está em home care?', next:()=>'i_motivo'},
-  i_motivo:{type:'textarea', q:'Qual o motivo da internação ou do home care? (se tiver relatório/exames, cole um link)', next:()=>'i_info'},
-  i_info:{type:'textarea', q:'Deseja trazer mais alguma informação?', next:()=>'SUBMIT'},
-
-  // Eletivos — verifica acesso ao plano antes de prosseguir
-  f_verif:{type:'choice', q:'Você já tem acesso ao seu novo plano?',
-    options:[
-      {label:'Sim, já tenho acesso ao novo plano', go:'f_msg'},
-      {label:'Ainda não tenho acesso ao novo plano', go:'f_sem_plano'},
+      {label:'Sim, e ambos já aceitam o novo plano',                  go:'msg_ok_g'},        // Seção 3 (terminal)
+      {label:'Sim, mas o novo plano não é aceito',                    go:'g_ajudar'},        // Seção 4 (preamble + Q10)
+      {label:'Ainda não verifiquei',                                  go:'g_q42'},           // pergunta 42
+      {label:'Não tenho acesso a informações do meu novo plano',      go:'g_apoio'},         // pergunta 11 (Seção 5)
     ]},
 
-  // Mensagens terminais
-  msg_ok_g:    {type:'message', q:MSG_OK_G},
-  msg_ok_c:    {type:'message', q:MSG_OK_C},
-  msg_parc_g:  {type:'message', q:MSG_PARC_G},
-  msg_parc_c:  {type:'message', q:MSG_PARC_C},
-  msg_ok:      {type:'message', q:MSG_OK},
-  msg_parc:    {type:'message', q:MSG_PARC},
-  msg_int_ok:  {type:'message', q:MSG_INT_OK},
-  f_msg:       {type:'message', q:MSG_ELET},
-  f_sem_plano: {type:'message', q:MSG_SEM_PLANO},
-  i_sem_plano: {type:'message', q:MSG_INT_SEM_PLANO},
+  /* SEÇÃO 3 — terminal */
+  msg_ok_g: { secao:3, type:'message', title:'✓ Tudo certo!', q:MSG_OK_G, terminal:true },
+
+  /* SEÇÃO 4 — Gestante - Estamos aqui para ajudar! (Q10) */
+  g_ajudar: { secao:4, type:'message-choice', title:'Gestante — Estamos aqui para ajudar!', preamble:MSG_G_AJUDAR,
+    q:'Como deseja prosseguir?',
+    options:[
+      {label:'Após as orientações, opto por seguir as recomendações definidas em conjunto entre meu médico(a) e a maternidade.', go:'msg_perfeito'},
+      {label:'Preciso de apoio na localização de prestadores da rede credenciada.',                                              go:'g_apoio'},
+    ]},
+
+  /* Pergunta 42 — Gestante: "Ainda não verifiquei" */
+  g_q42: { secao:2, type:'choice', q:'Como deseja prosseguir?',
+    options:[
+      {label:'Após as orientações, opto por seguir as recomendações definidas em conjunto entre meu médico(a) e a maternidade.', go:'msg_perfeito'},
+      {label:'Preciso de apoio na localização de prestadores da rede credenciada.',                                              go:'g_apoio'},
+    ]},
+
+  /* ============================================================
+     SEÇÃO 5 — Gestante — Informações adicionais (Q11–Q18) → SUBMIT
+     ============================================================ */
+  g_apoio:  { secao:5, type:'choice', q:'Qual apoio de busca você precisa?',
+    options:[
+      {label:'Hospital', go:'g_semanas'},
+      {label:'Médico',   go:'g_semanas'},
+      {label:'Ambos',    go:'g_semanas'},
+    ]},
+  g_semanas:{ secao:5, type:'text',     q:'Com quantas semanas de gestação você está?', next:()=>'g_data' },
+  g_data:   { secao:5, type:'text',     q:'O parto está previsto para quando?', next:()=>'g_medico' },
+  g_medico: { secao:5, type:'text',     q:'Qual o nome completo do seu médico obstetra?', next:()=>'g_hosp' },
+  g_hosp:   { secao:5, type:'textarea', q:'Em qual cidade e maternidade está programado o seu parto?', next:()=>'g_bairros' },
+  g_bairros:{ secao:5, type:'text',     q:'Para apoiarmos na busca de prestadores, informe os bairros de sua preferência para atendimento.', next:()=>'g_info' },
+  g_info:   { secao:5, type:'textarea', q:'Há mais alguma informação importante que possamos considerar para localizar um novo prestador?',
+              hint:'Por exemplo: preferência por profissional homem ou mulher; necessidade de UTI Neonatal; outras características. Quanto mais detalhes você compartilhar, mais assertiva será nossa busca.',
+              next:()=>'g_outras' },
+  g_outras: { secao:5, type:'textarea', q:'Deseja informar outras condições de saúde, cirurgias futuras já agendadas, medicamentos utilizados pelo plano ou alguma condição específica que considere importante mencionar?',
+              hint:HINT_DOCS, next:()=>'SUBMIT' },
+
+  /* ============================================================
+     SEÇÃO 6 — Cirurgia / Procedimento (Q19)
+     ============================================================ */
+  c_verif: { secao:6, type:'choice', q:'Você já verificou com seu médico e hospital se aceitam o novo plano?', req:true,
+    options:[
+      {label:'Sim, e ambos já aceitam o novo plano',                  go:'msg_ok_c'},   // Seção 7 (terminal)
+      {label:'Sim, mas o novo plano não é aceito',                    go:'msg_parc_c'}, // Seção 8 (terminal)
+      {label:'Ainda não verifiquei',                                  go:'c_intro'},    // → Seção 9
+      {label:'Não tenho acesso a informações do meu novo plano',      go:'c_intro'},    // → Seção 9
+    ]},
+
+  /* SEÇÃO 7 — terminal */
+  msg_ok_c:   { secao:7, type:'message', title:'✓ Tudo certo!',                          q:MSG_OK_C,   terminal:true },
+  /* SEÇÃO 8 — terminal */
+  msg_parc_c: { secao:8, type:'message', title:'✓ Vamos encontrar a melhor solução!',  q:MSG_PARC_C, terminal:true },
+
+  /* ============================================================
+     SEÇÃO 9 — Cirurgia — Informações adicionais (Q20–Q25) → SUBMIT
+     ============================================================ */
+  c_intro:  { secao:9, type:'message-next', title:'Cirurgia — Informações adicionais', preamble:MSG_C_AJUDAR, next:()=>'c_qual' },
+  c_qual:   { secao:9, type:'text',     q:'Qual cirurgia/procedimento está agendado?', next:()=>'c_data' },
+  c_data:   { secao:9, type:'text',     q:'Qual a data está programada a sua cirurgia ou procedimento?', hint:'Exemplo: 7 de janeiro de 2026', next:()=>'c_medico' },
+  c_medico: { secao:9, type:'text',     q:'Qual o nome completo do profissional que irá realizar a sua cirurgia?', next:()=>'c_bairros' },
+  c_bairros:{ secao:9, type:'text',     q:'Para apoiarmos na busca de prestadores, informe os bairros de sua preferência para atendimento.', next:()=>'c_info' },
+  c_info:   { secao:9, type:'textarea', q:'Há mais alguma informação importante que possamos considerar para localizar um novo prestador?',
+              hint:'Por exemplo: preferência por profissional homem ou mulher; necessidade de atendimento em algum hospital específico; outras características. Quanto mais detalhes você compartilhar, mais assertiva será nossa busca.',
+              next:()=>'c_outras' },
+  c_outras: { secao:9, type:'textarea', q:'Deseja informar outras condições de saúde, medicamentos utilizados pelo plano ou alguma condição específica que considere importante mencionar?',
+              hint:HINT_DOCS, next:()=>'SUBMIT' },
+
+  /* ============================================================
+     SEÇÃO 10 — Tratamento Contínuo (Q26–Q31) → SUBMIT
+     ============================================================ */
+  t_intro:  { secao:10, type:'message-next', title:'Tratamento Contínuo', preamble:MSG_T_INTRO, next:()=>'t_qual' },
+  t_qual:   { secao:10, type:'text',     q:'Qual tratamento você realiza atualmente?', next:()=>'t_data' },
+  t_data:   { secao:10, type:'text',     q:'Qual a data do próximo tratamento?', next:()=>'t_prof' },
+  t_prof:   { secao:10, type:'text',     q:'Qual o nome completo do profissional que faz o seu acompanhamento?', next:()=>'t_bairros' },
+  t_bairros:{ secao:10, type:'text',     q:'Para apoiarmos na busca de prestadores, informe os bairros de sua preferência para atendimento.', next:()=>'t_info' },
+  t_info:   { secao:10, type:'textarea', q:'Há mais alguma informação importante que possamos considerar para localizar um novo prestador, caso seja necessário?',
+              hint:'Por exemplo: preferência por profissional homem ou mulher; necessidade de atendimento em algum hospital específico; outras características.',
+              next:()=>'t_outras' },
+  t_outras: { secao:10, type:'textarea', q:'Deseja trazer mais alguma informação? Outras condições de saúde, cirurgias futuras já agendadas, medicamentos utilizados pelo plano ou alguma condição específica que considere importante mencionar?',
+              hint:HINT_DOCS, next:()=>'SUBMIT' },
+
+  /* ============================================================
+     SEÇÃO 11 — Medicamento Contínuo (Q32–Q35) → SUBMIT
+     ============================================================ */
+  m_qual:   { secao:11, type:'text',     q:'Quais medicamentos você utiliza atualmente com liberação da operadora?', next:()=>'m_local' },
+  m_local:  { secao:11, type:'text',     q:'Em qual local você retira ou recebe a medicação?', next:()=>'m_data' },
+  m_data:   { secao:11, type:'text',     q:'Qual é a data da próxima retirada ou aplicação da medicação?', next:()=>'m_outras' },
+  m_outras: { secao:11, type:'textarea', q:'Deseja trazer mais alguma informação? Outras condições de saúde, cirurgias futuras já agendadas ou alguma condição específica que considere importante mencionar?',
+              hint:HINT_DOCS, next:()=>'SUBMIT' },
+
+  /* ============================================================
+     SEÇÃO 12 — Internado / Home Care (Q36)
+     ============================================================ */
+  i_verif: { secao:12, type:'choice', q:'Você já verificou com o hospital/clínica se aceitam o novo plano?', req:true,
+    options:[
+      {label:'Sim, e o hospital/clínica já aceita o novo plano',                                                       go:'msg_int_ok'}, // Seção 13 (terminal)
+      {label:'O novo plano não é aceito ou ainda não tenho acesso às informações do plano para realizar a verificação.', go:'i_hosp'},     // → Seção 16
+    ]},
+
+  /* SEÇÃO 13 — terminal */
+  msg_int_ok: { secao:13, type:'message', title:'✓ Tudo certo!', q:MSG_INT_OK, terminal:true },
+
+  /* ============================================================
+     SEÇÃO 16 — Internado — Informações adicionais (Q37–Q40) → SUBMIT
+     ============================================================ */
+  i_hosp:   { secao:16, type:'text',     q:'Em qual hospital você está internado(a) ou está em home care?', next:()=>'i_motivo' },
+  i_motivo: { secao:16, type:'textarea', q:'Qual o motivo da internação ou do home care?', next:()=>'i_info' },
+  i_info:   { secao:16, type:'textarea', q:'Há mais alguma informação importante que possamos considerar para localizar um novo prestador, caso seja necessário?',
+              hint:'Por exemplo: preferência por profissional homem ou mulher; necessidade de atendimento em algum hospital específico; outras características.',
+              next:()=>'i_outras' },
+  i_outras: { secao:16, type:'textarea', q:'Outras condições de saúde, cirurgias futuras já agendadas, medicamentos utilizados pelo plano ou alguma condição específica que considere importante mencionar?',
+              hint:HINT_DOCS, next:()=>'SUBMIT' },
+
+  /* ============================================================
+     SEÇÃO 17 — Consultas e/ou exames eletivos (Q41)
+     ============================================================ */
+  f_verif: { secao:17, type:'choice', q:'Você já tem acesso ao seu novo plano?', req:true,
+    options:[
+      {label:'Sim, já tenho acesso ao novo plano',     go:'msg_elet_orient'},  // Seção 18 (terminal)
+      {label:'Ainda não tenho acesso ao novo plano',   go:'msg_aguarda'},      // Seção 19 (terminal)
+    ]},
+
+  /* SEÇÃO 18 — terminal (Orientações importantes) */
+  msg_elet_orient: { secao:18, type:'message', title:'Orientações importantes', q:MSG_ELET_ORIENT, terminal:true },
+  /* SEÇÃO 19 — terminal (Aguardando acesso ao plano) */
+  msg_aguarda:     { secao:19, type:'message', title:'Aguardando acesso ao plano', q:MSG_AGUARDA, terminal:true },
+  /* SEÇÃO 20 — terminal (Perfeito!) */
+  msg_perfeito:    { secao:20, type:'message', title:'Perfeito!', q:MSG_PERFEITO, terminal:true },
 };
 
+/* ---------- Estado / render ---------- */
 let current = 'intro';
 let history = [];
 let answers = {};
@@ -162,35 +309,60 @@ const app = () => document.getElementById('app');
 const progressEl = () => document.getElementById('progress');
 
 function setProgress(){
-  const pct = current==='intro'?0 : Math.min(95, 10 + history.length*9);
-  progressEl().style.width = (current==='intro'?0:pct)+'%';
+  const pct = current==='intro' ? 0 : Math.min(95, 8 + history.length*8);
+  progressEl().style.width = pct + '%';
 }
+
+function labelNum(){ return 'Pergunta ' + (history.length+1); }
 
 function render(){
   setProgress();
   const s = STEPS[current];
   let html = '';
+
   if(s.type==='intro'){
     html = `
       <div class="step max-w-xl">
         <img src="${LOGO}" class="h-9 mb-8" alt="Vitta"/>
         <p class="text-xs font-mono uppercase tracking-widest text-v-blue mb-3">Hospital Digital Vitta</p>
-        <h1 class="text-3xl md:text-4xl font-semibold leading-tight mb-4">Acolhimento de beneficiários</h1>
+        <h1 class="text-3xl md:text-4xl font-semibold leading-tight mb-4">Acolhimento — Hospital Digital Vitta</h1>
         <p class="text-v-t70 mb-8 leading-relaxed">Para te acolher da melhor forma durante a mudança do seu plano, vamos fazer algumas perguntas rápidas. Leva poucos minutos.</p>
         <button onclick="avancar('nome')" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-8 py-4">Começar</button>
       </div>`;
-  } else if(s.type==='message'){
+  }
+  else if(s.type==='message'){
+    // Tela terminal — apenas mostra a mensagem e oferece voltar ao início
     html = `
       <div class="step max-w-xl">
-        <div class="w-12 h-12 bg-v-bluel text-v-blue flex items-center justify-center mb-6 text-2xl">✓</div>
-        <p class="text-xl md:text-2xl leading-relaxed text-v-t100 mb-8">${s.q}</p>
-        <button onclick="enviar()" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-8 py-4">Enviar respostas</button>
+        <div class="w-12 h-12 bg-v-bluel text-v-blue flex items-center justify-center mb-6 text-2xl">💙</div>
+        ${s.title ? `<h2 class="text-2xl md:text-3xl font-semibold leading-snug mb-4">${s.title}</h2>` : ''}
+        <p class="preamble text-v-t100 leading-relaxed mb-8">${s.q}</p>
+        <div class="flex items-center gap-3">
+          <button onclick="reiniciar()" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-7 py-3">Voltar ao início</button>
+        </div>
       </div>`;
-  } else if(s.type==='choice'){
+  }
+  else if(s.type==='message-next'){
+    // Tela intermediária com texto longo + botão OK (avança sem coletar resposta)
     html = `
       <div class="step max-w-2xl w-full">
         <p class="text-xs font-mono text-v-t50 mb-2">${labelNum()}</p>
-        <h2 class="text-2xl md:text-3xl font-semibold leading-snug mb-6">${s.q}</h2>
+        ${s.title ? `<h2 class="text-xl md:text-2xl font-semibold mb-4 text-v-blue">${s.title}</h2>` : ''}
+        <div class="preamble text-v-t70 leading-relaxed mb-8">${s.preamble}</div>
+        <div class="flex items-center gap-3">
+          <button onclick="proximoMsg()" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-7 py-3">Continuar</button>
+          <span class="text-xs text-v-t50">pressione <b>Enter ↵</b></span>
+        </div>
+      </div>`;
+  }
+  else if(s.type==='message-choice'){
+    // Mensagem longa seguida de escolha (Seção 4 — Gestante "Estamos aqui para ajudar!")
+    html = `
+      <div class="step max-w-2xl w-full">
+        <p class="text-xs font-mono text-v-t50 mb-2">${labelNum()}</p>
+        ${s.title ? `<h2 class="text-xl md:text-2xl font-semibold mb-4 text-v-blue">${s.title}</h2>` : ''}
+        <div class="preamble text-v-t70 leading-relaxed mb-6">${s.preamble}</div>
+        <h3 class="text-lg md:text-xl font-semibold leading-snug mb-4">${s.q}</h3>
         <div class="space-y-3">
           ${s.options.map((o,i)=>`
             <button class="opt w-full text-left border border-v-border2 px-5 py-4 hover:border-v-blue hover:bg-v-bluel transition flex items-center gap-3"
@@ -200,7 +372,24 @@ function render(){
             </button>`).join('')}
         </div>
       </div>`;
-  } else {
+  }
+  else if(s.type==='choice'){
+    html = `
+      <div class="step max-w-2xl w-full">
+        <p class="text-xs font-mono text-v-t50 mb-2">${labelNum()}</p>
+        <h2 class="text-2xl md:text-3xl font-semibold leading-snug mb-6">${s.q}${s.req?' <span class="text-v-blue">*</span>':''}</h2>
+        <div class="space-y-3">
+          ${s.options.map((o,i)=>`
+            <button class="opt w-full text-left border border-v-border2 px-5 py-4 hover:border-v-blue hover:bg-v-bluel transition flex items-center gap-3"
+              onclick="escolher('${o.go}', ${i})">
+              <span class="w-7 h-7 border border-v-border2 flex items-center justify-center text-xs font-mono shrink-0">${String.fromCharCode(65+i)}</span>
+              <span>${o.label}</span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+  }
+  else {
+    // input (text/textarea/cpf/email/tel)
     const isCpf = s.type==='cpf';
     const isTel = s.type==='tel';
     const val = answers[current] ? `value="${(answers[current]+'').replace(/"/g,'&quot;')}"` : '';
@@ -209,14 +398,14 @@ function render(){
     if(s.type==='textarea'){
       field = `<textarea id="inp" rows="3" class="w-full bg-transparent border-b-2 border-v-border2 focus:border-v-blue outline-none text-2xl md:text-3xl py-2 resize-none" placeholder="Digite aqui...">${answers[current]||''}</textarea>`;
     } else if(isCpf){
-      field = `<input id="inp" type="text" inputmode="numeric" maxlength="14" ${val} class="w-full bg-transparent border-b-2 border-v-border2 focus:border-v-blue outline-none text-2xl md:text-3xl py-2" placeholder="000.000.000-00"
-        oninput="this.value=formatCPF(this.value)"/>`;
+      field = `<input id="inp" type="text" inputmode="numeric" maxlength="11" ${val} class="w-full bg-transparent border-b-2 border-v-border2 focus:border-v-blue outline-none text-2xl md:text-3xl py-2" placeholder="00000000000"
+        oninput="this.value=this.value.replace(/\\D/g,'').slice(0,11)"/>`;
     } else if(isTel){
       field = `<input id="inp" type="tel" inputmode="numeric" ${val} class="w-full bg-transparent border-b-2 border-v-border2 focus:border-v-blue outline-none text-2xl md:text-3xl py-2" placeholder="${s.hint||'Ex.: 11 98765-4321'}"/>`;
     } else {
       field = `<input id="inp" type="${inputType}" ${val} class="w-full bg-transparent border-b-2 border-v-border2 focus:border-v-blue outline-none text-2xl md:text-3xl py-2" placeholder="Digite aqui..."/>`;
     }
-    const hint = s.hint && !isTel ? `<p class="text-sm text-v-t50 mt-1">${s.hint}</p>` : '';
+    const hint = s.hint && !isTel ? `<p class="text-sm text-v-t50 mt-2">${s.hint}</p>` : '';
     const isSubmit = s.next && s.next()==='SUBMIT';
     html = `
       <div class="step max-w-2xl w-full">
@@ -226,27 +415,38 @@ function render(){
         ${hint}
         <p id="err" class="text-sm text-red-600 mt-2 hidden">Por favor, preencha este campo.</p>
         <div class="mt-7 flex items-center gap-3">
-          <button onclick="proximo()" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-7 py-3">${isSubmit?'Enviar':'OK'}</button>
+          <button onclick="proximo()" class="bg-v-blue hover:bg-v-blueh text-white font-medium px-7 py-3">${isSubmit?'Enviar respostas':'OK'}</button>
           <span class="text-xs text-v-t50">pressione <b>Enter ↵</b></span>
         </div>
       </div>`;
   }
   app().innerHTML = html;
+
   const inp = document.getElementById('inp');
-  if(inp){ inp.focus(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter' && (STEPS[current].type!=='textarea' || !e.shiftKey)){ e.preventDefault(); proximo(); } }); }
-  if(STEPS[current].type==='choice'){ document.onkeydown = e=>{ const s=STEPS[current]; const i=e.key.toUpperCase().charCodeAt(0)-65; if(i>=0 && i<s.options.length){ escolher(s.options[i].go,i); } }; }
-  else { document.onkeydown=null; }
+  if(inp){
+    inp.focus();
+    inp.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && (STEPS[current].type!=='textarea' || !e.shiftKey)){
+        e.preventDefault(); proximo();
+      }
+    });
+  }
+  if(STEPS[current].type==='choice' || STEPS[current].type==='message-choice'){
+    document.onkeydown = e=>{
+      const s=STEPS[current];
+      const i=e.key.toUpperCase().charCodeAt(0)-65;
+      if(i>=0 && i<s.options.length){ escolher(s.options[i].go, i); }
+      if(e.key==='Escape') voltar();
+    };
+  } else if(STEPS[current].type==='message-next'){
+    document.onkeydown = e=>{
+      if(e.key==='Enter'){ e.preventDefault(); proximoMsg(); }
+      if(e.key==='Escape') voltar();
+    };
+  } else {
+    document.onkeydown = e=>{ if(e.key==='Escape') voltar(); };
+  }
 }
-
-function formatCPF(v){
-  const d = v.replace(/\D/g,'').slice(0,11);
-  if(d.length<=3) return d;
-  if(d.length<=6) return d.slice(0,3)+'.'+d.slice(3);
-  if(d.length<=9) return d.slice(0,3)+'.'+d.slice(3,6)+'.'+d.slice(6);
-  return d.slice(0,3)+'.'+d.slice(3,6)+'.'+d.slice(6,9)+'-'+d.slice(9);
-}
-
-function labelNum(){ return 'Pergunta ' + (history.length+1); }
 
 function showErr(msg){
   const el = document.getElementById('err');
@@ -254,79 +454,95 @@ function showErr(msg){
 }
 
 function avancar(id){ history.push(current); current=id; render(); }
+
 function escolher(go, i){
-  const s=STEPS[current];
+  const s = STEPS[current];
   answers[current] = s.options[i].label;
   if(go==='SUBMIT'){ enviar(); return; }
   history.push(current); current=go; render();
 }
+
+function proximoMsg(){
+  const s = STEPS[current];
+  const nx = s.next();
+  if(nx==='SUBMIT'){ enviar(); return; }
+  history.push(current); current=nx; render();
+}
+
 function proximo(){
-  const s=STEPS[current];
-  const inp=document.getElementById('inp');
-  const v=(inp?inp.value:'').trim();
+  const s = STEPS[current];
+  const inp = document.getElementById('inp');
+  const v = (inp ? inp.value : '').trim();
   if(s.req && !v){ showErr('Por favor, preencha este campo.'); return; }
 
-  // Validação de CPF: apenas 11 dígitos numéricos
   if(s.type==='cpf'){
     const digits = v.replace(/\D/g,'');
-    if(digits.length!==11){ showErr('Informe um CPF válido com 11 dígitos numéricos.'); return; }
+    if(digits.length !== 11){ showErr('Informe um CPF válido com 11 dígitos numéricos.'); return; }
     answers[current] = digits;
-    const nx=s.next();
+    const nx = s.next();
     if(nx==='SUBMIT'){ enviar(); return; }
     history.push(current); current=nx; render();
     return;
   }
 
-  // Validação de telefone: DDD obrigatório (mínimo 10 dígitos)
   if(s.type==='tel'){
     const digits = v.replace(/\D/g,'');
     if(digits.length < 10){ showErr('Informe o telefone com DDD (mínimo 10 dígitos). Ex.: 11 98765-4321'); return; }
   }
 
-  answers[current]=v;
-  const nx=s.next();
+  answers[current] = v;
+  const nx = s.next();
   if(nx==='SUBMIT'){ enviar(); return; }
   history.push(current); current=nx; render();
 }
-function voltar(){ if(history.length){ current=history.pop(); render(); } }
 
-function getFimMsg(){
-  // Veio de uma tela de orientação (mensagem terminal) → mensagem genérica
-  if(STEPS[current] && STEPS[current].type === 'message'){
-    return 'Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙<br><br>Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me';
-  }
-  // Completou o formulário completo → mensagem empática por trilha + contato universal
-  const sit = answers.situacao || '';
-  const c = 'Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me';
-  if(sit.includes('gestante'))    return `Desejamos que seu parto seja tranquilo, seguro e cheio de amor. 💙<br><br>${c}`;
-  if(sit.includes('cirurgia'))    return `Desejamos que tudo corra muito bem e que sua recuperação seja leve e tranquila. 💙<br><br>${c}`;
-  if(sit.includes('tratamento'))  return `Estamos aqui para garantir que sua jornada de cuidado continue com toda a atenção que você merece. 💙<br><br>${c}`;
-  if(sit.includes('medicamento')) return `Sua saúde é nossa prioridade e faremos o possível para que nada seja interrompido. 💙<br><br>${c}`;
-  if(sit.includes('internado'))   return `Nesse momento o mais importante é o seu bem-estar. Pode contar com a gente. 💙<br><br>${c}`;
-  return `Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙<br><br>${c}`;
+function voltar(){ if(history.length){ current = history.pop(); render(); } }
+
+function reiniciar(){
+  current = 'intro';
+  history = [];
+  answers = {};
+  document.onkeydown = null;
+  setProgress();
+  render();
 }
 
 async function enviar(){
-  const payload={ access_key: CONFIG.WEB3FORMS_KEY, subject: "Novo acolhimento — Hospital Digital Vitta" };
-  Object.keys(answers).forEach(k=>{ if(STEPS[k] && STEPS[k].q) payload[STEPS[k].q]=answers[k]; });
-  payload['Enviado em']=new Date().toLocaleString('pt-BR');
+  const payload = { access_key: CONFIG.WEB3FORMS_KEY, subject: 'Novo acolhimento — Hospital Digital Vitta' };
+  Object.keys(answers).forEach(k => { if(STEPS[k] && STEPS[k].q) payload[STEPS[k].q] = answers[k]; });
+  payload['Enviado em'] = new Date().toLocaleString('pt-BR');
   try{
-    await fetch('https://api.web3forms.com/submit',{method:'POST',
-      headers:{'Content-Type':'application/json', Accept:'application/json'},
-      body:JSON.stringify(payload)});
-  }catch(e){ console.error(e); }
-  current='__fim'; document.onkeydown=null; setProgress2(100);
+    await fetch('https://api.web3forms.com/submit', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e){ console.error(e); }
+
+  // Mensagem de fechamento empática por trilha
+  const sit = (answers.situacao || '').toLowerCase();
+  const c = 'Caso precise de algum apoio, pode nos acionar através do 11 49493-6663 ou através do sac@vitta.me';
+  let msg = `Nossa equipe vai dar sequência e entrar em contato pelo canal informado. 💙<br><br>${c}`;
+  if(sit.includes('gestante'))         msg = `Desejamos que seu parto seja tranquilo, seguro e cheio de amor. 💙<br><br>${c}`;
+  else if(sit.includes('cirurgia'))    msg = `Desejamos que tudo corra muito bem e que sua recuperação seja leve e tranquila. 💙<br><br>${c}`;
+  else if(sit.includes('tratamento'))  msg = `Estamos aqui para garantir que sua jornada de cuidado continue com toda a atenção que você merece. 💙<br><br>${c}`;
+  else if(sit.includes('medicamento')) msg = `Sua saúde é nossa prioridade e faremos o possível para que nada seja interrompido. 💙<br><br>${c}`;
+  else if(sit.includes('internado'))   msg = `Nesse momento o mais importante é o seu bem-estar. Pode contar com a gente. 💙<br><br>${c}`;
+
+  current = '__fim';
+  document.onkeydown = null;
+  progressEl().style.width = '100%';
   app().innerHTML = `
     <div class="step max-w-xl text-center mx-auto">
       <img src="${LOGO}" class="h-9 mb-8 mx-auto" alt="Vitta"/>
       <div class="w-14 h-14 bg-v-blue text-white flex items-center justify-center mx-auto mb-6 text-2xl">✓</div>
-      <h1 class="text-2xl md:text-3xl font-semibold mb-3">Recebemos o seu acolhimento!</h1>
-      <p class="text-v-t70 leading-relaxed">${getFimMsg()}</p>
+      <h1 class="text-2xl md:text-3xl font-semibold mb-3">Recebemos a sua solicitação!</h1>
+      <p class="text-v-t70 leading-relaxed">${msg}</p>
+      <button onclick="reiniciar()" class="mt-8 text-sm text-v-blue hover:text-v-blueh underline">Voltar ao início</button>
     </div>`;
 }
-function setProgress2(p){ progressEl().style.width=p+'%'; }
 
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') voltar(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && current!=='intro' && current!=='__fim') voltar(); });
 window.addEventListener('DOMContentLoaded', render);
 </script>
 

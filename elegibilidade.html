@@ -163,6 +163,11 @@
     }
     .nota-input:focus { border-color: #1a3a5c; outline: none; }
     .nota-input::placeholder { color: #bbb; }
+    .nota-input.nota-readonly {
+      background: #fffbeb; border-color: #fde68a; color: #444;
+      cursor: default; resize: none;
+    }
+    .nota-input.nota-readonly:focus { border-color: #fde68a; }
 
     .nota-badge {
       display: inline-block; background: #fff8e1; color: #7a5c00;
@@ -2144,7 +2149,7 @@ function buildEditPanels() {
         </select>
         <span style="font-size:0.74rem;color:#888">(ctrl+clique para múltiplos)</span>
       </div>
-      <div class="edit-row edit-only" style="flex-direction:column;align-items:stretch;gap:3px">
+      <div class="edit-row nota-row" style="flex-direction:column;align-items:stretch;gap:3px">
         <label>Anotação:</label>
         <textarea class="nota-input" placeholder="Adicione uma observação…" oninput="saveNota('${id}', this.value)">${s.nota||''}</textarea>
       </div>
@@ -2455,6 +2460,15 @@ function ativarModoView(){
   document.getElementById('modo-badge').style.display='inline';
   // Esconde todos os controles de edição
   document.querySelectorAll('.edit-only').forEach(function(el){ el.style.display='none'; });
+  // Anotações ficam visíveis em modo leitura. Esconde a linha quando estiver vazia.
+  document.querySelectorAll('.nota-input').forEach(function(ta){
+    ta.setAttribute('readonly','readonly');
+    ta.classList.add('nota-readonly');
+    if(!ta.value.trim()){
+      var row = ta.closest('.nota-row');
+      if(row) row.style.display='none';
+    }
+  });
   // Esconde CPF (📋) e telefone (📱)
   document.querySelectorAll('.paciente-contact').forEach(function(el){
     var t = el.textContent.trim();

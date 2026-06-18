@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agendamentos de Exames • Hospital Digital Vitta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{
+  fontFamily:{sans:['"IBM Plex Sans"','system-ui','sans-serif']},
+  colors:{
+    navy:{DEFAULT:'#0a2d5e',dark:'#071f42',mid:'#0e3a78',light:'#1a4f9e',faint:'#e8f0fc'},
+    v:{blue:'#0a4dbe',bluel:'#e9f0fb'}
+  }
+}}}
+</script>
+<style>
+*{font-family:'IBM Plex Sans',sans-serif}
+.badge-sim{background:#dcfce7;color:#166534}
+.badge-nao{background:#fee2e2;color:#991b1b}
+.highlight-box{background:#f0f6ff;border-left:3px solid #0a4dbe;padding:12px 16px;margin:12px 0}
+.warn-box{background:#fffbeb;border-left:3px solid #f59e0b;padding:12px 16px;margin:12px 0}
+h3.sec-title{font-size:1.1rem;font-weight:700;color:#0a2d5e;margin-bottom:8px;margin-top:20px}
+h4.sub-title{font-size:.95rem;font-weight:600;color:#0e3a78;margin-bottom:6px;margin-top:14px}
+p.body-text{color:#374151;line-height:1.7;margin-bottom:8px;font-size:.9rem}
+ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;list-style:disc;margin-bottom:8px}
+.q-box{border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px;min-height:100%}
+.q-title{font-weight:600;font-size:.92rem}
+.q-desc{font-size:.75rem;color:#6b7280;margin-bottom:4px}
+.q-input{border:1.5px solid;border-radius:6px;padding:8px 12px;font-size:.85rem;width:100%;outline:none;background:#fff}
+.q-btn{border:none;border-radius:6px;padding:8px 14px;font-size:.78rem;font-weight:600;cursor:pointer;color:#fff;margin-top:4px;align-self:flex-start}
+.q-result{margin-top:10px;font-size:.82rem;line-height:1.55;min-height:1px}
+.box-conv{background:#ecfdf5;border:1.5px solid #a7f3d0}
+.box-conv .q-input{border-color:#a7f3d0}
+.box-conv .q-btn{background:#059669}
+.box-cep{background:#eff6ff;border:1.5px solid #bfdbfe}
+.box-cep .q-input{border-color:#bfdbfe}
+.box-cep .q-btn{background:#1d4ed8}
+.box-exam{background:#eef2ff;border:1.5px solid #c7d2fe}
+.box-exam .q-input{border-color:#c7d2fe}
+.box-exam .q-btn{background:#4338ca}
+.res-ok  {background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;color:#166534;font-weight:600}
+.res-no  {background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;color:#b91c1c;font-weight:600}
+.res-warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;color:#92400e;font-weight:600}
+.consolidado-ok{background:linear-gradient(135deg,#dcfce7 0%,#bbf7d0 100%);border:2px solid #16a34a;color:#14532d}
+.consolidado-no{background:linear-gradient(135deg,#fee2e2 0%,#fecaca 100%);border:2px solid #dc2626;color:#7f1d1d}
+.consolidado{border-radius:10px;padding:18px 22px;font-size:.95rem;line-height:1.6;font-weight:600;display:flex;gap:14px;align-items:flex-start}
+.consolidado .icon{font-size:2rem;line-height:1}
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- ── TELA DE SENHA (mesma do painel) ── -->
+<div id="lock-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
+  <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
+    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
+         style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
+    <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Agendamentos de Exames</h1>
+    <input id="lock-input" type="password" placeholder="Digite a senha"
+      onkeydown="if(event.key==='Enter')checkPass()"
+      style="width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;box-sizing:border-box"/>
+    <p id="lock-err" style="color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px"></p>
+    <button onclick="checkPass()"
+      style="margin-top:16px;width:100%;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer">
+      Entrar
+    </button>
+  </div>
+</div>
+
+<div id="main-content" style="display:none">
+
+<!-- HERO -->
+<div style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="flex items-center justify-between mb-4">
+      <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png" class="h-8 brightness-0 invert" alt="Vitta"/>
+      <a href="painel.html" class="text-white/80 hover:text-white text-sm">← Voltar ao painel</a>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">🧪 Agendamentos de Exames</h1>
+    <p class="text-blue-200 text-sm mt-2">Consulta de cobertura — Convênio, CEP e exame para coleta domiciliar.</p>
+  </div>
+</div>
+
+<!-- ====== CONSULTAS RÁPIDAS ====== -->
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+  <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">Consultar cobertura</h2>
+  <p class="text-xs text-gray-500 mb-5">Você pode consultar cada item individualmente, ou preencher os três e usar o botão <strong>Consultar tudo</strong> para validar o agendamento.</p>
+
+  <!-- 3 BOXES -->
+  <div class="grid md:grid-cols-3 gap-4">
+
+    <!-- BOX 1: CONVÊNIO -->
+    <div class="q-box box-conv">
+      <p class="q-title text-emerald-900">🏥 Qual convênio do membro?</p>
+      <p class="q-desc">Selecione o convênio. Bradesco Efetivo/Ideal não é coberto.</p>
+      <select id="conv-select" class="q-input" onchange="toggleBradesco()">
+        <option value="">Selecione um convênio…</option>
+        <option value="seguros-unimed">Seguros Unimed</option>
+        <option value="porto-seguro">Porto Seguro</option>
+        <option value="omint">Omint</option>
+        <option value="bradesco">Bradesco</option>
+        <option value="outro">Outro</option>
+      </select>
+      <input id="bradesco-plano" type="text" placeholder='Qual plano Bradesco? (ex.: Top, Nacional Plus, Efetivo, Ideal…)'
+        class="q-input" style="display:none"
+        onkeydown="if(event.key==='Enter')verificarConvenio()"/>
+      <button class="q-btn" onclick="verificarConvenio()">Verificar convênio</button>
+      <div id="conv-result" class="q-result"></div>
+    </div>
+
+    <!-- BOX 2: CEP -->
+    <div class="q-box box-cep">
+      <p class="q-title text-blue-900">📍 Consultar cobertura por CEP</p>
+      <p class="q-desc">Verifica se o CEP do membro está na área de coleta domiciliar.</p>
+      <input id="cep-input" type="text" maxlength="9" placeholder="Ex.: 01310-100" class="q-input"
+        oninput="this.value=this.value.replace(/\D/g,'').replace(/^(\d{5})(\d)/,'$1-$2')"
+        onkeydown="if(event.key==='Enter')buscarCep()"/>
+      <button class="q-btn" onclick="buscarCep()">🔍 Buscar CEP</button>
+      <span id="cep-loading" style="display:none;font-size:.75rem;color:#6b7280">Consultando…</span>
+      <div id="cep-result" class="q-result"></div>
+    </div>
+
+    <!-- BOX 3: EXAME -->
+    <div class="q-box box-exam">
+      <p class="q-title text-indigo-900">🔬 Consultar cobertura do exame</p>
+      <p class="q-desc">Cole um ou mais exames ou códigos TUSS (um por linha ou separados por vírgula).</p>
+      <textarea id="exam-input" rows="3" class="q-input"
+        placeholder="Ex.: Hemograma completo&#10;40311018&#10;TSH, glicose, colesterol"></textarea>
+      <button class="q-btn" onclick="buscarExames()">Buscar cobertura</button>
+      <div id="exam-results" class="q-result"></div>
+    </div>
+
+  </div>
+
+  <!-- CONSULTAR TUDO -->
+  <div class="text-center my-6">
+    <button onclick="consultarTudo()"
+      class="bg-navy-mid hover:bg-navy text-white font-bold px-8 py-4 rounded-lg shadow-md text-base"
+      style="background:#0e3a78">
+      🚀 Consultar tudo (Convênio + CEP + Exame)
+    </button>
+    <p class="text-xs text-gray-500 mt-2">Preencha os três campos acima antes de consultar tudo.</p>
+  </div>
+
+  <div id="consolidado-result" class="mb-8"></div>
+
+  <!-- ====== REGRAS GERAIS (igual ao painel) ====== -->
+  <div class="bg-white border border-gray-200 rounded-lg p-6 mt-4">
+    <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🧪 Agendamentos de Exames Vitta</h2>
+    <p class="text-xs text-gray-400 font-mono uppercase mb-6">Laboratórios parceiros e coberturas</p>
+
+    <div class="grid sm:grid-cols-2 gap-3 mb-6">
+      <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
+      <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
+    </div>
+
+    <h3 class="sec-title">Planos com cobertura de exames</h3>
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="badge-sim px-3 py-1 text-xs font-medium">Seguros Unimed</span>
+      <span class="badge-sim px-3 py-1 text-xs font-medium">Porto Seguro</span>
+      <span class="badge-sim px-3 py-1 text-xs font-medium">Omint</span>
+      <span class="badge-sim px-3 py-1 text-xs font-medium">Bradesco (exceto Efetivo e Ideal)</span>
+    </div>
+    <div class="warn-box">
+      <p class="text-sm text-gray-600">⚠️ <strong>Sem cobertura:</strong> Capitado, Capitado Plus e Subsidiados: exceto FCL (pode agendar pelo convênio Bradesco). Bradesco Efetivo e Ideal estão sujeitos a autorização do plano, podendo ser cancelados posteriormente.</p>
+    </div>
+
+    <h3 class="sec-title">Cidades atendidas</h3>
+    <h4 class="sub-title">Labi:</h4>
+    <ul class="body-list">
+      <li>Grande São Paulo (SP, Guarulhos, Osasco, Barueri, Mogi das Cruzes…)</li>
+      <li>Grande Rio (Rio de Janeiro, Niterói, São Gonçalo)</li>
+      <li>Grande ABCD (Santo André, SBC, São Caetano, Diadema)</li>
+      <li>Interior SP (Sorocaba, Campinas, Piracicaba, São José dos Campos)</li>
+      <li>Litoral SP · Curitiba e região</li>
+    </ul>
+    <h4 class="sub-title">Isalab:</h4>
+    <p class="body-text text-xs text-gray-500">Cobertura apenas no estado de SP. Consultar cobertura no concierge.</p>
+
+    <h3 class="sec-title">Como é realizado o agendamento?</h3>
+    <p class="body-text">O agendamento é realizado exclusivamente pelo time de atendimento via WhatsApp, onde são enviadas as orientações e agendada a coleta no endereço do membro. Após o registro, os exames são autorizados no convênio e o laboratório vai até a casa do membro. No dia da coleta, o membro recebe um protocolo para retirar os resultados.</p>
+
+    <h3 class="sec-title">Coleta atrasada ou resultado não recebido?</h3>
+    <p class="body-text">O membro deve acionar imediatamente o time de WhatsApp, que fará contato com o laboratório para verificar as informações e trazer um retorno.</p>
+
+    <h3 class="sec-title">Exames e convênios sem cobertura</h3>
+    <p class="body-text">O membro deve procurar a rede do seu convênio médico para agendar com um prestador credenciado. Todos os pedidos dos médicos Vitta são assinados digitalmente e têm validade nacional.</p>
+  </div>
+</div>
+
+<footer class="max-w-6xl mx-auto px-6 py-5 text-xs text-gray-400 border-t border-gray-200">
+  Hospital Digital Vitta — Agendamentos de Exames
+</footer>
+
+</div><!-- /main-content -->
+
+<script>
+/* ────────────────────────────────────────────────────────
+   LOCK SCREEN (mesma do painel)
+   ──────────────────────────────────────────────────────── */
+function checkPass(){
+  var v=document.getElementById('lock-input').value;
+  if(v==='Vitta2026'){
+    document.getElementById('lock-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    sessionStorage.setItem('vitta-auth','1');
+  } else {
+    document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
+    document.getElementById('lock-input').value='';
+    document.getElementById('lock-input').focus();
+  }
+}
+if(sessionStorage.getItem('vitta-auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+}
+
+/* ────────────────────────────────────────────────────────
+   CONVÊNIO
+   ──────────────────────────────────────────────────────── */
+var CONVENIOS_COBERTOS = ['seguros-unimed','porto-seguro','omint'];
+var BRADESCO_NEGADOS = ['efetivo','ideal'];
+var CONV_LABEL = {
+  'seguros-unimed':'Seguros Unimed',
+  'porto-seguro':'Porto Seguro',
+  'omint':'Omint',
+  'bradesco':'Bradesco',
+  'outro':'Outro convênio'
+};
+
+function toggleBradesco(){
+  var conv = document.getElementById('conv-select').value;
+  var inp = document.getElementById('bradesco-plano');
+  inp.style.display = (conv==='bradesco') ? 'block' : 'none';
+  if(conv!=='bradesco') inp.value='';
+  document.getElementById('conv-result').innerHTML='';
+}
+
+function avaliarConvenio(){
+  var conv = document.getElementById('conv-select').value;
+  var plano = (document.getElementById('bradesco-plano').value||'').trim();
+  if(!conv) return {ok:false, warn:true, msg:'Selecione um convênio.'};
+  if(CONVENIOS_COBERTOS.indexOf(conv) >= 0){
+    return {ok:true, msg:'Convênio <strong>'+CONV_LABEL[conv]+'</strong> é coberto na coleta domiciliar.'};
+  }
+  if(conv==='bradesco'){
+    if(!plano) return {ok:false, warn:true, msg:'Informe qual plano Bradesco para verificar.'};
+    var pl = plano.toLowerCase();
+    var bloqueado = BRADESCO_NEGADOS.some(function(n){ return pl.indexOf(n) >= 0; });
+    if(bloqueado){
+      return {ok:false, msg:'Bradesco <strong>'+plano+'</strong> não é coberto na coleta domiciliar (Bradesco Efetivo e Ideal estão sujeitos a autorização e podem ser cancelados).'};
+    }
+    return {ok:true, msg:'Bradesco <strong>'+plano+'</strong> é coberto na coleta domiciliar.'};
+  }
+  return {ok:false, msg:'Convênio não coberto na coleta domiciliar.'};
+}
+
+function verificarConvenio(){
+  var r = avaliarConvenio();
+  var el = document.getElementById('conv-result');
+  if(r.warn) el.innerHTML = '<div class="res-warn">⚠️ '+r.msg+'</div>';
+  else if(r.ok) el.innerHTML = '<div class="res-ok">✅ '+r.msg+'</div>';
+  else el.innerHTML = '<div class="res-no">❌ '+r.msg+'</div>';
+}
+
+/* ────────────────────────────────────────────────────────
+   CEP
+   ──────────────────────────────────────────────────────── */
+function buscarCep(){ return _buscarCep(true); }
+
+function _buscarCep(showResult){
+  return new Promise(function(resolve){
+    var raw = document.getElementById('cep-input').value.replace(/\D/g,'');
+    if(raw.length !== 8){
+      if(showResult) document.getElementById('cep-result').innerHTML='<div class="res-warn">⚠️ Digite um CEP válido com 8 dígitos.</div>';
+      resolve({ok:false, warn:true, msg:'CEP inválido (8 dígitos).'});
+      return;
+    }
+    var result = document.getElementById('cep-result');
+    var loading = document.getElementById('cep-loading');
+    if(showResult){ result.innerHTML=''; loading.style.display='inline'; }
+    fetch('https://api.labiexames.com.br/site/home-collection/availability/zipcode?zip_code=' + raw + '&origin=chatbot')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(showResult) loading.style.display='none';
+        var formatted = raw.replace(/^(\d{5})(\d{3})$/,'$1-$2');
+        if(data && data.address && data.address.city){
+          var a = data.address;
+          var addr = [a.street, a.neighborhood, a.city, a.state].filter(Boolean).join(', ');
+          if(showResult){
+            result.innerHTML =
+              '<div class="res-ok">✅ CEP coberto para coleta domiciliar</div>' +
+              '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:.78rem;color:#374151;margin-top:6px">📍 '+addr+' — CEP '+formatted+'</div>';
+          }
+          resolve({ok:true, msg:'CEP '+formatted+' coberto.'});
+        } else {
+          if(showResult) result.innerHTML='<div class="res-no">❌ CEP '+formatted+' não coberto para coleta domiciliar.</div>';
+          resolve({ok:false, msg:'CEP '+formatted+' não coberto.'});
+        }
+      })
+      .catch(function(){
+        if(showResult){
+          loading.style.display='none';
+          result.innerHTML='<div class="res-warn">⚠️ Não foi possível consultar. <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" style="color:#1d4ed8;text-decoration:underline">Buscar no site</a></div>';
+        }
+        resolve({ok:false, warn:true, msg:'Erro ao consultar o CEP.'});
+      });
+  });
+}
+
+/* ────────────────────────────────────────────────────────
+   EXAMES
+   ──────────────────────────────────────────────────────── */
+var _examesDB = null;
+function loadExamesDB(cb){
+  if(_examesDB){ cb(_examesDB); return; }
+  fetch('exames.json').then(function(r){ return r.json(); }).then(function(data){
+    _examesDB = data; cb(data);
+  }).catch(function(){ cb([]); });
+}
+function normalizar(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function _buscarMatches(termo, db){
+  var norm = normalizar(termo);
+  return db.filter(function(e){
+    if(e.t && e.t===termo.trim()) return true;
+    if(normalizar(e.n).indexOf(norm)>=0) return true;
+    for(var i=0;i<e.s.length;i++){
+      if(normalizar(e.s[i]).indexOf(norm)>=0) return true;
+    }
+    return false;
+  });
+}
+
+function buscarExames(){ return _buscarExames(true); }
+
+function _buscarExames(showResult){
+  return new Promise(function(resolve){
+    var input = document.getElementById('exam-input').value;
+    var div = document.getElementById('exam-results');
+    var termos = input.split(/[\n,]+/).map(function(t){ return t.trim(); }).filter(Boolean);
+    if(!termos.length){
+      if(showResult) div.innerHTML='<div class="res-warn">⚠️ Informe ao menos um exame.</div>';
+      resolve({ok:false, warn:true, msg:'Nenhum exame informado.'});
+      return;
+    }
+    if(showResult) div.innerHTML='<p class="text-xs text-gray-500">Carregando…</p>';
+    loadExamesDB(function(db){
+      if(!db.length){
+        if(showResult) div.innerHTML='<div class="res-warn">⚠️ Não foi possível carregar a base de exames.</div>';
+        resolve({ok:false, warn:true, msg:'Base de exames indisponível.'});
+        return;
+      }
+      var html = '';
+      var todosCobertos = true;
+      var naoCobertos = [];
+      termos.forEach(function(termo){
+        var matches = _buscarMatches(termo, db).slice(0,8);
+        var hasDomiciliar = matches.some(function(m){ return m.d==='Sim'; });
+        if(matches.length===0 || !hasDomiciliar){
+          todosCobertos = false;
+          naoCobertos.push(termo);
+        }
+        if(showResult){
+          html += '<div class="mb-3">';
+          html += '<p class="text-xs font-mono text-indigo-600 uppercase mb-1">🔍 "'+termo+'" — '+matches.length+' resultado(s)</p>';
+          if(matches.length===0){
+            html += '<div class="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">Exame não encontrado na cobertura LABI.</div>';
+          } else {
+            matches.forEach(function(e){
+              var tags = '';
+              if(e.d==='Sim') tags += '<span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded mr-1">🏠 Coleta domiciliar</span>';
+              else            tags += '<span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded mr-1">🚫 Sem domiciliar</span>';
+              if(e.pr) tags += '<span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded mr-1">⏱ '+e.pr+' dias úteis</span>';
+              if(e.p)  tags += '<span class="inline-block bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded">⚠️ Requer preparo</span>';
+              var tuss = e.t ? '<span class="text-gray-400 ml-2 font-mono">TUSS '+e.t+'</span>' : '';
+              var preparo = e.p ? '<p class="text-xs text-gray-500 mt-1 italic">'+e.p+'</p>' : '';
+              var icon = (e.d==='Sim') ? '✅' : '⚠️';
+              html += '<div class="bg-white border border-indigo-100 rounded px-3 py-2 mb-1">';
+              html += '<p class="text-sm font-semibold text-gray-800">'+icon+' '+e.n+tuss+'</p>';
+              html += '<div class="mt-1">'+tags+'</div>'+preparo;
+              html += '</div>';
+            });
+          }
+          html += '</div>';
+        }
+      });
+      if(showResult) div.innerHTML = html;
+      if(todosCobertos){
+        resolve({ok:true, msg:'Todos os exames informados têm coleta domiciliar.'});
+      } else {
+        resolve({ok:false, msg:'Sem cobertura domiciliar para: '+naoCobertos.join(', ')});
+      }
+    });
+  });
+}
+
+/* ────────────────────────────────────────────────────────
+   CONSULTAR TUDO
+   ──────────────────────────────────────────────────────── */
+async function consultarTudo(){
+  var conv  = document.getElementById('conv-select').value;
+  var cep   = document.getElementById('cep-input').value.replace(/\D/g,'');
+  var exame = document.getElementById('exam-input').value.trim();
+  var faltando = [];
+  if(!conv)  faltando.push('o convênio');
+  if(cep.length !== 8) faltando.push('um CEP válido (8 dígitos)');
+  if(!exame) faltando.push('ao menos um exame');
+  if(faltando.length){
+    document.getElementById('consolidado-result').innerHTML =
+      '<div class="consolidado consolidado-no"><span class="icon">⚠️</span><div>Antes de consultar tudo, preencha '+faltando.join(', ')+'.</div></div>';
+    return;
+  }
+
+  var r1 = avaliarConvenio();
+  verificarConvenio();
+  document.getElementById('consolidado-result').innerHTML =
+    '<div class="consolidado" style="background:#f3f4f6;border:1px solid #d1d5db;color:#374151"><span class="icon">⏳</span><div>Consultando convênio, CEP e exames…</div></div>';
+
+  var r2 = await _buscarCep(true);
+  var r3 = await _buscarExames(true);
+
+  var allOk = r1.ok && r2.ok && r3.ok;
+  var box = document.getElementById('consolidado-result');
+  if(allOk){
+    box.innerHTML =
+      '<div class="consolidado consolidado-ok">' +
+        '<span class="icon">✅</span>' +
+        '<div>' +
+          '<div style="font-size:1.05rem;margin-bottom:4px">Esse agendamento é elegível à coleta domiciliar.</div>' +
+          '<div style="font-weight:500;font-size:.85rem">Oferte o agendamento ao membro.</div>' +
+        '</div>' +
+      '</div>';
+  } else {
+    var motivos = [];
+    if(!r1.ok) motivos.push('o convênio não é coberto');
+    if(!r2.ok) motivos.push('o CEP não é coberto');
+    if(!r3.ok) motivos.push('o exame não é coberto');
+    var motivoTxt = motivos.length===1 ? motivos[0] : motivos.slice(0,-1).join(', ') + ' e ' + motivos.slice(-1);
+    box.innerHTML =
+      '<div class="consolidado consolidado-no">' +
+        '<span class="icon">❌</span>' +
+        '<div>' +
+          '<div style="font-size:1.05rem;margin-bottom:4px">Esse agendamento não é coberto na coleta domiciliar pois '+motivoTxt+'.</div>' +
+          '<div style="font-weight:500;font-size:.85rem">Orientar o membro a buscar a rede do seu plano.</div>' +
+        '</div>' +
+      '</div>';
+  }
+}
+</script>
+
+</body>
+</html>

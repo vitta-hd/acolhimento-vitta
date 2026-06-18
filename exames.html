@@ -32,9 +32,9 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 .q-input{border:1.5px solid;border-radius:6px;padding:8px 12px;font-size:.85rem;width:100%;outline:none;background:#fff}
 .q-btn{border:none;border-radius:6px;padding:8px 14px;font-size:.78rem;font-weight:600;cursor:pointer;color:#fff;margin-top:4px;align-self:flex-start}
 .q-result{margin-top:10px;font-size:.82rem;line-height:1.55;min-height:1px}
-.box-conv{background:#ecfdf5;border:1.5px solid #a7f3d0}
-.box-conv .q-input{border-color:#a7f3d0}
-.box-conv .q-btn{background:#059669}
+.box-conv{background:#f0f9ff;border:1.5px solid #bae6fd}
+.box-conv .q-input{border-color:#bae6fd}
+.box-conv .q-btn{background:#0369a1}
 .box-cep{background:#eff6ff;border:1.5px solid #bfdbfe}
 .box-cep .q-input{border-color:#bfdbfe}
 .box-cep .q-btn{background:#1d4ed8}
@@ -59,9 +59,8 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   <div style="position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(96,165,250,.06);pointer-events:none"></div>
 
   <div class="max-w-6xl mx-auto px-6 py-10 relative">
-    <div class="flex items-center justify-between mb-6">
+    <div class="mb-6">
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png" class="h-8 brightness-0 invert" alt="Vitta"/>
-      <a href="painel.html" class="text-white/80 hover:text-white text-sm">← Voltar ao painel</a>
     </div>
 
     <div class="flex items-center gap-5">
@@ -93,18 +92,10 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
     <!-- BOX 1: CONVÊNIO -->
     <div class="q-box box-conv">
-      <p class="q-title text-emerald-900">🏥 Qual convênio do membro?</p>
-      <p class="q-desc">Selecione o convênio. Bradesco Efetivo/Ideal não é coberto.</p>
-      <select id="conv-select" class="q-input" onchange="toggleBradesco()">
-        <option value="">Selecione um convênio…</option>
-        <option value="seguros-unimed">Seguros Unimed</option>
-        <option value="porto-seguro">Porto Seguro</option>
-        <option value="omint">Omint</option>
-        <option value="bradesco">Bradesco</option>
-        <option value="outro">Outro</option>
-      </select>
-      <input id="bradesco-plano" type="text" placeholder='Qual plano Bradesco? (ex.: Top, Nacional Plus, Efetivo, Ideal…)'
-        class="q-input" style="display:none"
+      <p class="q-title text-sky-900">🏥 Qual convênio do membro?</p>
+      <p class="q-desc">Digite o nome do convênio. Cobertos: Seguros Unimed, Porto Seguro, Omint e Bradesco (exceto Efetivo/Ideal).</p>
+      <input id="conv-input" type="text" class="q-input"
+        placeholder="Ex.: Seguros Unimed, Porto Seguro, Omint, Bradesco Top…"
         onkeydown="if(event.key==='Enter')verificarConvenio()"/>
       <button class="q-btn" onclick="verificarConvenio()">Verificar convênio</button>
       <div id="conv-result" class="q-result"></div>
@@ -196,43 +187,39 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
 <script>
 /* ────────────────────────────────────────────────────────
-   CONVÊNIO
+   CONVÊNIO — busca por similaridade no texto digitado
    ──────────────────────────────────────────────────────── */
-var CONVENIOS_COBERTOS = ['seguros-unimed','porto-seguro','omint'];
-var BRADESCO_NEGADOS = ['efetivo','ideal'];
-var CONV_LABEL = {
-  'seguros-unimed':'Seguros Unimed',
-  'porto-seguro':'Porto Seguro',
-  'omint':'Omint',
-  'bradesco':'Bradesco',
-  'outro':'Outro convênio'
-};
-
-function toggleBradesco(){
-  var conv = document.getElementById('conv-select').value;
-  var inp = document.getElementById('bradesco-plano');
-  inp.style.display = (conv==='bradesco') ? 'block' : 'none';
-  if(conv!=='bradesco') inp.value='';
-  document.getElementById('conv-result').innerHTML='';
+function _normConv(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/\s+/g,' ').trim();
 }
 
 function avaliarConvenio(){
-  var conv = document.getElementById('conv-select').value;
-  var plano = (document.getElementById('bradesco-plano').value||'').trim();
-  if(!conv) return {ok:false, warn:true, msg:'Selecione um convênio.'};
-  if(CONVENIOS_COBERTOS.indexOf(conv) >= 0){
-    return {ok:true, msg:'Convênio <strong>'+CONV_LABEL[conv]+'</strong> é coberto na coleta domiciliar.'};
-  }
-  if(conv==='bradesco'){
-    if(!plano) return {ok:false, warn:true, msg:'Informe qual plano Bradesco para verificar.'};
-    var pl = plano.toLowerCase();
-    var bloqueado = BRADESCO_NEGADOS.some(function(n){ return pl.indexOf(n) >= 0; });
-    if(bloqueado){
-      return {ok:false, msg:'Bradesco <strong>'+plano+'</strong> não é coberto na coleta domiciliar (Bradesco Efetivo e Ideal estão sujeitos a autorização e podem ser cancelados).'};
+  var raw = (document.getElementById('conv-input').value||'').trim();
+  if(!raw) return {ok:false, warn:true, msg:'Informe o nome do convênio do membro.'};
+  var t = _normConv(raw);
+
+  // Bradesco — aceita por padrão, exceto Efetivo/Ideal
+  if(/bradesco/.test(t)){
+    if(/efetivo|ideal/.test(t)){
+      return {ok:false, msg:'<strong>'+raw+'</strong> não é coberto na coleta domiciliar (Bradesco Efetivo e Ideal estão sujeitos a autorização do plano e podem ser cancelados).'};
     }
-    return {ok:true, msg:'Bradesco <strong>'+plano+'</strong> é coberto na coleta domiciliar.'};
+    return {ok:true, msg:'<strong>'+raw+'</strong> identificado como Bradesco — coberto na coleta domiciliar.'};
   }
-  return {ok:false, msg:'Convênio não coberto na coleta domiciliar.'};
+  // Seguros Unimed
+  if(/\bunimed\b/.test(t)){
+    return {ok:true, msg:'<strong>'+raw+'</strong> identificado como Seguros Unimed — coberto na coleta domiciliar.'};
+  }
+  // Porto Seguro
+  if(/\bporto\b/.test(t)){
+    return {ok:true, msg:'<strong>'+raw+'</strong> identificado como Porto Seguro — coberto na coleta domiciliar.'};
+  }
+  // Omint
+  if(/\bomint\b/.test(t)){
+    return {ok:true, msg:'<strong>'+raw+'</strong> identificado como Omint — coberto na coleta domiciliar.'};
+  }
+  return {ok:false, msg:'<strong>'+raw+'</strong> não é coberto na coleta domiciliar.'};
 }
 
 function verificarConvenio(){
@@ -383,7 +370,7 @@ function _buscarExames(showResult){
    CONSULTAR TUDO
    ──────────────────────────────────────────────────────── */
 async function consultarTudo(){
-  var conv  = document.getElementById('conv-select').value;
+  var conv  = (document.getElementById('conv-input').value||'').trim();
   var cep   = document.getElementById('cep-input').value.replace(/\D/g,'');
   var exame = document.getElementById('exam-input').value.trim();
   var faltando = [];

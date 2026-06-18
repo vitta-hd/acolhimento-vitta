@@ -107,6 +107,11 @@
   <button class="btn" id="fill-btn" title="Cor de fundo / cor da seta">🎨 Cor</button>
   <button class="btn" id="text-color-btn" title="Cor do texto"><span style="border-bottom:3px solid #ffb000;padding-bottom:1px">A</span></button>
   <div class="sep"></div>
+  <button class="btn" id="undo-btn" title="Desfazer (Ctrl+Z)">↶</button>
+  <button class="btn" id="redo-btn" title="Refazer (Ctrl+Y)">↷</button>
+  <button class="btn" id="copy-btn" title="Copiar seleção (Ctrl+C)">📋 Copiar</button>
+  <button class="btn" id="paste-btn" title="Colar (Ctrl+V)">📥 Colar</button>
+  <div class="sep"></div>
   <button class="btn danger" id="delete-btn">✕ Excluir</button>
   <div class="sep"></div>
   <button class="btn" id="zoom-out">−</button>
@@ -253,6 +258,99 @@ const state = {
   editing: null            // nodeId atualmente em edição (ou null)
 };
 
+/* ----- Histórico (undo/redo) e clipboard ----- */
+let history = [];
+let historyIdx = -1;
+const HISTORY_MAX = 100;
+let clipboard = null;
+let pasteOffset = 30;
+
+function pushHistory(){
+  const snap = JSON.stringify({nodes:state.nodes, edges:state.edges});
+  if(history[historyIdx] === snap) return;   // sem mudanças, ignora
+  history = history.slice(0, historyIdx + 1);
+  history.push(snap);
+  if(history.length > HISTORY_MAX){ history.shift(); }
+  historyIdx = history.length - 1;
+  updateUndoRedoButtons();
+}
+function restoreFromHistory(){
+  const d = JSON.parse(history[historyIdx]);
+  state.nodes = d.nodes.map(n=>({...n}));
+  state.edges = d.edges.map(e=>({...e}));
+  state.nextId = Math.max(0, ...state.nodes.map(n=>n.id||0), ...state.edges.map(e=>e.id||0)) + 1;
+  state.selected = [];
+  state.editing = null;
+  fullRender();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
+  if(hasToken()) pushToGitHub();
+  updateUndoRedoButtons();
+}
+function undo(){
+  if(state.editing !== null){ const prev = state.editing; commitEdit(); refreshNode(prev); }
+  if(state.connecting) setConnectingMode(null);
+  if(historyIdx <= 0){ setStatus('Nada para desfazer'); return; }
+  historyIdx--;
+  restoreFromHistory();
+  setStatus('↶ Desfeito');
+}
+function redo(){
+  if(historyIdx >= history.length - 1){ setStatus('Nada para refazer'); return; }
+  historyIdx++;
+  restoreFromHistory();
+  setStatus('↷ Refeito');
+}
+function updateUndoRedoButtons(){
+  const u = document.getElementById('undo-btn');
+  const r = document.getElementById('redo-btn');
+  if(u) u.style.opacity = historyIdx <= 0 ? .4 : 1;
+  if(r) r.style.opacity = historyIdx >= history.length - 1 ? .4 : 1;
+}
+
+function copySelection(){
+  const ns = selectedNodes();
+  if(!ns.length){ setStatus('Nada selecionado para copiar'); return; }
+  const nodeIds = new Set(ns.map(n=>n.id));
+  // pega setas entre nós selecionados (e também as que estão na seleção)
+  const selectedEdgeIds = new Set(state.selected.filter(s=>s.type==='edge').map(s=>s.id));
+  const es = state.edges.filter(e =>
+    selectedEdgeIds.has(e.id) || (nodeIds.has(e.from) && nodeIds.has(e.to))
+  );
+  clipboard = JSON.stringify({
+    nodes: ns.map(n=>({...n})),
+    edges: es.map(e=>({...e}))
+  });
+  pasteOffset = 30;
+  setStatus(`📋 Copiado: ${ns.length} forma(s)${es.length?', '+es.length+' seta(s)':''}`);
+}
+
+function pasteClipboard(){
+  if(!clipboard){ setStatus('Nada para colar'); return; }
+  let data;
+  try { data = JSON.parse(clipboard); } catch(e){ return; }
+  if(!data.nodes || !data.nodes.length) return;
+  const idMap = {};
+  const off = pasteOffset;
+  const newNodes = data.nodes.map(n => {
+    const newId = state.nextId++;
+    idMap[n.id] = newId;
+    return {...n, id: newId, x: n.x + off, y: n.y + off};
+  });
+  const newEdges = (data.edges||[]).map(e => ({
+    ...e,
+    id: state.nextId++,
+    from: idMap[e.from],
+    to: idMap[e.to]
+  })).filter(e => e.from !== undefined && e.to !== undefined);
+  state.nodes.push(...newNodes);
+  state.edges.push(...newEdges);
+  state.selected = newNodes.map(n=>({type:'node', id:n.id}));
+  pasteOffset += 30;
+  persist();
+  fullRender();
+  setStatus(`📥 Colado: ${newNodes.length} forma(s)`);
+}
+
 /* =========================================================
    Persistência + GitHub sync
    ========================================================= */
@@ -263,6 +361,7 @@ function getToken(){ return localStorage.getItem('fluxo-gh-token') || ''; }
 function hasToken(){ return !!getToken(); }
 
 function persist(){
+  pushHistory();
   localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
   if(hasToken()) pushToGitHub();
 }
@@ -335,6 +434,9 @@ function applyData(d){
   state.selected = [];
   state.editing = null;
   fullRender();
+  // reinicia histórico com o snapshot inicial
+  history = []; historyIdx = -1;
+  pushHistory();
 }
 
 /* =========================================================
@@ -642,8 +744,7 @@ function commitEdit(){
     div.removeAttribute('contenteditable');
   }
   state.editing = null;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({nodes:state.nodes, edges:state.edges}));
-  if(hasToken()) pushToGitHub();
+  persist();
   return id;
 }
 function editEdgeLabel(id){
@@ -1049,6 +1150,10 @@ function deleteSelected(){
   setStatus(`${nodeIds.size + edgeIds.size} excluído(s)`);
 }
 document.getElementById('delete-btn').onclick = deleteSelected;
+document.getElementById('undo-btn').onclick  = undo;
+document.getElementById('redo-btn').onclick  = redo;
+document.getElementById('copy-btn').onclick  = copySelection;
+document.getElementById('paste-btn').onclick = pasteClipboard;
 
 document.getElementById('zoom-in').onclick  = ()=>{ state.zoom = Math.min(3, state.zoom*1.2); updateTransform(); };
 document.getElementById('zoom-out').onclick = ()=>{ state.zoom = Math.max(0.15, state.zoom/1.2); updateTransform(); };
@@ -1266,6 +1371,25 @@ window.addEventListener('keydown', e=>{
     e.preventDefault();
     state.selected = state.nodes.map(n=>({type:'node', id:n.id}));
     refreshSelectionClasses();
+  }
+  // Ctrl+Z = desfazer / Ctrl+Shift+Z ou Ctrl+Y = refazer
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){
+    e.preventDefault();
+    if(e.shiftKey) redo(); else undo();
+  }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='y'){
+    e.preventDefault();
+    redo();
+  }
+  // Ctrl+C / Ctrl+V = copiar/colar
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='c'){
+    if(window.getSelection().toString()) return;  // não interferir em texto selecionado
+    e.preventDefault();
+    copySelection();
+  }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='v'){
+    e.preventDefault();
+    pasteClipboard();
   }
 });
 

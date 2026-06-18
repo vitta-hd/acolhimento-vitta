@@ -153,7 +153,10 @@
   },
   "23": {
     "nota": "Plano seguira o mesmo, enviado orientações apenas sobre troca de carteirinha",
-    "status_acomp": "finalizado"
+    "status_acomp": "finalizado",
+    "motivos": [
+      "t-oncologico"
+    ]
   },
   "24": {
     "nota": "Plano seguira o mesmo, enviado orientações apenas sobre troca de carteirinha",

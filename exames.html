@@ -52,34 +52,33 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-<!-- ── TELA DE SENHA (mesma do painel) ── -->
-<div id="lock-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
-  <div style="width:100%;max-width:360px;padding:0 24px;text-align:center">
-    <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
-         style="height:36px;margin:0 auto 28px;filter:brightness(0) invert(1)" alt="Vitta"/>
-    <h1 style="color:#fff;font-size:1.4rem;font-weight:700;margin-bottom:28px">Agendamentos de Exames</h1>
-    <input id="lock-input" type="password" placeholder="Digite a senha"
-      onkeydown="if(event.key==='Enter')checkPass()"
-      style="width:100%;padding:14px 16px;font-size:1rem;border:none;border-bottom:2px solid rgba(255,255,255,.3);background:transparent;color:#fff;outline:none;text-align:center;caret-color:#60a5fa;box-sizing:border-box"/>
-    <p id="lock-err" style="color:#fca5a5;font-size:.8rem;margin-top:8px;min-height:20px"></p>
-    <button onclick="checkPass()"
-      style="margin-top:16px;width:100%;padding:14px;background:#0a4dbe;color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer">
-      Entrar
-    </button>
-  </div>
-</div>
-
-<div id="main-content" style="display:none">
-
 <!-- HERO -->
-<div style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
-  <div class="max-w-6xl mx-auto px-6 py-10">
-    <div class="flex items-center justify-between mb-4">
+<div style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%);position:relative;overflow:hidden">
+  <!-- Padrão decorativo -->
+  <div style="position:absolute;right:-40px;top:-40px;width:240px;height:240px;border-radius:50%;background:rgba(96,165,250,.08);pointer-events:none"></div>
+  <div style="position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(96,165,250,.06);pointer-events:none"></div>
+
+  <div class="max-w-6xl mx-auto px-6 py-10 relative">
+    <div class="flex items-center justify-between mb-6">
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png" class="h-8 brightness-0 invert" alt="Vitta"/>
       <a href="painel.html" class="text-white/80 hover:text-white text-sm">← Voltar ao painel</a>
     </div>
-    <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">🧪 Agendamentos de Exames</h1>
-    <p class="text-blue-200 text-sm mt-2">Consulta de cobertura — Convênio, CEP e exame para coleta domiciliar.</p>
+
+    <div class="flex items-center gap-5">
+      <!-- Ícone bonito (tubo de ensaio + check) -->
+      <div style="width:78px;height:78px;border-radius:18px;background:linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(29,78,216,.45);flex-shrink:0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 2h6"/>
+          <path d="M10 2v8.5L4.5 19A2 2 0 0 0 6.2 22h11.6a2 2 0 0 0 1.7-3L14 10.5V2"/>
+          <path d="M7 16h10"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-blue-200 text-xs font-mono uppercase tracking-widest mb-1">Hospital Digital Vitta</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight">Agendamentos de Exames</h1>
+        <p class="text-blue-200 text-sm mt-2">Verifique cobertura por convênio, CEP e exame para coleta domiciliar.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -195,29 +194,7 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
   Hospital Digital Vitta — Agendamentos de Exames
 </footer>
 
-</div><!-- /main-content -->
-
 <script>
-/* ────────────────────────────────────────────────────────
-   LOCK SCREEN (mesma do painel)
-   ──────────────────────────────────────────────────────── */
-function checkPass(){
-  var v=document.getElementById('lock-input').value;
-  if(v==='Vitta2026'){
-    document.getElementById('lock-screen').style.display='none';
-    document.getElementById('main-content').style.display='block';
-    sessionStorage.setItem('vitta-auth','1');
-  } else {
-    document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
-    document.getElementById('lock-input').value='';
-    document.getElementById('lock-input').focus();
-  }
-}
-if(sessionStorage.getItem('vitta-auth')==='1'){
-  document.getElementById('lock-screen').style.display='none';
-  document.getElementById('main-content').style.display='block';
-}
-
 /* ────────────────────────────────────────────────────────
    CONVÊNIO
    ──────────────────────────────────────────────────────── */

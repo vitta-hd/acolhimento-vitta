@@ -113,102 +113,8 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 
   <div id="stepper"></div>
 
-  <!-- ==================== BLOCO LABS (aparece quando exames cobertos) ==================== -->
-  <div id="labs-block" style="display:none" class="mt-8">
-    <h2 class="text-xl font-bold mb-1" style="color:#0a2d5e">🏥 Agende no site do laboratório</h2>
-    <p class="text-xs text-gray-500 mb-4">Selecione o laboratório, faça o agendamento e depois registre no Vision.</p>
-
-    <div class="lab-card">
-      <h4>🧪 ISA LAB · Concierge</h4>
-      <p class="text-sm text-gray-600">Plataforma para registrar o agendamento da coleta domiciliar do ISA Lab.</p>
-      <a href="https://concierge.isalab.com.br/entrar" target="_blank" class="lab-link">Abrir Concierge ISA Lab ↗</a>
-      <button class="passos-toggle" onclick="togglePassos(this)"><span class="arrow">▶</span> Passo a passo do registro no ISA Lab</button>
-      <div class="passos-body">
-        <p class="text-xs text-gray-500 mb-2"><strong>Será necessário dois registros</strong>: um no site <a href="https://concierge.isalab.com.br/" target="_blank" class="text-blue-600 underline">concierge.isalab.com.br</a> e outro no Vision.</p>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como agendar a coleta domiciliar no site ISA</p>
-        <ol>
-          <li>Clique em <strong>"Incluir agendamento"</strong> no canto superior direito da Agenda.</li>
-          <li>Verifique que tem a logo da <strong>Vitta</strong> e preencha todos os dados da tela: <strong>CEP / endereço, número, complemento, bairro, cidade, data e horário</strong> da coleta.</li>
-          <li>Anexe o <strong>pedido médico (obrigatório)</strong>. O documento com foto é opcional.</li>
-          <li>Preencha <strong>CRM</strong> e <strong>nome do médico solicitante</strong>.</li>
-          <li>Caso o paciente não tenha pedido médico em mãos, avise no campo de observação que a equipe entrará em contato pelo número cadastrado para solicitar o envio.</li>
-          <li>Pode incluir observações no <strong>campo de observações para a coleta</strong>.</li>
-          <li>Clique em <strong>"Confirmar agendamento"</strong>.</li>
-        </ol>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como validar se o agendamento foi concluído</p>
-        <ol>
-          <li>Selecione a <strong>data que agendou</strong> no topo da Agenda.</li>
-          <li>O paciente deve aparecer listado com status <strong>"Agendado"</strong>.</li>
-          <li>Para alterar a data ou horário, clique em <strong>EDITAR/VER</strong>.</li>
-        </ol>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como registrar este agendamento no Vision</p>
-        <ol>
-          <li>Em <strong>Tipo de prestador</strong>, escolha <strong>Laboratório</strong>.</li>
-          <li>Em <strong>Nome do exame</strong>, informe o exame (ex.: Hemograma).</li>
-          <li>No <strong>endereço</strong>, use Avenida das Nações Unidas (SP) ou um endereço do RJ quando for RJ.</li>
-          <li>Selecione o prestador <strong>ISA LAB DOMICILIAR</strong>.</li>
-          <li>Defina o <strong>dia e horário iguais aos registrados no Concierge</strong>.</li>
-          <li>No campo <strong>Motivo da consulta</strong>, anexe o pedido de exame (link do documento) referente ao agendamento.</li>
-        </ol>
-      </div>
-    </div>
-
-    <div class="lab-card">
-      <h4>🧪 LABI Exames · Coleta domiciliar</h4>
-      <p class="text-sm text-gray-600">Plataforma para agendar a coleta domiciliar do LABI.</p>
-      <a href="https://labiexames.as.me/schedule.php?appointmentType=category%3AVITTA+%28API+antiga%29" target="_blank" class="lab-link">Abrir agenda LABI ↗</a>
-      <button class="passos-toggle" onclick="togglePassos(this)"><span class="arrow">▶</span> Passo a passo do registro no LABI</button>
-      <div class="passos-body">
-        <p class="font-semibold text-sm mt-1 mb-2" style="color:#0a2d5e">Cidades atendidas pelo LABI</p>
-        <ul class="body-list">
-          <li>Grande São Paulo (SP, Guarulhos, Osasco, Barueri, Mogi das Cruzes…)</li>
-          <li>Grande Rio (Rio de Janeiro, Niterói, São Gonçalo)</li>
-          <li>Grande ABCD (Santo André, SBC, São Caetano, Diadema)</li>
-          <li>Interior SP (Sorocaba, Campinas, Piracicaba, São José dos Campos)</li>
-          <li>Litoral SP, Curitiba e região</li>
-        </ul>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como consultar o CEP</p>
-        <p class="text-sm text-gray-600">Use o widget de CEP acima ou consulte direto em <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" class="text-blue-600 underline">sites.google.com/vitta.me/ceplabi</a>. Você também pode simular um agendamento no Vision: em casos em que o form do LABI não funcione.</p>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como agendar no site LABI</p>
-        <ol>
-          <li>Acesse <a href="https://labiexames.as.me/schedule.php?appointmentType=category%3AVITTA+%28API+antiga%29" target="_blank" class="text-blue-600 underline">labiexames.as.me</a>.</li>
-          <li>Escolha o calendário <strong>[SP] Coleta de Exames (Manhã)</strong> / <strong>(Tarde)</strong> ou <strong>Domingo</strong> conforme a preferência do membro.</li>
-          <li>Preencher todos os campos necessários. Em campos sem informação, pode colocar apenas <strong>00</strong> ou <strong>-</strong>.</li>
-          <li>Não é necessário anexar o pedido nem colocar o link do mesmo no site LABI.</li>
-        </ol>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Registrando no Vision</p>
-        <ol>
-          <li>Lembre-se: no RJ, o endereço deve ser do RJ.</li>
-          <li>Em <strong>Tipo de Prestador</strong>, escolha <strong>Laboratório</strong>; ative <strong>"Particular"</strong>.</li>
-          <li>Em <strong>Nome do exame</strong>, informe o exame (ex.: Hemograma).</li>
-          <li>No <strong>endereço</strong>, informe o endereço do membro (SP: ex. Avenida Doutora Ruth Cardoso, 50; RJ: ex. Avenida Rio Branco, 156).</li>
-          <li>Clique em <strong>"Consultar rede"</strong> e selecione <strong>LABI EXAMES - DOMICILIAR</strong>.</li>
-          <li>Coloque <strong>dia e hora</strong> idênticos aos do site LABI.</li>
-          <li>No <strong>motivo da consulta</strong>, cole o <strong>link do pedido</strong>.</li>
-          <li>Em <strong>Prescrito pela Vitta Network?</strong>, marque <strong>Sim/Não</strong> e, se foi Vitta, informe o nome do médico solicitante.</li>
-        </ol>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Mensagem padrão após agendamento</p>
-        <div class="script-box" style="margin-top:6px;font-style:normal">
-Para realização dos exames você deve seguir os preparos: <strong>XXXXX</strong>
-
-Lembrando que nosso time tem uma janela de 1h de tolerância para chegar ao local devido a questões de trânsito ou coletas anteriores. Para cancelamento prévio, o mesmo deve ser sinalizado com 48 horas que antecedem a data agendada.
-
-Caso chegue alguma informação para você por e-mail com endereço diferente do seu, pode desconsiderar pois o agendamento está na coleta domiciliar. Ajudo com algo mais?
-        </div>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Cancelamentos</p>
-        <p class="text-sm text-gray-600">Em casos de cancelamento, todos precisam ser <strong>enviados via mensagem no grupo de laboratórios</strong>.</p>
-        <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Em casos de erros / unidades</p>
-        <p class="text-sm text-gray-600">Unidades: <a href="https://labiexames.com.br/unidades" target="_blank" class="text-blue-600 underline">labiexames.com.br/unidades</a> · Cobertura: <a href="https://labiexames.com.br/labi-em-casa" target="_blank" class="text-blue-600 underline">labiexames.com.br/labi-em-casa</a></p>
-      </div>
-    </div>
-
-    <div class="warn-box mt-4">
-      <p class="text-sm text-gray-700">
-        ℹ️ <strong>Após agendar no site do laboratório, registre o agendamento também no Vision.</strong><br/>
-        <strong>Importante:</strong> Para o LABI, caso o site deles apresente erro, agende direto na API Vision, caso esteja disponível.
-      </p>
-    </div>
-  </div>
+  <!-- O bloco "Agende no site do laboratório" ficou fixo embaixo dos cards LABI/ISALAB, dentro das regras gerais -->
+  <div id="labs-block" style="display:none"></div>
 
   <!-- ==================== REGRAS GERAIS — AGENDAMENTOS DE EXAMES VITTA ==================== -->
   <div class="bg-white border border-gray-200 rounded-lg p-6 mt-10" id="regras-gerais">
@@ -225,6 +131,105 @@ Caso chegue alguma informação para você por e-mail com endereço diferente do
       <div class="grid sm:grid-cols-2 gap-3 mb-4 sec">
         <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">LABI</p><p class="text-xs text-blue-600">Análises clínicas · SP e RJ (domiciliar e presencial)</p></div>
         <div class="bg-blue-50 border border-blue-200 p-3 text-center"><p class="font-semibold text-blue-800 text-sm">ISALAB</p><p class="text-xs text-blue-600">Análises clínicas · Estado de SP</p></div>
+      </div>
+
+      <!-- ==================== BLOCO LABS — FIXO EMBAIXO DOS CARDS ==================== -->
+      <div class="sec mb-4">
+        <h3 class="sec-title">🏥 Agende no site do laboratório</h3>
+        <div class="c-body">
+          <p class="text-xs text-gray-500 mb-3">Selecione o laboratório, faça o agendamento e depois registre no Vision.</p>
+
+          <div class="lab-card">
+            <h4>🧪 ISA LAB · Concierge</h4>
+            <p class="text-sm text-gray-600">Plataforma para registrar o agendamento da coleta domiciliar do ISA Lab.</p>
+            <a href="https://concierge.isalab.com.br/entrar" target="_blank" class="lab-link">Abrir Concierge ISA Lab ↗</a>
+            <button class="passos-toggle" onclick="togglePassos(this)"><span class="arrow">▶</span> Passo a passo do registro no ISA Lab</button>
+            <div class="passos-body">
+              <p class="text-xs text-gray-500 mb-2"><strong>Será necessário dois registros</strong>: um no site <a href="https://concierge.isalab.com.br/" target="_blank" class="text-blue-600 underline">concierge.isalab.com.br</a> e outro no Vision.</p>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como agendar a coleta domiciliar no site ISA</p>
+              <ol>
+                <li>Clique em <strong>"Incluir agendamento"</strong> no canto superior direito da Agenda.</li>
+                <li>Verifique que tem a logo da <strong>Vitta</strong> e preencha todos os dados da tela: <strong>CEP / endereço, número, complemento, bairro, cidade, data e horário</strong> da coleta.</li>
+                <li>Anexe o <strong>pedido médico (obrigatório)</strong>. O documento com foto é opcional.</li>
+                <li>Preencha <strong>CRM</strong> e <strong>nome do médico solicitante</strong>.</li>
+                <li>Caso o paciente não tenha pedido médico em mãos, avise no campo de observação que a equipe entrará em contato pelo número cadastrado para solicitar o envio.</li>
+                <li>Pode incluir observações no <strong>campo de observações para a coleta</strong>.</li>
+                <li>Clique em <strong>"Confirmar agendamento"</strong>.</li>
+              </ol>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como validar se o agendamento foi concluído</p>
+              <ol>
+                <li>Selecione a <strong>data que agendou</strong> no topo da Agenda.</li>
+                <li>O paciente deve aparecer listado com status <strong>"Agendado"</strong>.</li>
+                <li>Para alterar a data ou horário, clique em <strong>EDITAR/VER</strong>.</li>
+              </ol>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como registrar este agendamento no Vision</p>
+              <ol>
+                <li>Em <strong>Tipo de prestador</strong>, escolha <strong>Laboratório</strong>.</li>
+                <li>Em <strong>Nome do exame</strong>, informe o exame (ex.: Hemograma).</li>
+                <li>No <strong>endereço</strong>, use Avenida das Nações Unidas (SP) ou um endereço do RJ quando for RJ.</li>
+                <li>Selecione o prestador <strong>ISA LAB DOMICILIAR</strong>.</li>
+                <li>Defina o <strong>dia e horário iguais aos registrados no Concierge</strong>.</li>
+                <li>No campo <strong>Motivo da consulta</strong>, anexe o pedido de exame (link do documento) referente ao agendamento.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="lab-card">
+            <h4>🧪 LABI Exames · Coleta domiciliar</h4>
+            <p class="text-sm text-gray-600">Plataforma para agendar a coleta domiciliar do LABI.</p>
+            <a href="https://labiexames.as.me/schedule.php?appointmentType=category%3AVITTA+%28API+antiga%29" target="_blank" class="lab-link">Abrir agenda LABI ↗</a>
+            <button class="passos-toggle" onclick="togglePassos(this)"><span class="arrow">▶</span> Passo a passo do registro no LABI</button>
+            <div class="passos-body">
+              <p class="font-semibold text-sm mt-1 mb-2" style="color:#0a2d5e">Cidades atendidas pelo LABI</p>
+              <ul class="body-list">
+                <li>Grande São Paulo (SP, Guarulhos, Osasco, Barueri, Mogi das Cruzes…)</li>
+                <li>Grande Rio (Rio de Janeiro, Niterói, São Gonçalo)</li>
+                <li>Grande ABCD (Santo André, SBC, São Caetano, Diadema)</li>
+                <li>Interior SP (Sorocaba, Campinas, Piracicaba, São José dos Campos)</li>
+                <li>Litoral SP, Curitiba e região</li>
+              </ul>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como consultar o CEP</p>
+              <p class="text-sm text-gray-600">Use o widget de CEP acima ou consulte direto em <a href="https://sites.google.com/vitta.me/ceplabi/" target="_blank" class="text-blue-600 underline">sites.google.com/vitta.me/ceplabi</a>. Você também pode simular um agendamento no Vision: em casos em que o form do LABI não funcione.</p>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Como agendar no site LABI</p>
+              <ol>
+                <li>Acesse <a href="https://labiexames.as.me/schedule.php?appointmentType=category%3AVITTA+%28API+antiga%29" target="_blank" class="text-blue-600 underline">labiexames.as.me</a>.</li>
+                <li>Escolha o calendário <strong>[SP] Coleta de Exames (Manhã)</strong> / <strong>(Tarde)</strong> ou <strong>Domingo</strong> conforme a preferência do membro.</li>
+                <li>Preencher todos os campos necessários. Em campos sem informação, pode colocar apenas <strong>00</strong> ou <strong>-</strong>.</li>
+                <li>Não é necessário anexar o pedido nem colocar o link do mesmo no site LABI.</li>
+              </ol>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Registrando no Vision</p>
+              <ol>
+                <li>Lembre-se: no RJ, o endereço deve ser do RJ.</li>
+                <li>Em <strong>Tipo de Prestador</strong>, escolha <strong>Laboratório</strong>; ative <strong>"Particular"</strong>.</li>
+                <li>Em <strong>Nome do exame</strong>, informe o exame (ex.: Hemograma).</li>
+                <li>No <strong>endereço</strong>, informe o endereço do membro (SP: ex. Avenida Doutora Ruth Cardoso, 50; RJ: ex. Avenida Rio Branco, 156).</li>
+                <li>Clique em <strong>"Consultar rede"</strong> e selecione <strong>LABI EXAMES - DOMICILIAR</strong>.</li>
+                <li>Coloque <strong>dia e hora</strong> idênticos aos do site LABI.</li>
+                <li>No <strong>motivo da consulta</strong>, cole o <strong>link do pedido</strong>.</li>
+                <li>Em <strong>Prescrito pela Vitta Network?</strong>, marque <strong>Sim/Não</strong> e, se foi Vitta, informe o nome do médico solicitante.</li>
+              </ol>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Mensagem padrão após agendamento</p>
+              <div class="script-box" style="margin-top:6px;font-style:normal">
+Para realização dos exames você deve seguir os preparos: <strong>XXXXX</strong>
+
+Lembrando que nosso time tem uma janela de 1h de tolerância para chegar ao local devido a questões de trânsito ou coletas anteriores. Para cancelamento prévio, o mesmo deve ser sinalizado com 48 horas que antecedem a data agendada.
+
+Caso chegue alguma informação para você por e-mail com endereço diferente do seu, pode desconsiderar pois o agendamento está na coleta domiciliar. Ajudo com algo mais?
+              </div>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Cancelamentos</p>
+              <p class="text-sm text-gray-600">Em casos de cancelamento, todos precisam ser <strong>enviados via mensagem no grupo de laboratórios</strong>.</p>
+              <p class="font-semibold text-sm mt-3 mb-2" style="color:#0a2d5e">Em casos de erros / unidades</p>
+              <p class="text-sm text-gray-600">Unidades: <a href="https://labiexames.com.br/unidades" target="_blank" class="text-blue-600 underline">labiexames.com.br/unidades</a> · Cobertura: <a href="https://labiexames.com.br/labi-em-casa" target="_blank" class="text-blue-600 underline">labiexames.com.br/labi-em-casa</a></p>
+            </div>
+          </div>
+
+          <div class="warn-box mt-4">
+            <p class="text-sm text-gray-700">
+              ℹ️ <strong>Após agendar no site do laboratório, registre o agendamento também no Vision.</strong><br/>
+              <strong>Importante:</strong> Para o LABI, caso o site deles apresente erro, agende direto na API Vision, caso esteja disponível.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div class="sec">
@@ -884,8 +889,6 @@ function renderResumo(){
             '<div style="margin-top:8px;font-size:.85rem"><strong>Exames cobertos:</strong> '+cob.map(function(c){return escapeHtml(c.termo);}).join(', ')+'</div>'+
             scriptBox(msg)+
           '</div>';
-    // ativa bloco de labs
-    setTimeout(function(){ document.getElementById('labs-block').style.display='block'; },0);
   }
   // 2) todos sem cobertura
   else if(nao.length>0 && cob.length===0){
@@ -895,7 +898,6 @@ function renderResumo(){
             '<div style="margin-top:8px;font-size:.85rem"><strong>Exames informados:</strong> '+nao.map(function(c){return escapeHtml(c.termo);}).join(', ')+'</div>'+
             scriptBox(SCRIPT_EXAM_NAO)+
           '</div>';
-    setTimeout(function(){ document.getElementById('labs-block').style.display='none'; },0);
   }
   // 3) parcial
   else {
@@ -910,7 +912,6 @@ function renderResumo(){
             '<div style="font-size:.85rem"><strong>❌ Sem cobertura:</strong> '+escapeHtml(listaSem)+'</div>'+
             scriptBox(msg)+
           '</div>';
-    setTimeout(function(){ document.getElementById('labs-block').style.display='block'; },0);
   }
   return box;
 }
@@ -961,9 +962,9 @@ function verExames(){
 }
 
 function resetEtapa(et){
-  if(et==='conv'){ state.conv=null; state.cep=null; state.exam=null; state.step='conv'; document.getElementById('labs-block').style.display='none'; }
-  if(et==='cep'){ state.cep=null; state.exam=null; state.step='cep'; document.getElementById('labs-block').style.display='none'; }
-  if(et==='exam'){ state.exam=null; state.step='exam'; document.getElementById('labs-block').style.display='none'; }
+  if(et==='conv'){ state.conv=null; state.cep=null; state.exam=null; state.step='conv'; }
+  if(et==='cep'){ state.cep=null; state.exam=null; state.step='cep'; }
+  if(et==='exam'){ state.exam=null; state.step='exam'; }
   renderStepper();
 }
 

@@ -659,7 +659,9 @@ function avaliarConvenio(raw){
 }
 
 /* ════════════════════════════════════════════════════════════
-   CEP — API LABI
+   CEP — API LABI (duas chamadas, mesma lógica do Apps Script:
+   availability/zipcode → pega o polígono → product-groups e
+   confirma que existe o grupo "Exames" com calendários)
    ════════════════════════════════════════════════════════════ */
 function checarCep(raw){
   return new Promise(function(resolve){
@@ -668,17 +670,42 @@ function checarCep(raw){
       resolve({ok:false, raw:raw, msg:'Digite um CEP válido com 8 dígitos.'});
       return;
     }
+    var formatted = d.replace(/^(\d{5})(\d{3})$/,'$1-$2');
+
+    // 1) availability/zipcode
     fetch('https://api.labiexames.com.br/site/home-collection/availability/zipcode?zip_code='+d+'&origin=chatbot')
-      .then(function(r){return r.json();})
+      .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
-        var formatted = d.replace(/^(\d{5})(\d{3})$/,'$1-$2');
-        if(data && data.address && data.address.city){
-          var a = data.address;
-          var addr = [a.street, a.neighborhood, a.city, a.state].filter(Boolean).join(', ');
-          resolve({ok:true, raw:formatted, addr:addr, msg:'CEP '+formatted+' — coberto · '+addr});
-        } else {
-          resolve({ok:false, raw:formatted, msg:'CEP '+formatted+' — localidade não coberta na coleta domiciliar.'});
+        if(!data){
+          resolve({ok:false, raw:formatted, msg:'CEP '+formatted+' — não foi possível consultar no momento.'});
+          return;
         }
+        // captura endereço (sempre vem para CEP válido do Brasil)
+        var addr = '';
+        if(data.address && data.address.city){
+          var a = data.address;
+          addr = [a.street, a.neighborhood, a.city, a.state].filter(Boolean).join(', ');
+        }
+        // Sem polígono = LABI não tem cobertura nessa região
+        if(!data.kml || !data.kml.polygon){
+          resolve({ok:false, raw:formatted, addr:addr,
+                   msg:'CEP '+formatted+' — localidade não coberta na coleta domiciliar'+(addr?' ('+addr+')':'')+'.'});
+          return;
+        }
+        // 2) product-groups?polygon=... — confirma o grupo "Exames"
+        return fetch('https://api.labiexames.com.br/site/home-collection/product-groups?polygon='+encodeURIComponent(data.kml.polygon))
+          .then(function(r){ return r.ok ? r.json() : []; })
+          .then(function(groups){
+            var examGroup = (groups||[]).find(function(g){ return g && g.name === 'Exames'; });
+            var hasCalendar = examGroup && Array.isArray(examGroup.calendars) && examGroup.calendars.length > 0;
+            if(!hasCalendar){
+              resolve({ok:false, raw:formatted, addr:addr,
+                       msg:'CEP '+formatted+' — localidade sem cobertura para Exames'+(addr?' ('+addr+')':'')+'.'});
+              return;
+            }
+            resolve({ok:true, raw:formatted, addr:addr,
+                     msg:'CEP '+formatted+' — coberto · '+addr});
+          });
       })
       .catch(function(){
         resolve({ok:false, raw:raw, msg:'Não foi possível consultar o CEP no momento.'});

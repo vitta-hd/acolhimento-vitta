@@ -46,6 +46,11 @@ ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 .consolidado-no{background:linear-gradient(135deg,#fee2e2 0%,#fecaca 100%);border:2px solid #dc2626;color:#7f1d1d}
 .consolidado{border-radius:10px;padding:18px 22px;font-size:.95rem;line-height:1.6;font-weight:600;display:flex;gap:14px;align-items:flex-start}
 .consolidado .icon{font-size:2rem;line-height:1}
+.cons-itens{display:flex;flex-direction:column;gap:6px;margin:10px 0 14px;font-weight:500;font-size:.88rem}
+.cons-itens .it{display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(255,255,255,.55);border-radius:6px}
+.cons-itens .it .mark{font-size:1rem;flex-shrink:0}
+.cons-itens .it.ok{color:#14532d}
+.cons-itens .it.no{color:#7f1d1d}
 </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -391,26 +396,45 @@ async function consultarTudo(){
 
   var allOk = r1.ok && r2.ok && r3.ok;
   var box = document.getElementById('consolidado-result');
+
+  // Linha por item: convênio, CEP, exame
+  function linha(rotulo, ok){
+    var cls = ok ? 'ok' : 'no';
+    var mark = ok ? '✅' : '❌';
+    var txt = ok ? rotulo + ' — coberto' : rotulo + ' — não coberto';
+    return '<div class="it '+cls+'"><span class="mark">'+mark+'</span><span>'+txt+'</span></div>';
+  }
+  var itens =
+    '<div class="cons-itens">' +
+      linha('Convênio', r1.ok) +
+      linha('CEP', r2.ok) +
+      linha('Exame', r3.ok) +
+    '</div>';
+
   if(allOk){
     box.innerHTML =
       '<div class="consolidado consolidado-ok">' +
         '<span class="icon">✅</span>' +
-        '<div>' +
+        '<div style="flex:1">' +
           '<div style="font-size:1.05rem;margin-bottom:4px">Esse agendamento é elegível à coleta domiciliar.</div>' +
+          itens +
           '<div style="font-weight:500;font-size:.85rem">Oferte o agendamento ao membro.</div>' +
         '</div>' +
       '</div>';
   } else {
+    // Só lista os que falharam no motivo
     var motivos = [];
     if(!r1.ok) motivos.push('o convênio não é coberto');
     if(!r2.ok) motivos.push('o CEP não é coberto');
     if(!r3.ok) motivos.push('o exame não é coberto');
-    var motivoTxt = motivos.length===1 ? motivos[0] : motivos.slice(0,-1).join(', ') + ' e ' + motivos.slice(-1);
+    var motivoTxt = motivos.length===1 ? motivos[0] :
+                    motivos.slice(0,-1).join(', ') + ' e ' + motivos.slice(-1);
     box.innerHTML =
       '<div class="consolidado consolidado-no">' +
         '<span class="icon">❌</span>' +
-        '<div>' +
+        '<div style="flex:1">' +
           '<div style="font-size:1.05rem;margin-bottom:4px">Esse agendamento não é coberto na coleta domiciliar pois '+motivoTxt+'.</div>' +
+          itens +
           '<div style="font-weight:500;font-size:.85rem">Orientar o membro a buscar a rede do seu plano.</div>' +
         '</div>' +
       '</div>';

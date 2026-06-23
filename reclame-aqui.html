@@ -129,11 +129,13 @@
   table.compl tbody tr:hover{background:#f9fbff}
   .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
   .tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
-  .tag.t-agendamento{background:#dbeafe;color:#1d4ed8}
-  .tag.t-documentos{background:#ede9fe;color:#6d28d9}
-  .tag.t-medicamento{background:#fef3c7;color:#92400e}
   .tag.t-app{background:#cffafe;color:#0891b2}
-  .tag.t-medico{background:#fee2e2;color:#b91c1c}
+  .tag.t-teleconsulta{background:#dbeafe;color:#1d4ed8}
+  .tag.t-prontuario{background:#e0e7ff;color:#3730a3}
+  .tag.t-documentos{background:#ede9fe;color:#6d28d9}
+  .tag.t-beneficio{background:#fef3c7;color:#92400e}
+  .tag.t-whatsapp{background:#dcfce7;color:#15803d}
+  .tag.t-cadastro{background:#fce7f3;color:#be123c}
   .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
   .b-ok{background:var(--good-50);color:#15803d}
   .b-warn{background:var(--warn-50);color:#a16207}
@@ -306,7 +308,7 @@
       <div class="grid-2">
         <div class="panel">
           <h2>Reclamações por mês</h2>
-          <p class="desc">Volume total e quantas foram avaliadas em cada mês.</p>
+          <p class="desc">Volume de reclamações registradas no Reclame Aqui em cada mês de 2026.</p>
           <div class="chart-wrap"><canvas id="chMes"></canvas></div>
         </div>
         <div class="panel">
@@ -319,7 +321,7 @@
       <!-- Theme by month -->
       <div class="panel">
         <h2>Temas por mês</h2>
-        <p class="desc">Como cada categoria evolui ao longo do semestre — útil para identificar surtos pontuais (ex.: app em maio, documentos quase todos os meses).</p>
+        <p class="desc">Como cada categoria evolui ao longo do semestre — útil para identificar concentrações pontuais e padrões recorrentes.</p>
         <div class="chart-wrap tall"><canvas id="chTemaMes"></canvas></div>
       </div>
 
@@ -476,25 +478,25 @@
 ============================================================ */
 const COMPLAINTS = [
   { date:'2026-06-12T09:59', month:6, name:'José Batista de Oliveira Neto', city:'São Pedro',
-    theme:'Agendamento', subject:'Problemas com agendamento e documentos após consulta médica, com falta de retorno e suporte',
+    theme:'App', subject:'Problemas com agendamento e documentos após consulta médica, com falta de retorno e suporte',
     response:'2026-06-12T16:14', closed:'2026-06-17T17:38', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Identificada instabilidade que afetou agendamento e suporte; sistema corrigido, agenda ajustada e atendimentos remarcados; supervisor entrou em contato pessoalmente.' },
 
   { date:'2026-06-09T12:36', month:6, name:'Jessica Amanda dos Santos', city:'Praia Grande',
-    theme:'Documentos', subject:'Consulta de nutrição com status cancelado e instruções alimentares não recebidas',
+    theme:'Tele consulta', subject:'Consulta de nutrição com status cancelado e instruções alimentares não recebidas',
     response:'2026-06-09T14:33', closed:'2026-06-11T10:01', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Confirmado que o atendimento ocorreu; status "cancelado" era temporário até a finalização do prontuário; orientações enviadas pela equipe.' },
 
   { date:'2026-05-29T08:27', month:5, name:'Renata Speransa Fraga', city:'Santo Antônio da Patrulha',
-    theme:'Medicamento', subject:'Falha na requisição de medicamento impede a compra',
+    theme:'Benefício medicamentos', subject:'Falha na requisição de medicamento impede a compra',
     response:'2026-05-29T14:05', closed:'2026-06-05T15:33', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Caso encaminhado ao time técnico para análise da inconsistência; cliente orientada sobre o processo de reembolso para não interromper o tratamento.' },
 
   { date:'2026-05-27T18:45', month:5, name:'Vagner Pellegrini de Andrade', city:'Anápolis',
-    theme:'Medicamento', subject:'Receita e autorização de medicamento controlado da filha não disponíveis no app',
+    theme:'Benefício medicamentos', subject:'Receita e autorização de medicamento controlado da filha não disponíveis no app',
     response:'2026-05-29T13:55', closed:'2026-06-02T08:24', status:'Resolvida',
     evaluated:true, rating:8, returns:true,
     resolution:'Caso em verificação interna para análise da inconsistência; cliente orientado sobre o processo de reembolso enquanto a análise corria.' },
@@ -506,97 +508,97 @@ const COMPLAINTS = [
     resolution:'Acesso à conta regularizado; consulta posterior realizada com sucesso; feedback sobre app e WhatsApp encaminhado para melhoria.' },
 
   { date:'2026-05-13T19:01', month:5, name:'Fabiana Nascimento', city:'São Paulo',
-    theme:'App', subject:'Consultas psicológicas com problemas técnicos recorrentes e sem solução do suporte',
+    theme:'Tele consulta', subject:'Consultas psicológicas com problemas técnicos recorrentes e sem solução do suporte',
     response:'2026-05-14T16:18', closed:'2026-05-20T21:22', status:'Resolvida',
     evaluated:true, rating:7, returns:true,
     resolution:'Atendimento reorganizado com a mesma profissional; nova consulta agendada para 20/05 conforme disponibilidade da paciente.' },
 
   { date:'2026-05-12T12:42', month:5, name:'Juliana Melo da Silva', city:'Itaquaquecetuba',
-    theme:'Documentos', subject:'Solicitação urgente de prontuário com a psiquiatra sem retorno desde abril',
+    theme:'Prontuário', subject:'Solicitação urgente de prontuário com a psiquiatra sem retorno desde abril',
     response:'2026-05-20T16:20', closed:'2026-06-03T22:21', status:'Resolvida',
     evaluated:true, rating:8, returns:true,
     resolution:'Prontuário encaminhado em 15/05, confirmação de recebimento via WhatsApp em 20/05; atendimento conduzido pelo supervisor Renan.' },
 
   { date:'2026-05-10T11:02', month:5, name:'Thiago Henrique Sampaio do Nascimento', city:'Brasília',
-    theme:'Documentos', subject:'Sem retorno para solicitação de relatório psicológico após múltiplos contatos',
+    theme:'Prontuário', subject:'Sem retorno para solicitação de relatório psicológico após múltiplos contatos',
     response:'2026-05-15T15:30', closed:'2026-05-19T15:02', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Prontuário enviado com sucesso; recebimento confirmado por contato telefônico em 15/05.' },
 
   { date:'2026-04-22T22:04', month:4, name:'Juliane Fregadolli', city:'Maringá',
-    theme:'Medicamento', subject:'Benefício de medicamento bloqueado por "divergência na nota fiscal" sem explicação',
+    theme:'Benefício medicamentos', subject:'Benefício de medicamento bloqueado por "divergência na nota fiscal" sem explicação',
     response:'2026-04-23T12:15', closed:'2026-04-25T10:22', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Comprovante inicial incompleto; nova NF válida recebida via WhatsApp; análise concluída e benefício liberado.' },
 
   { date:'2026-04-13T21:35', month:4, name:'Juliane Fregadolli', city:'Maringá',
-    theme:'Agendamento', subject:'Bloqueio de acesso a consultas por política de cancelamento considerada inflexível',
+    theme:'App', subject:'Bloqueio de acesso a consultas por política de cancelamento considerada inflexível',
     response:'2026-04-22T10:46', closed:'2026-04-25T10:21', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Bloqueio ocorreu por regra automática aplicada igualmente a todos; equipe entrou em contato para apoiar a continuidade do tratamento; apontamento registrado para revisão da regra.' },
 
   { date:'2026-04-07T09:46', month:4, name:'Alanne Brandão', city:'São Paulo',
-    theme:'Documentos', subject:'Atestado médico não recebido após consulta online',
+    theme:'Documentos da consulta', subject:'Atestado médico não recebido após consulta online',
     response:'2026-04-07T15:18', closed:'2026-04-08T20:11', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Instabilidade pontual identificada; atestado reenviado por WhatsApp e, na sequência, por e-mail conforme solicitado.' },
 
   { date:'2026-04-06T17:10', month:4, name:'Cleyton Messias Dos Santos', city:'São Paulo',
-    theme:'Agendamento', subject:'Agendamentos online com falhas e médica que não compareceu',
+    theme:'Tele consulta', subject:'Agendamentos online com falhas e médica que não compareceu',
     response:'2026-04-07T15:07', closed:'2026-06-08T13:42', status:'Resolvida',
     evaluated:true, rating:8, returns:true,
     resolution:'Ocorrências anteriores verificadas; correções aplicadas no processo; última consulta ocorreu como esperado.' },
 
   { date:'2026-03-16T10:07', month:3, name:'Paulo Aparecido de Lima Junior', city:'Mauá',
-    theme:'Documentos', subject:'Demora no envio de prontuário médico para acompanhamento terapêutico',
+    theme:'Prontuário', subject:'Demora no envio de prontuário médico para acompanhamento terapêutico',
     response:'2026-03-17T15:54', closed:'2026-05-08T11:46', status:'Resolvida',
     evaluated:true, rating:6, returns:true,
     resolution:'Prontuário encaminhado para o e-mail informado; cliente orientado a verificar spam e a acionar o WhatsApp em caso de dificuldade.' },
 
   { date:'2026-03-13T10:30', month:3, name:'Jéssica Almeida Tolentino', city:'São Paulo',
-    theme:'Documentos', subject:'Médica não anexou atestado após consulta',
+    theme:'Documentos da consulta', subject:'Médica não anexou atestado após consulta',
     response:'2026-03-16T15:36', closed:'2026-03-17T12:59', status:'Resolvida',
     evaluated:true, rating:8, returns:true,
     resolution:'Atestado localizado e enviado pela equipe via WhatsApp após contato da paciente.' },
 
   { date:'2026-02-20T18:33', month:2, name:'Juliane Fregadolli', city:'Maringá',
-    theme:'Medicamento', subject:'Benefício bloqueado e nota fiscal de reembolso reprovada sem justificativa plausível',
+    theme:'App', subject:'Benefício bloqueado e nota fiscal de reembolso reprovada sem justificativa plausível',
     response:'2026-02-23T12:18', closed:'2026-03-02T20:23', status:'Resolvida',
     evaluated:true, rating:9, returns:true,
     resolution:'Bloqueio gerado por divergência entre unidades informadas (2) e o cupom fiscal (1); benefício desbloqueado após análise e orientação ao consumidor sobre o preenchimento correto.' },
 
   { date:'2026-02-19T09:34', month:2, name:'Vagner Pellegrini de Andrade', city:'Anápolis',
-    theme:'Agendamento', subject:'Impossibilidade de agendar consulta online; cadastro inativo e 0800 indisponível',
+    theme:'App', subject:'Impossibilidade de agendar consulta online; cadastro inativo e 0800 indisponível',
     response:'2026-02-20T19:38', closed:'2026-05-07T09:09', status:'Resolvida',
     evaluated:true, rating:9, returns:true,
     resolution:'Cadastro normalizado e ajustes feitos no app; agendamento desbloqueado com retorno por telefone à beneficiária.' },
 
   { date:'2026-02-12T09:30', month:2, name:'Ana Paula Portoghese', city:'São Paulo',
-    theme:'Agendamento', subject:'Não foi atendida no horário marcado da consulta',
+    theme:'Tele consulta', subject:'Não foi atendida no horário marcado da consulta',
     response:'2026-02-12T13:11', closed:'2026-02-20T11:39', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Consulta realocada com a mesma médica no mesmo dia; caso direcionado internamente para evitar reincidência.' },
 
   { date:'2026-01-26T20:42', month:1, name:'Wilker Alves da Silva', city:'Rio Verde',
-    theme:'Agendamento', subject:'Falha no agendamento para dependentes: disponibilidade seletiva entre titular e dependente',
+    theme:'Cadastro', subject:'Falha no agendamento para dependentes: disponibilidade seletiva entre titular e dependente',
     response:'2026-01-29T10:47', closed:'2026-02-01T11:27', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Inconsistência cadastral corrigida; agendamento normalizado para dependentes no app.' },
 
   { date:'2026-01-17T00:55', month:1, name:'Vitoria Medeiros da Rosa', city:'Tramandaí',
-    theme:'Atendimento Médico', subject:'Atendimento médico inadequado, falta de suporte e prescrição equivocada de medicamento',
+    theme:'WhatsApp', subject:'Atendimento médico inadequado, falta de suporte e prescrição equivocada de medicamento',
     response:'2026-01-21T12:28', closed:null, status:'Respondida',
     evaluated:false, rating:null, returns:null,
     resolution:'Diversas tentativas de contato (telefone, e-mail, WhatsApp) sem retorno conclusivo; oferta de nova avaliação médica, inclusive com outro profissional. Aguardando avaliação até 21/07/2026.' },
 
   { date:'2026-01-06T23:23', month:1, name:'Julia Neles Costa', city:'Porto Alegre',
-    theme:'App', subject:'Erro no aplicativo durante o pagamento e solicitação urgente de reembolso',
+    theme:'Benefício medicamentos', subject:'Erro no aplicativo durante o pagamento e solicitação urgente de reembolso',
     response:'2026-01-07T09:53', closed:'2026-06-08T14:15', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Reembolso processado e valor creditado na chave Pix informada; canal de WhatsApp reforçado para próximas demandas.' },
 
   { date:'2026-01-05T13:13', month:1, name:'David de Almeida Cruz', city:'Belo Horizonte',
-    theme:'Documentos', subject:'Solicitação de histórico de atendimentos, laudos e atestados sem retorno',
+    theme:'Documentos da consulta', subject:'Solicitação de histórico de atendimentos, laudos e atestados sem retorno',
     response:'2026-01-06T16:46', closed:'2026-01-06T16:47', status:'Resolvida',
     evaluated:true, rating:10, returns:true,
     resolution:'Solicitação atendida dentro do prazo legal e abertura de canal por e-mail disponibilizada para dúvidas adicionais.' },
@@ -606,20 +608,24 @@ const COMPLAINTS = [
    HELPERS
 ============================================================ */
 const MES_NOMES = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const TEMAS = ['Documentos','Agendamento','Medicamento','App','Atendimento Médico'];
+const TEMAS = ['App','Tele consulta','Prontuário','Documentos da consulta','Benefício medicamentos','WhatsApp','Cadastro'];
 const TEMA_COLOR = {
-  'Documentos':'#6d28d9',
-  'Agendamento':'#1d4ed8',
-  'Medicamento':'#d97706',
   'App':'#0891b2',
-  'Atendimento Médico':'#dc2626'
+  'Tele consulta':'#1d4ed8',
+  'Prontuário':'#3730a3',
+  'Documentos da consulta':'#6d28d9',
+  'Benefício medicamentos':'#d97706',
+  'WhatsApp':'#16a34a',
+  'Cadastro':'#be123c'
 };
 const TEMA_CLASS = {
-  'Documentos':'t-documentos',
-  'Agendamento':'t-agendamento',
-  'Medicamento':'t-medicamento',
   'App':'t-app',
-  'Atendimento Médico':'t-medico'
+  'Tele consulta':'t-teleconsulta',
+  'Prontuário':'t-prontuario',
+  'Documentos da consulta':'t-documentos',
+  'Benefício medicamentos':'t-beneficio',
+  'WhatsApp':'t-whatsapp',
+  'Cadastro':'t-cadastro'
 };
 
 function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString('pt-BR') }
@@ -672,32 +678,29 @@ function renderKpis(){
 ============================================================ */
 function renderChartMes(){
   const byMes = {};
-  for (let m=1;m<=6;m++) byMes[m] = { total:0, avaliadas:0 };
-  COMPLAINTS.forEach(c=>{
-    byMes[c.month].total++;
-    if (c.evaluated) byMes[c.month].avaliadas++;
-  });
+  for (let m=1;m<=6;m++) byMes[m] = 0;
+  COMPLAINTS.forEach(c=>{ byMes[c.month]++; });
   const labels = [];
   const totals = [];
-  const avals = [];
   for (let m=1;m<=6;m++){
     labels.push(MES_NOMES[m]);
-    totals.push(byMes[m].total);
-    avals.push(byMes[m].avaliadas);
+    totals.push(byMes[m]);
   }
   new Chart(document.getElementById('chMes'), {
     type:'bar',
     data:{
       labels,
       datasets:[
-        { label:'Total', data:totals, backgroundColor:'#1d4ed8', borderRadius:8, barPercentage:.65 },
-        { label:'Avaliadas', data:avals, backgroundColor:'#36c800', borderRadius:8, barPercentage:.65 }
+        { label:'Reclamações', data:totals, backgroundColor:'#1d4ed8', borderRadius:8, barPercentage:.6 }
       ]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ position:'bottom', labels:{boxWidth:12,font:{family:'IBM Plex Sans',size:12}} } },
-      scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } }
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ callbacks:{ label:(ctx)=>` ${ctx.parsed.y} reclamação${ctx.parsed.y===1?'':'es'}` } }
+      },
+      scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } }, x:{ grid:{display:false} } }
     }
   });
 }

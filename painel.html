@@ -54,6 +54,56 @@ tailwind.config={theme:{extend:{
 .filter-clear:hover{text-decoration:underline;}
 .company-bubble{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0;letter-spacing:.5px;}
 .empty-state{padding:60px 20px;text-align:center;color:#6b7280;font-size:.9rem;grid-column:1/-1;}
+
+.edit-launcher{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:linear-gradient(135deg,#0a2d5e,#1a4f9e);color:#fff;border-radius:8px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(10,45,94,.15);}
+.edit-launcher .info{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.edit-launcher .lock-ico{width:32px;height:32px;background:rgba(255,255,255,.14);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.edit-launcher h3{margin:0;font-size:.95rem;font-weight:700}
+.edit-launcher p{margin:2px 0 0;font-size:.75rem;color:#bfdbfe;line-height:1.4}
+.edit-launcher button{background:#fff;color:#0a2d5e;border:0;border-radius:6px;padding:9px 16px;font-weight:600;font-size:.78rem;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.edit-launcher button:hover{background:#e8f0fc}
+.edit-launcher button.unlocked{background:#16a34a;color:#fff}
+.edit-launcher button.unlocked:hover{background:#15803d}
+.edit-launcher .export-btn{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+.edit-launcher .export-btn:hover{background:rgba(255,255,255,.1)}
+
+body.edit-mode .company-card{position:relative}
+body.edit-mode .company-card::before{content:"✏️ Editar";position:absolute;top:-10px;right:12px;background:#0a4dbe;color:#fff;font-size:.65rem;padding:3px 8px;border-radius:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;z-index:2;cursor:pointer;pointer-events:none}
+body.edit-mode .company-card{cursor:pointer;outline:2px dashed transparent;transition:outline .15s}
+body.edit-mode .company-card:hover{outline-color:#0a4dbe}
+body.edit-mode .company-card.has-edits::after{content:"●";position:absolute;top:8px;left:-6px;color:#16a34a;font-size:1.4rem;line-height:1}
+
+.modal-bg{position:fixed;inset:0;background:rgba(7,31,66,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:9000;padding:20px}
+.modal-bg.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;max-width:560px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 24px 60px rgba(7,31,66,.3)}
+.modal-box .head{background:#0a2d5e;color:#fff;padding:18px 22px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
+.modal-box .head h3{margin:0;font-size:1rem;font-weight:700}
+.modal-box .head .x{background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;padding:0 4px;opacity:.85}
+.modal-box .head .x:hover{opacity:1}
+.modal-box .body{padding:20px 22px}
+.modal-box .foot{padding:14px 22px;border-top:1px solid #e5eaf3;display:flex;justify-content:flex-end;gap:8px;background:#f8faff;border-radius:0 0 12px 12px}
+.modal-box .foot button{padding:9px 18px;border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:inherit;border:0}
+.modal-box .foot .cancel{background:#f3f4f6;color:#374151;border:1px solid #d1d5db}
+.modal-box .foot .cancel:hover{background:#e5e7eb}
+.modal-box .foot .save{background:#0a4dbe;color:#fff}
+.modal-box .foot .save:hover{background:#0e3a78}
+.modal-box .foot .delete{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;margin-right:auto}
+.modal-box .foot .delete:hover{background:#fecaca}
+
+.edit-form label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;font-weight:700;margin:14px 0 5px}
+.edit-form input[type=text]{width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:.9rem;font-family:inherit;outline:none}
+.edit-form input[type=text]:focus{border-color:#0a4dbe}
+.edit-form select{width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;outline:none;background:#fff}
+.edit-form select:focus{border-color:#0a4dbe}
+.edit-form .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.edit-form .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.edit-form .plan-block{border:1px solid #e5eaf3;border-radius:8px;padding:14px;margin-top:14px;position:relative;background:#fafbff}
+.edit-form .plan-block h4{margin:0 0 8px;font-size:.85rem;font-weight:700;color:#0a2d5e}
+.edit-form .plan-block .rm-plan{position:absolute;top:10px;right:10px;background:#fee2e2;color:#b91c1c;border:0;border-radius:4px;font-size:.7rem;padding:4px 8px;cursor:pointer;font-family:inherit;font-weight:600}
+.edit-form .add-plan{margin-top:10px;background:#dcfce7;color:#15803d;border:1px dashed #16a34a;border-radius:6px;padding:8px 12px;font-size:.78rem;cursor:pointer;font-family:inherit;font-weight:600;width:100%}
+.edit-form .add-plan:hover{background:#bbf7d0}
+.edit-form .pwd-input{width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:6px;font-size:1rem;font-family:inherit;letter-spacing:.2em;text-align:center;margin-top:8px}
+.edit-form .pwd-err{color:#b91c1c;font-size:.78rem;margin-top:6px;text-align:center;min-height:16px}
 .highlight-box{background:#f0f6ff;border-left:3px solid #0a4dbe;padding:12px 16px;margin:12px 0;}
 .warn-box{background:#fffbeb;border-left:3px solid #f59e0b;padding:12px 16px;margin:12px 0;}
 .rule-box{background:#f8faff;border:1px solid #c7d8f5;border-radius:0;padding:16px;margin:12px 0;}
@@ -114,6 +164,21 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 ═══════════════════════════════════════════════ -->
 <div id="content-area" style="display:none">
 <div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10 hidden">
+
+  <!-- Realizar alterações em empresas -->
+  <div class="edit-launcher" id="edit-launcher">
+    <div class="info">
+      <div class="lock-ico" id="edit-lock-ico">🔒</div>
+      <div>
+        <h3>Realizar alterações em empresas</h3>
+        <p id="edit-launcher-sub">Modo restrito · requer senha para liberar a edição dos cards</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="export-btn" id="btn-export-edits" onclick="exportEdits()" style="display:none">⬇️ Exportar alterações</button>
+      <button id="btn-edit-toggle" onclick="toggleEditMode()">🔓 Liberar edição</button>
+    </div>
+  </div>
 
   <!-- Legenda (no topo) -->
   <div class="mb-5 bg-white border border-gray-200 p-4">
@@ -4616,6 +4681,329 @@ document.addEventListener('DOMContentLoaded', ()=>{ try { applyFilters(); } catc
 // alias retrocompatível
 function filterCompanies(){ applyFilters(); }
 
+/* ============================================================
+   EDITOR DE EMPRESAS (com senha, persistência em localStorage)
+============================================================ */
+const EDIT_PWD = 'Atendimento2026';
+const EDIT_STORAGE_KEY = 'elig_edits_v1';
+let EDIT_MODE = false;
+let EDIT_TARGET = null;  // card sendo editado
+let EDIT_DRAFT = null;   // objeto { conv, tipo, plans: [...] }
+
+const MOD_OPTIONS = [
+  ['convenio','Convênio'],
+  ['subsidiado','Subsidiado'],
+  ['capitado','Capitado'],
+  ['capitado-plus','Capitado Plus'],
+  ['vamplia','Vitta Amplia'],
+  ['vessencial','Vitta Essencial'],
+  ['particular','Particular']
+];
+const MOD_LABEL = Object.fromEntries(MOD_OPTIONS);
+const MOD_BADGE_CLS = {
+  'convenio':'badge-conv','subsidiado':'badge-sub','capitado':'badge-cap',
+  'capitado-plus':'badge-capplus','vamplia':'badge-vamplia',
+  'vessencial':'badge-vessencial','particular':'badge-part'
+};
+
+function loadEdits(){
+  try { return JSON.parse(localStorage.getItem(EDIT_STORAGE_KEY)||'{}'); }
+  catch(e){ return {}; }
+}
+function saveEditsToStorage(map){
+  localStorage.setItem(EDIT_STORAGE_KEY, JSON.stringify(map));
+}
+
+/* ---- Parse a card's current state into structured data ---- */
+function parseCardModel(card){
+  const conv = card.querySelector('button .text-xs.text-gray-500')?.textContent.trim() || '';
+  const tipo = card.querySelector('button .text-xs.text-gray-400.mt-0\\.5')?.textContent.trim() || '';
+  const body = card.querySelector('.expand-body');
+  const plans = [];
+  if (!body) return { conv, tipo, plans };
+
+  // Multi-plan: each .bg-gray-50 is one plan
+  let containers = body.querySelectorAll('.bg-gray-50');
+  if (containers.length === 0){
+    // Single-plan: the .mt-4 > div block
+    const single = body.querySelector('.mt-4 > div, .mt-4');
+    if (single) containers = [single];
+  }
+  containers.forEach(c=>{
+    const titleEl = c.querySelector('.text-xs.font-semibold')
+                  || c.querySelector('.text-xs.font-mono.uppercase')
+                  || c.querySelector('.text-xs.font-mono');
+    const label = titleEl ? titleEl.textContent.trim() : '';
+    const rows = c.querySelectorAll('.flex.justify-between');
+    const plan = { label, med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' };
+    rows.forEach(r=>{
+      const lbl = (r.querySelector('span.text-gray-600')?.textContent||'').toLowerCase();
+      const badgeText = (r.querySelector('span:last-child')?.textContent||'').trim().toLowerCase();
+      let mod;
+      if (badgeText.includes('capitado plus')) mod='capitado-plus';
+      else if (badgeText.includes('vitta amplia')) mod='vamplia';
+      else if (badgeText.includes('vitta essencial')) mod='vessencial';
+      else if (badgeText.includes('capitado')) mod='capitado';
+      else if (badgeText.includes('convênio')) mod='convenio';
+      else if (badgeText.includes('subsid')) mod='subsidiado';
+      else if (badgeText.includes('particular')) mod='particular';
+      const yn = badgeText==='sim' ? 'sim' : (badgeText==='não' ? 'nao' : null);
+      if (lbl.includes('médic')) plan.med = mod || plan.med;
+      else if (lbl.includes('psicolog')) plan.psi = mod || plan.psi;
+      else if (lbl.includes('nutri')) plan.nut = mod || plan.nut;
+      else if (lbl.includes('exames')) plan.exames = yn || plan.exames;
+      else if (lbl.includes('auto')) plan.auto = yn || plan.auto;
+    });
+    plans.push(plan);
+  });
+  return { conv, tipo, plans };
+}
+
+/* ---- Render the editor form ---- */
+function renderEditorForm(){
+  const body = document.getElementById('edit-body');
+  const modOpts = MOD_OPTIONS.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  const ynOpts = `<option value="sim">Sim</option><option value="nao">Não</option>`;
+  let html = `
+    <label>Convênio | Plano (linha de subtítulo)</label>
+    <input type="text" id="edit-conv" value="${escAttr(EDIT_DRAFT.conv)}"/>
+    <label>Modelo / tipo de atendimento</label>
+    <input type="text" id="edit-tipo" value="${escAttr(EDIT_DRAFT.tipo)}"/>
+    <div id="edit-plans"></div>
+    <button type="button" class="add-plan" onclick="addPlan()">+ Adicionar plano</button>
+  `;
+  body.innerHTML = html;
+  renderPlans();
+}
+function renderPlans(){
+  const wrap = document.getElementById('edit-plans');
+  wrap.innerHTML = EDIT_DRAFT.plans.map((p,i)=>planBlockHTML(p,i)).join('');
+}
+function planBlockHTML(p, i){
+  const sel = (cur, opts) => opts.map(([v,l])=>`<option value="${v}"${v===cur?' selected':''}>${l}</option>`).join('');
+  return `<div class="plan-block">
+    <h4>Plano #${i+1}</h4>
+    ${EDIT_DRAFT.plans.length>1?`<button type="button" class="rm-plan" onclick="removePlan(${i})">Remover</button>`:''}
+    <label>Descrição (ex.: "Bradesco Top Nacional")</label>
+    <input type="text" oninput="EDIT_DRAFT.plans[${i}].label=this.value" value="${escAttr(p.label)}"/>
+    <div class="row3">
+      <div><label>Medicina</label><select onchange="EDIT_DRAFT.plans[${i}].med=this.value">${sel(p.med, MOD_OPTIONS)}</select></div>
+      <div><label>Nutrição</label><select onchange="EDIT_DRAFT.plans[${i}].nut=this.value">${sel(p.nut, MOD_OPTIONS)}</select></div>
+      <div><label>Psicologia</label><select onchange="EDIT_DRAFT.plans[${i}].psi=this.value">${sel(p.psi, MOD_OPTIONS)}</select></div>
+    </div>
+    <div class="row2">
+      <div><label>Exames</label><select onchange="EDIT_DRAFT.plans[${i}].exames=this.value"><option value="sim"${p.exames==='sim'?' selected':''}>Sim</option><option value="nao"${p.exames==='nao'?' selected':''}>Não</option></select></div>
+      <div><label>Auto agendamento</label><select onchange="EDIT_DRAFT.plans[${i}].auto=this.value"><option value="sim"${p.auto==='sim'?' selected':''}>Sim</option><option value="nao"${p.auto==='nao'?' selected':''}>Não</option></select></div>
+    </div>
+  </div>`;
+}
+function addPlan(){
+  EDIT_DRAFT.plans.push({ label:'Novo plano', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' });
+  renderPlans();
+}
+function removePlan(i){
+  EDIT_DRAFT.plans.splice(i,1);
+  renderPlans();
+}
+function escAttr(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escHTML(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function badgeHTML(mod){
+  const cls = MOD_BADGE_CLS[mod] || 'badge-conv';
+  const lbl = MOD_LABEL[mod] || mod;
+  return `<span class="${cls} px-2 py-0.5 text-xs font-medium">${lbl}</span>`;
+}
+function ynHTML(v){
+  return v==='sim'
+    ? '<span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span>'
+    : '<span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span>';
+}
+
+/* ---- Rebuild the body of a card from a model ---- */
+function rebuildCardBody(card, model){
+  // Update conv / tipo lines
+  const subEl = card.querySelector('button .text-xs.text-gray-500');
+  const tipoEl = card.querySelector('button .text-xs.text-gray-400.mt-0\\.5');
+  if (subEl) subEl.textContent = model.conv;
+  if (tipoEl) tipoEl.textContent = model.tipo;
+
+  // Rebuild expand-body content
+  const body = card.querySelector('.expand-body');
+  if (!body) return;
+
+  let html;
+  if (model.plans.length === 1){
+    const p = model.plans[0];
+    html = `<div class="mt-4">
+      <p class="text-xs font-mono uppercase text-gray-400 mb-3">${escHTML(p.label)}</p>
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span>${badgeHTML(p.med)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span>${badgeHTML(p.psi)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span>${badgeHTML(p.nut)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span>${ynHTML(p.exames)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span>${ynHTML(p.auto)}</div>
+      </div>
+    </div>`;
+  } else {
+    const per = model.plans.map(p=>`<div class="bg-gray-50 p-4">
+      <p class="text-xs font-semibold text-gray-700 mb-1">${escHTML(p.label)}</p>
+      <div class="space-y-1.5">
+        <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span>${badgeHTML(p.med)}</div>
+        <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span>${badgeHTML(p.psi)}</div>
+        <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span>${badgeHTML(p.nut)}</div>
+        <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span>${ynHTML(p.exames)}</div>
+        <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span>${ynHTML(p.auto)}</div>
+      </div>
+    </div>`).join('');
+    html = `<div class="mt-4 grid grid-cols-1 gap-3">${per}</div>`;
+  }
+  // Preserve the open class on expand-body wrapper
+  const wasOpen = body.classList.contains('open');
+  body.innerHTML = html;
+  if (wasOpen) body.classList.add('open');
+
+  // Update filter data attributes
+  const mods = new Set(), autos = new Set(), exs = new Set();
+  model.plans.forEach(p=>{
+    mods.add(p.med); mods.add(p.nut); mods.add(p.psi);
+    autos.add(p.auto); exs.add(p.exames);
+  });
+  card.dataset.mod = [...mods].join(',');
+  card.dataset.auto = [...autos].join(',');
+  card.dataset.exames = [...exs].join(',');
+}
+
+/* ---- Apply persisted edits on page load ---- */
+function applyPersistedEdits(){
+  const edits = loadEdits();
+  if (!Object.keys(edits).length) return;
+  document.querySelectorAll('#companies-grid .company-card').forEach(card=>{
+    const key = card.dataset.name;
+    if (edits[key]){
+      rebuildCardBody(card, edits[key]);
+      card.classList.add('has-edits');
+    }
+  });
+}
+
+/* ---- Edit mode toggle ---- */
+function toggleEditMode(){
+  if (!EDIT_MODE){
+    // Need password
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-err').textContent = '';
+    document.getElementById('modal-pwd').classList.add('open');
+    setTimeout(()=>document.getElementById('pwd-input').focus(), 50);
+  } else {
+    // Disable edit mode
+    EDIT_MODE = false;
+    document.body.classList.remove('edit-mode');
+    const btn = document.getElementById('btn-edit-toggle');
+    btn.textContent = '🔓 Liberar edição';
+    btn.classList.remove('unlocked');
+    document.getElementById('edit-lock-ico').textContent = '🔒';
+    document.getElementById('edit-launcher-sub').textContent = 'Modo restrito · requer senha para liberar a edição dos cards';
+    document.getElementById('btn-export-edits').style.display = 'none';
+  }
+}
+function submitPwd(){
+  const v = document.getElementById('pwd-input').value;
+  if (v === EDIT_PWD){
+    closePwdModal();
+    EDIT_MODE = true;
+    document.body.classList.add('edit-mode');
+    const btn = document.getElementById('btn-edit-toggle');
+    btn.textContent = '🔒 Travar edição';
+    btn.classList.add('unlocked');
+    document.getElementById('edit-lock-ico').textContent = '🔓';
+    document.getElementById('edit-launcher-sub').textContent = 'Edição liberada · clique em qualquer card para editar. Suas alterações ficam salvas neste navegador.';
+    document.getElementById('btn-export-edits').style.display = '';
+  } else {
+    document.getElementById('pwd-err').textContent = 'Senha incorreta.';
+  }
+}
+function closePwdModal(){ document.getElementById('modal-pwd').classList.remove('open'); }
+function closeEditModal(){ document.getElementById('modal-edit').classList.remove('open'); EDIT_TARGET=null; EDIT_DRAFT=null; }
+
+/* ---- Open editor for a specific card ---- */
+function openCardEditor(card){
+  EDIT_TARGET = card;
+  // Use persisted edit if exists, else parse current DOM
+  const edits = loadEdits();
+  const key = card.dataset.name;
+  EDIT_DRAFT = edits[key] ? JSON.parse(JSON.stringify(edits[key])) : parseCardModel(card);
+  // Name in header
+  const nm = card.querySelector('button .font-semibold')?.textContent.trim() || 'Empresa';
+  document.getElementById('edit-title').textContent = '✏️ ' + nm;
+  // Show/hide "Reverter" button
+  document.getElementById('edit-revert').style.display = edits[key] ? '' : 'none';
+  renderEditorForm();
+  document.getElementById('modal-edit').classList.add('open');
+}
+
+/* ---- Save / revert ---- */
+function saveEdits(){
+  if (!EDIT_TARGET || !EDIT_DRAFT) return;
+  // sanity: at least one plan
+  if (!EDIT_DRAFT.plans.length){
+    alert('A empresa precisa ter pelo menos 1 plano.');
+    return;
+  }
+  const edits = loadEdits();
+  edits[EDIT_TARGET.dataset.name] = EDIT_DRAFT;
+  saveEditsToStorage(edits);
+  rebuildCardBody(EDIT_TARGET, EDIT_DRAFT);
+  EDIT_TARGET.classList.add('has-edits');
+  closeEditModal();
+  if (typeof applyFilters === 'function') applyFilters();
+}
+function revertEdits(){
+  if (!EDIT_TARGET) return;
+  if (!confirm('Reverter as alterações desta empresa ao estado original?')) return;
+  const edits = loadEdits();
+  delete edits[EDIT_TARGET.dataset.name];
+  saveEditsToStorage(edits);
+  // Reload page to restore original DOM cleanly
+  location.reload();
+}
+
+/* ---- Export edits as downloadable JSON ---- */
+function exportEdits(){
+  const edits = loadEdits();
+  if (!Object.keys(edits).length){
+    alert('Não há alterações salvas para exportar.');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(edits, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'elegibilidade-alteracoes-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---- Hook clicks on cards while in edit mode ---- */
+document.addEventListener('click', function(e){
+  if (!EDIT_MODE) return;
+  const card = e.target.closest('.company-card');
+  if (!card) return;
+  // Block normal toggle behavior; open editor instead
+  e.preventDefault();
+  e.stopPropagation();
+  openCardEditor(card);
+}, true);
+
+/* ---- Apply persisted edits on load ---- */
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', ()=>{ try { applyPersistedEdits(); if (typeof applyFilters==='function') applyFilters(); } catch(e){} });
+} else {
+  try { applyPersistedEdits(); if (typeof applyFilters==='function') applyFilters(); } catch(e){}
+}
+
+
 function openSection(id){
   document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
   document.querySelectorAll('.sidebar-item').forEach(function(s){s.classList.remove('active');});
@@ -5024,5 +5412,42 @@ function enviarSugestao(){
   document.getElementById('sug-nome').value='';
 }
 </script>
+
+<!-- ===== Modal: senha do editor ===== -->
+<div class="modal-bg" id="modal-pwd">
+  <div class="modal-box" style="max-width:380px">
+    <div class="head">
+      <h3>🔐 Senha de acesso</h3>
+      <button class="x" onclick="closePwdModal()">×</button>
+    </div>
+    <div class="body edit-form">
+      <p style="font-size:.85rem;color:#374151;margin:0 0 6px">Digite a senha para liberar a edição de empresas.</p>
+      <input type="password" id="pwd-input" class="pwd-input" placeholder="••••••••••••"
+             onkeydown="if(event.key==='Enter')submitPwd()" autocomplete="off"/>
+      <p class="pwd-err" id="pwd-err"></p>
+    </div>
+    <div class="foot">
+      <button class="cancel" onclick="closePwdModal()">Cancelar</button>
+      <button class="save" onclick="submitPwd()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal: editor de empresa ===== -->
+<div class="modal-bg" id="modal-edit">
+  <div class="modal-box">
+    <div class="head">
+      <h3 id="edit-title">Editar empresa</h3>
+      <button class="x" onclick="closeEditModal()">×</button>
+    </div>
+    <div class="body edit-form" id="edit-body"></div>
+    <div class="foot">
+      <button class="delete" id="edit-revert" onclick="revertEdits()">↻ Reverter alterações</button>
+      <button class="cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="save" onclick="saveEdits()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

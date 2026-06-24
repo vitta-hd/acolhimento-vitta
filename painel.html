@@ -113,6 +113,63 @@ p.body-text{color:#374151;line-height:1.7;margin-bottom:8px;font-size:.9rem;}
 ul.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;list-style:disc;margin-bottom:8px;}
 ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;list-style:decimal;margin-bottom:8px;}
 </style>
+<style id="escala-css">
+.escala-wrap{max-width:1280px;margin:0 auto;padding:20px}
+.escala-hd{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.escala-hd .ico{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0a2d5e,#1a4f9e);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px}
+.escala-hd h2{margin:0;font-size:1.3rem;color:#0a2d5e;font-weight:800}
+.escala-hd p{margin:2px 0 0;font-size:.85rem;color:#6b7280}
+.escala-hd .period{margin-left:auto;background:#eff4ff;color:#0e3a78;border:1px solid #c7d8f5;padding:8px 14px;border-radius:8px;font-size:.78rem;font-weight:700;letter-spacing:.4px}
+.escala-legend{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.escala-legend .lbl{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;font-weight:700;margin-right:6px}
+.shift-chip{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:999px;color:#fff}
+.shift-7{background:#1d4ed8}
+.shift-8{background:#0891b2}
+.shift-9{background:#065f46}
+.shift-10{background:#16a34a}
+.shift-11{background:#a16207}
+.shift-12{background:#c2410c}
+.shift-13{background:#9d174d}
+.shift-folga{background:#e5e7eb;color:#374151!important}
+.shift-ferias{background:#67e8f9;color:#0e7490!important}
+.shift-at{background:#fcd34d;color:#78350f!important}
+.shift-dayoff{background:#f9a8d4;color:#831843!important}
+.escala-tbl-wrap{background:#fff;border:1px solid #e5eaf3;border-radius:12px;overflow:auto;box-shadow:0 4px 14px rgba(7,31,66,.05)}
+table.escala{border-collapse:separate;border-spacing:0;width:100%;font-size:.7rem;font-family:'IBM Plex Sans',sans-serif}
+table.escala thead th{
+  background:#f6f8fc;position:sticky;top:0;z-index:2;
+  padding:8px 4px;font-weight:700;color:#0a2d5e;border-bottom:2px solid #c7d8f5;
+  text-align:center;min-width:42px;
+}
+table.escala thead th.assistente{position:sticky;left:0;z-index:3;background:#eff4ff;text-align:left;padding-left:14px;min-width:200px;border-right:2px solid #c7d8f5}
+table.escala thead th.weekend{background:#fef3c7;color:#92400e}
+table.escala thead th .dow{display:block;font-size:.6rem;color:#6b7280;font-weight:600;margin-top:2px;text-transform:uppercase}
+table.escala tbody td{
+  text-align:center;padding:6px 4px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;
+  white-space:nowrap;font-weight:600;font-size:.66rem
+}
+table.escala tbody td.assistente{
+  position:sticky;left:0;background:#fafbff;color:#0a2d5e;font-weight:700;text-align:left;padding-left:14px;
+  z-index:1;border-right:2px solid #c7d8f5;font-size:.78rem
+}
+table.escala tbody td.weekend{background:#fffbeb}
+table.escala tbody td.shift{color:#fff}
+table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escala tbody td.shift-at,table.escala tbody td.shift-dayoff{color:#1f2937!important}
+.off-demand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+.off-card{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.off-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#0a4dbe,#1a4f9e)}
+.off-card .who{font-size:.85rem;font-weight:700;color:#0a2d5e;margin:0}
+.off-card .what{font-size:.75rem;color:#374151;margin:4px 0 6px}
+.off-card .when{display:inline-block;background:#eff4ff;color:#0e3a78;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:6px;font-family:'IBM Plex Sans',monospace}
+.off-section{background:#fff;border:1px solid #e5eaf3;border-radius:12px;padding:18px 20px;margin-top:22px}
+.off-section h3{margin:0;font-size:.95rem;color:#0a2d5e;font-weight:700;display:flex;align-items:center;gap:8px}
+.off-section p.sub{margin:4px 0 0;font-size:.78rem;color:#6b7280}
+@media (max-width: 640px){
+  table.escala thead th.assistente{min-width:140px}
+  table.escala tbody td.assistente{font-size:.7rem}
+}
+</style>
+
 </head>
 <body class="bg-gray-50 min-h-screen">
 
@@ -147,26 +204,26 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       <p id="role-subtitle" class="text-blue-100 text-sm font-medium" style="display:none">Seja bem vindo analista ao portal do atendimento.</p>
       
     </div>
-    <div id="tab-buttons" class="flex flex-wrap gap-3">
+    <div id="tab-buttons" class="flex flex-wrap gap-2">
+      <button onclick="showTab('avisos')" id="btn-avisos"
+        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
+        📢 Avisos Internos
+      </button>
+      <button onclick="showTab('escala')" id="btn-escala"
+        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
+        🗓️ Escala
+      </button>
       <button onclick="showTab('rules')" id="btn-rules"
-        class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
+        class="tab-btn active px-4 py-2.5 font-semibold text-xs tracking-wide">
         <span id="btn-rules-label">📋 Regras Gerais</span>
       </button>
       <button onclick="showTab('elig')" id="btn-elig"
-        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide">
+        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide">
         🏥 Elegibilidade
       </button>
-      <button onclick="showTab('escala')" id="btn-escala"
-        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
-        🗓️ Escala
-      </button>
       <button onclick="showTab('exames')" id="btn-exames"
-        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
+        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
         🧪 Agendamento de Exames
-      </button>
-      <button onclick="showTab('avisos')" id="btn-avisos"
-        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
-        📢 Avisos Internos
       </button>
     </div>
   </div>
@@ -4494,20 +4551,32 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <!-- ═══════════════════════════════════════════════
      ABA ESCALA (Front2026)
 ═══════════════════════════════════════════════ -->
-<div id="tab-escala" class="max-w-6xl mx-auto px-6 py-10 hidden">
-  <div class="bg-white border border-gray-200 rounded-lg p-6">
-    <div class="flex items-center gap-3 mb-4">
-      <span style="font-size:1.6rem">🗓️</span>
+<div id="tab-escala" class="hidden">
+  <div class="escala-wrap">
+    <div class="escala-hd">
+      <div class="ico">🗓️</div>
       <div>
-        <h2 class="text-xl font-bold" style="color:#0a2d5e">Escala</h2>
-        <p class="text-sm text-gray-500">Escala de plantão e cobertura do time de atendimento</p>
+        <h2>Escala — Time de Saúde · Front</h2>
+        <p>Cobertura diária da equipe de atendimento</p>
       </div>
+      <div class="period">Julho de 2026 · 01/jul → 02/ago</div>
     </div>
-    <div class="mt-6 p-8 rounded-lg" style="background:#fffbeb;border:2px dashed #f59e0b;text-align:center">
-      <p class="text-3xl mb-3">📎</p>
-      <p class="font-semibold text-gray-800 mb-1">Aguardando envio do PDF da escala</p>
-      <p class="text-sm text-gray-600">O conteúdo visual será inserido aqui assim que o PDF da escala for compartilhado.</p>
+
+    <div class="escala-legend"><span class="lbl">Legenda</span><span class="shift-chip shift-7">7h–16h</span><span class="shift-chip shift-8">8h–17h</span><span class="shift-chip shift-9">9h–18h</span><span class="shift-chip shift-10">10h–19h</span><span class="shift-chip shift-11">11h–20h</span><span class="shift-chip shift-12">12h–21h</span><span class="shift-chip shift-13">13h–22h</span><span class="shift-chip shift-folga">Folga</span><span class="shift-chip shift-ferias">Férias</span><span class="shift-chip shift-at">Atestado</span><span class="shift-chip shift-dayoff">Day-off</span></div>
+
+    <div class="escala-tbl-wrap">
+      <table class="escala">
+        <thead><tr><th class="assistente">Assistente</th><th class="">01/jul<span class="dow">Qua</span></th><th class="">02/jul<span class="dow">Qui</span></th><th class="">03/jul<span class="dow">Sex</span></th><th class="weekend">04/jul<span class="dow">Sáb</span></th><th class="weekend">05/jul<span class="dow">Dom</span></th><th class="">06/jul<span class="dow">Seg</span></th><th class="">07/jul<span class="dow">Ter</span></th><th class="">08/jul<span class="dow">Qua</span></th><th class="">09/jul<span class="dow">Qui</span></th><th class="">10/jul<span class="dow">Sex</span></th><th class="weekend">11/jul<span class="dow">Sáb</span></th><th class="weekend">12/jul<span class="dow">Dom</span></th><th class="">13/jul<span class="dow">Seg</span></th><th class="">14/jul<span class="dow">Ter</span></th><th class="">15/jul<span class="dow">Qua</span></th><th class="">16/jul<span class="dow">Qui</span></th><th class="">17/jul<span class="dow">Sex</span></th><th class="weekend">18/jul<span class="dow">Sáb</span></th><th class="weekend">19/jul<span class="dow">Dom</span></th><th class="">20/jul<span class="dow">Seg</span></th><th class="">21/jul<span class="dow">Ter</span></th><th class="">22/jul<span class="dow">Qua</span></th><th class="">23/jul<span class="dow">Qui</span></th><th class="">24/jul<span class="dow">Sex</span></th><th class="weekend">25/jul<span class="dow">Sáb</span></th><th class="weekend">26/jul<span class="dow">Dom</span></th><th class="">27/jul<span class="dow">Seg</span></th><th class="">28/jul<span class="dow">Ter</span></th><th class="">29/jul<span class="dow">Qua</span></th><th class="">30/jul<span class="dow">Qui</span></th><th class="">31/jul<span class="dow">Sex</span></th><th class="weekend">01/ago<span class="dow">Sáb</span></th><th class="weekend">02/ago<span class="dow">Dom</span></th></tr></thead>
+        <tbody><tr><td class="assistente">Andressa Vitoria</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td></tr><tr><td class="assistente">Renan Machado de Matos Pontes</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Igor Cordeiro Aarão</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Jessica Clemente</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Bruna Pereira</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Ilton Oliveira Da Silva Neto</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Ana Claudia Silva</td><td class="shift shift-dayoff" title="Day-off">Day-off</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr></tbody>
+      </table>
     </div>
+
+    <div class="off-section">
+      <h3>⏱️ Horários OFF demanda — ADM</h3>
+      <p class="sub">Janelas reservadas no dia a dia para tarefas administrativas específicas.</p>
+      <div class="off-demand-grid"><div class="off-card"><p class="who">Isabella</p><p class="what">SAC</p><span class="when">15:00 – 16:00</span></div><div class="off-card"><p class="who">Renan</p><p class="what">Demandas</p><span class="when">08:00 – 09:00</span></div><div class="off-card"><p class="who">Igor</p><p class="what">Conferência Amil</p><span class="when">14:00 – 15:00</span></div><div class="off-card"><p class="who">Barbara</p><p class="what">Cérebro e autorizações</p><span class="when">18:00 – 19:00</span></div><div class="off-card"><p class="who">Ilton</p><p class="what">Autorizações e check médico</p><span class="when">20:30 – 21:30</span></div><div class="off-card"><p class="who">Vaga nova</p><p class="what">Tarefas e exames</p><span class="when">12:00 – 13:00</span></div><div class="off-card"><p class="who">Andressa</p><p class="what">Token Amil</p><span class="when">09:00 – 10:00</span></div></div>
+    </div>
+
   </div>
 </div>
 
@@ -4517,7 +4586,7 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <div id="tab-exames" class="hidden">
   <div class="max-w-6xl mx-auto px-6 py-6">
     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden" style="height:calc(100vh - 220px);min-height:600px">
-      <iframe src="exames.html" id="exames-iframe" style="width:100%;height:100%;border:0;display:block" title="Agendamento de Exames — Vitta"></iframe>
+      <iframe src="exames.html?embed=1" id="exames-iframe" style="width:100%;height:100%;border:0;display:block" title="Agendamento de Exames — Vitta"></iframe>
     </div>
     <p class="text-xs text-gray-500 mt-2 text-center">
       Painel de exames carregado de <a href="exames.html" target="_blank" class="text-blue-700 underline">exames.html</a> ·
@@ -4664,7 +4733,7 @@ function applyRole(){
   if (ft) ft.textContent = isFront ? 'Painel Interno — Front/Rede' : 'Painel Interno';
   // Rules tab label
   var rlbl = document.getElementById('btn-rules-label');
-  if (rlbl) rlbl.textContent = isFront ? '📋 Fluxo e Scripts' : '📋 Regras Gerais';
+  if (rlbl) rlbl.textContent = isFront ? '📋 Fluxos' : '📋 Regras Gerais';
   // Show/hide front-only tabs
   document.querySelectorAll('.front-only').forEach(function(b){
     b.style.display = isFront ? '' : 'none';

@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Painel Reclame Aqui — Vitta · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#f3f6fb;
+    --ink:#0d1b3e;
+    --ink-2:#374151;
+    --muted:#6b7280;
+    --line:#e5eaf3;
+    --card:#ffffff;
+    --brand-900:#071f42;
+    --brand-800:#0a2d5e;
+    --brand-700:#0e3a78;
+    --brand-600:#1a4f9e;
+    --brand-500:#1d4ed8;
+    --brand-50:#eff4ff;
+    --good:#16a34a;
+    --good-50:#dcfce7;
+    --warn:#d97706;
+    --warn-50:#fef3c7;
+    --bad:#dc2626;
+    --bad-50:#fee2e2;
+    --ra:#36c800;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .container{max-width:1320px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  header{
+    background:linear-gradient(135deg,var(--brand-900) 0%,var(--brand-800) 60%,var(--brand-700) 100%);
+    color:#fff;padding:28px 0 30px;position:relative;
+  }
+  .header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-logo{
+    width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;
+    color:var(--brand-800);font-weight:700;font-size:18px;letter-spacing:.5px;box-shadow:0 6px 22px rgba(0,0,0,.18)
+  }
+  .brand h1{margin:0;font-size:20px;font-weight:600;letter-spacing:.2px}
+  .brand p{margin:2px 0 0;font-size:13px;opacity:.78;font-weight:400}
+
+  .tabs{display:flex;gap:8px;background:rgba(255,255,255,.08);padding:6px;border-radius:12px}
+  .tab-btn{
+    border:0;background:transparent;color:#cfd8ea;padding:9px 16px;border-radius:8px;cursor:pointer;
+    font-weight:500;font-size:14px;font-family:inherit;transition:.18s
+  }
+  .tab-btn:hover{color:#fff}
+  .tab-btn.active{background:#fff;color:var(--brand-800);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+
+  /* Reputation banner */
+  .reputation{
+    margin-top:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;backdrop-filter:blur(6px)
+  }
+  .reputation .left{display:flex;align-items:center;gap:18px}
+  .smiley{
+    width:64px;height:64px;border-radius:50%;background:#36c800;display:grid;place-items:center;color:#fff;font-size:34px;
+    box-shadow:0 8px 24px rgba(54,200,0,.35)
+  }
+  .reputation .lbl{font-size:12px;opacity:.75;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;margin:0}
+  .reputation .score{font-size:30px;font-weight:700;margin:2px 0 0}
+  .reputation .score small{font-size:14px;font-weight:500;opacity:.7}
+  .reputation .status{font-size:14px;color:#bcffc9;font-weight:600}
+  .reputation .period{font-size:12px;opacity:.7;margin-top:4px}
+  .ra-mini{display:flex;gap:10px;flex-wrap:wrap}
+  .ra-mini .pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:8px 14px;font-size:12px}
+  .ra-mini .pill b{font-size:13px}
+
+  /* Layout */
+  main{margin-top:28px;padding-bottom:60px}
+
+  /* Cards grid */
+  .kpi-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:14px;margin-bottom:22px}
+  @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:680px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+  .kpi{
+    background:var(--card);border-radius:14px;padding:16px 16px;border:1px solid var(--line);
+    box-shadow:0 4px 14px rgba(7,31,66,.04)
+  }
+  .kpi .k-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+  .kpi .k-val{font-size:26px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.1}
+  .kpi .k-val small{font-size:13px;color:var(--muted);font-weight:500;margin-left:4px}
+  .kpi .k-bar{margin-top:10px;height:6px;background:#eef2f9;border-radius:6px;overflow:hidden}
+  .kpi .k-bar span{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:6px}
+  .kpi.bad .k-bar span{background:linear-gradient(90deg,#dc2626,#f87171)}
+  .kpi.warn .k-bar span{background:linear-gradient(90deg,#d97706,#fbbf24)}
+  .kpi .k-foot{font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* Section card */
+  .panel{
+    background:var(--card);border-radius:16px;padding:22px;border:1px solid var(--line);
+    box-shadow:0 4px 14px rgba(7,31,66,.05);margin-bottom:22px
+  }
+  .panel h2{margin:0 0 4px;font-size:16px;font-weight:600;color:var(--ink)}
+  .panel .desc{margin:0 0 18px;font-size:13px;color:var(--muted)}
+  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
+  @media(max-width:980px){.grid-2{grid-template-columns:1fr}}
+  .chart-wrap{position:relative;height:280px}
+  .chart-wrap.tall{height:340px}
+
+  /* Table */
+  .table-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .search{
+    flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:#f6f8fc;border:1px solid var(--line);
+    border-radius:10px;padding:9px 12px
+  }
+  .search input{border:0;outline:0;background:transparent;width:100%;font-family:inherit;font-size:14px;color:var(--ink)}
+  .filter{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:13px;color:var(--ink-2)
+  }
+  table.compl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+  table.compl thead th{
+    text-align:left;padding:12px 10px;color:#5b6b85;font-weight:600;text-transform:uppercase;letter-spacing:.6px;
+    font-size:11px;background:#f6f8fc;border-bottom:1px solid var(--line);position:sticky;top:0
+  }
+  table.compl thead th:first-child{border-radius:10px 0 0 0}
+  table.compl thead th:last-child{border-radius:0 10px 0 0}
+  table.compl tbody td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+  table.compl tbody tr:hover{background:#f9fbff}
+  .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+  .tag.t-app{background:#cffafe;color:#0891b2}
+  .tag.t-teleconsulta{background:#dbeafe;color:#1d4ed8}
+  .tag.t-prontuario{background:#e0e7ff;color:#3730a3}
+  .tag.t-documentos{background:#ede9fe;color:#6d28d9}
+  .tag.t-beneficio{background:#fef3c7;color:#92400e}
+  .tag.t-whatsapp{background:#dcfce7;color:#15803d}
+  .tag.t-cadastro{background:#fce7f3;color:#be123c}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+  .b-ok{background:var(--good-50);color:#15803d}
+  .b-warn{background:var(--warn-50);color:#a16207}
+  .b-no{background:var(--bad-50);color:#b91c1c}
+  .b-pend{background:#e5e7eb;color:#4b5563}
+  .nota{font-weight:700;font-size:14px}
+  .nota.alta{color:#15803d}
+  .nota.media{color:#a16207}
+  .nota.baixa{color:#b91c1c}
+  .resol-cell{max-width:380px;color:var(--ink-2);line-height:1.45}
+
+  /* RA1000 page */
+  .ra-hero{
+    background:linear-gradient(135deg,#0e3a78,#1a4f9e);color:#fff;border-radius:18px;padding:26px 28px;display:flex;
+    align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;margin-bottom:22px;
+    box-shadow:0 14px 34px rgba(7,31,66,.18)
+  }
+  .ra-hero h2{margin:0 0 6px;font-size:22px;font-weight:700}
+  .ra-hero p{margin:0;opacity:.85;font-size:14px;max-width:720px;line-height:1.55}
+  .ra-stamp{
+    background:#fff;color:#0e3a78;border-radius:14px;padding:14px 18px;text-align:center;min-width:170px;
+    box-shadow:0 10px 28px rgba(0,0,0,.16)
+  }
+  .ra-stamp .top{font-size:11px;letter-spacing:1.4px;font-weight:700;color:#1a4f9e}
+  .ra-stamp .big{font-size:34px;font-weight:800;letter-spacing:-1px;color:#36c800;line-height:1}
+  .ra-stamp .sub{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .crit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .crit{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 4px 14px rgba(7,31,66,.05);position:relative;overflow:hidden
+  }
+  .crit::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--good)}
+  .crit.bad::before{background:var(--bad)}
+  .crit.warn::before{background:var(--warn)}
+  .crit .ic{font-size:20px}
+  .crit .crit-lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-top:4px}
+  .crit .crit-val{font-size:22px;font-weight:700;color:var(--ink);margin-top:4px}
+  .crit .crit-val small{font-size:12px;color:var(--muted);font-weight:500;margin-left:2px}
+  .crit .crit-target{font-size:12px;color:var(--muted);margin-top:6px}
+  .crit .crit-status{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700}
+  .crit .crit-status.ok{background:var(--good-50);color:#15803d}
+  .crit .crit-status.no{background:var(--bad-50);color:#b91c1c}
+  .crit .crit-status.warn{background:var(--warn-50);color:#a16207}
+  .crit .bar{height:8px;background:#eef2f9;border-radius:6px;margin-top:10px;overflow:hidden}
+  .crit .bar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#16a34a,#22c55e)}
+  .crit.bad .bar span{background:linear-gradient(90deg,#dc2626,#f87171)}
+  .crit.warn .bar span{background:linear-gradient(90deg,#d97706,#fbbf24)}
+
+  .plan{
+    margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+    box-shadow:0 4px 14px rgba(7,31,66,.05)
+  }
+  .plan h3{margin:0 0 6px;font-size:16px}
+  .plan ul{margin:10px 0 0;padding-left:20px;color:var(--ink-2);line-height:1.7;font-size:14px}
+  .plan ul li b{color:var(--ink)}
+  .plan .note{margin-top:14px;background:var(--brand-50);border-left:4px solid var(--brand-600);padding:12px 14px;border-radius:8px;font-size:13px;color:#1e3a5f}
+  .progress-line{margin-top:14px}
+  .progress-line .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin-bottom:6px}
+  .progress-line .bar{height:12px;background:#eef2f9;border-radius:8px;overflow:hidden;position:relative}
+  .progress-line .bar .fill{height:100%;background:linear-gradient(90deg,#0e3a78,#36c800);border-radius:8px;transition:width .8s}
+  .progress-line .bar .target{position:absolute;top:-4px;bottom:-4px;width:2px;background:#dc2626}
+
+  /* Footer */
+  footer{
+    text-align:center;color:var(--muted);font-size:12px;padding:28px 0 12px;border-top:1px solid var(--line);margin-top:20px
+  }
+  footer a{color:var(--brand-600);text-decoration:none}
+
+  .hidden{display:none!important}
+
+  /* Tabs body */
+  .tab-pane{animation:fade .22s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-row">
+      <div class="brand">
+        <div class="brand-logo">V</div>
+        <div>
+          <h1>Painel Reclame Aqui · Vitta Saúde</h1>
+          <p>Acompanhamento de reclamações — Janeiro a Junho de 2026</p>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="painel" role="tab" aria-selected="true">Painel 2026</button>
+        <button class="tab-btn" data-tab="ra1000" role="tab" aria-selected="false">Radar RA1000</button>
+      </nav>
+    </div>
+
+    <!-- Reputação banner -->
+    <div class="reputation" id="repBanner">
+      <div class="left">
+        <div class="smiley">☺</div>
+        <div>
+          <p class="lbl">Reputação · últimos 6 meses</p>
+          <p class="score" id="repScore">9.7<small>/10</small></p>
+          <p class="status">Ótimo</p>
+          <p class="period">01/12/2025 — 31/05/2026 · fonte: Reclame Aqui</p>
+        </div>
+      </div>
+      <div class="ra-mini">
+        <span class="pill">Respondidas <b id="rpResp">100%</b></span>
+        <span class="pill">Voltariam <b id="rpVolt">100%</b></span>
+        <span class="pill">Índice solução <b id="rpSol">100%</b></span>
+        <span class="pill">Nota do consumidor <b id="rpNota">9,11</b></span>
+        <span class="pill">Tempo médio <b id="rpTempo">2d 9h</b></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- ============= TAB: PAINEL ============= -->
+    <section class="tab-pane" id="pane-painel">
+
+      <!-- KPI grid -->
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="k-lbl">Reclamações 2026</div>
+          <div class="k-val" id="kQtd">—</div>
+          <div class="k-bar"><span style="width:100%"></span></div>
+          <div class="k-foot">Período: Jan — Jun/2026</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Respondidas</div>
+          <div class="k-val" id="kResp">—<small>/<span id="kRespTot">—</span></small></div>
+          <div class="k-bar"><span id="kRespBar" style="width:100%"></span></div>
+          <div class="k-foot" id="kRespPct">100%</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Avaliadas</div>
+          <div class="k-val" id="kAval">—</div>
+          <div class="k-bar"><span id="kAvalBar"></span></div>
+          <div class="k-foot" id="kAvalPct">—</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Nota média</div>
+          <div class="k-val" id="kNota">—<small>/10</small></div>
+          <div class="k-bar"><span id="kNotaBar"></span></div>
+          <div class="k-foot">Média ponderada das avaliações</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Voltaria a fazer negócio</div>
+          <div class="k-val" id="kVolt">—<small>%</small></div>
+          <div class="k-bar"><span id="kVoltBar"></span></div>
+          <div class="k-foot">Entre as reclamações avaliadas</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Índice de solução</div>
+          <div class="k-val" id="kSol">—<small>%</small></div>
+          <div class="k-bar"><span id="kSolBar"></span></div>
+          <div class="k-foot">Resolvidas / avaliadas</div>
+        </div>
+        <div class="kpi">
+          <div class="k-lbl">Tempo médio de resposta</div>
+          <div class="k-val" id="kSla">—</div>
+          <div class="k-bar"><span style="width:80%"></span></div>
+          <div class="k-foot">Do registro à 1ª resposta</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Reclamações por mês</h2>
+          <p class="desc">Volume de reclamações registradas no Reclame Aqui em cada mês de 2026.</p>
+          <div class="chart-wrap"><canvas id="chMes"></canvas></div>
+        </div>
+        <div class="panel">
+          <h2>Distribuição por tema · 2026</h2>
+          <p class="desc">Onde estão concentradas as dores dos beneficiários neste semestre.</p>
+          <div class="chart-wrap"><canvas id="chTema"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Theme by month -->
+      <div class="panel">
+        <h2>Temas por mês</h2>
+        <p class="desc">Como cada categoria evolui ao longo do semestre — útil para identificar concentrações pontuais e padrões recorrentes.</p>
+        <div class="chart-wrap tall"><canvas id="chTemaMes"></canvas></div>
+      </div>
+
+      <!-- Detail table -->
+      <div class="panel">
+        <h2>Detalhe das reclamações · 2026</h2>
+        <p class="desc">Cada linha é uma reclamação registrada no Reclame Aqui em 2026. Dados pessoais sensíveis (CPF, telefone, e-mail) foram omitidos.</p>
+
+        <div class="table-tools">
+          <div class="search">
+            <span>🔍</span>
+            <input type="search" id="tblSearch" placeholder="Buscar por nome, assunto ou tema…" />
+          </div>
+          <select class="filter" id="filterMes">
+            <option value="">Todos os meses</option>
+          </select>
+          <select class="filter" id="filterTema">
+            <option value="">Todos os temas</option>
+          </select>
+          <select class="filter" id="filterStatus">
+            <option value="">Todos os status</option>
+            <option value="Resolvida">Resolvida</option>
+            <option value="Respondida">Respondida</option>
+          </select>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="compl" id="complTable">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Mês</th>
+                <th>SLA resposta</th>
+                <th>Tema</th>
+                <th>Assunto</th>
+                <th>Paciente</th>
+                <th>Como foi resolvido</th>
+                <th>Avaliou?</th>
+                <th>Nota</th>
+                <th>Resolvido?</th>
+                <th>Voltaria?</th>
+              </tr>
+            </thead>
+            <tbody id="complBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============= TAB: RA1000 ============= -->
+    <section class="tab-pane hidden" id="pane-ra1000">
+
+      <div class="ra-hero">
+        <div>
+          <h2>Radar RA1000 · onde estamos</h2>
+          <p>Para conquistar o selo <b>RA1000</b> é preciso atender simultaneamente aos cinco critérios do Reclame Aqui. O painel abaixo mostra nossa posição na <b>aba Geral</b> (24/06/2023 — 23/06/2026), que é a janela considerada para o selo, e o gap até a meta.</p>
+        </div>
+        <div class="ra-stamp">
+          <div class="top">RA1000</div>
+          <div class="big">8.1</div>
+          <div class="sub">Nota Geral atual · Ótimo</div>
+        </div>
+      </div>
+
+      <div class="crit-grid">
+
+        <div class="crit ok">
+          <div class="ic">✅</div>
+          <div class="crit-lbl">Avaliações (≥ 50)</div>
+          <div class="crit-val">122</div>
+          <div class="crit-target">Meta: ≥ 50 · margem: +72</div>
+          <div class="bar"><span style="width:100%"></span></div>
+          <div class="crit-status ok">Atingido</div>
+        </div>
+
+        <div class="crit ok">
+          <div class="ic">✅</div>
+          <div class="crit-lbl">Índice de Resposta (≥ 90%)</div>
+          <div class="crit-val">100<small>%</small></div>
+          <div class="crit-target">Meta: ≥ 90% · 175 de 175 respondidas</div>
+          <div class="bar"><span style="width:100%"></span></div>
+          <div class="crit-status ok">Atingido</div>
+        </div>
+
+        <div class="crit bad">
+          <div class="ic">⚠️</div>
+          <div class="crit-lbl">Índice de Solução (≥ 90%)</div>
+          <div class="crit-val">81,8<small>%</small></div>
+          <div class="crit-target">Meta: ≥ 90% · faltam <b>8,2 p.p.</b></div>
+          <div class="bar"><span style="width:90.9%"></span></div>
+          <div class="crit-status no">Falta atingir</div>
+        </div>
+
+        <div class="crit warn">
+          <div class="ic">🟢</div>
+          <div class="crit-lbl">Nota do Consumidor (≥ 7,0)</div>
+          <div class="crit-val">7,08<small>/10</small></div>
+          <div class="crit-target">Meta: ≥ 7,0 · margem apertada (+0,08)</div>
+          <div class="bar"><span style="width:71%"></span></div>
+          <div class="crit-status warn">No limite</div>
+        </div>
+
+        <div class="crit ok">
+          <div class="ic">✅</div>
+          <div class="crit-lbl">Voltaria a fazer negócio (≥ 70%)</div>
+          <div class="crit-val">78,5<small>%</small></div>
+          <div class="crit-target">Meta: ≥ 70% · margem: +8,5 p.p.</div>
+          <div class="bar"><span style="width:100%"></span></div>
+          <div class="crit-status ok">Atingido</div>
+        </div>
+
+      </div>
+
+      <div class="plan">
+        <h3>O que falta para o RA1000</h3>
+        <p style="margin:0;color:var(--muted);font-size:13px">Hoje, o único critério em vermelho é o <b>Índice de Solução</b>. Os demais estão dentro da meta — a Nota do Consumidor está bem no limite (precisa de atenção contínua).</p>
+
+        <div class="progress-line">
+          <div class="lbl"><span>Índice de Solução · 81,8%</span><span>Meta: 90%</span></div>
+          <div class="bar">
+            <div class="fill" style="width:81.8%"></div>
+            <div class="target" style="left:90%"></div>
+          </div>
+        </div>
+
+        <ul>
+          <li>Cada nova reclamação respondida e avaliada como <b>"Resolvida"</b> sobe aproximadamente <b>0,3 p.p.</b> no índice de solução.</li>
+          <li>Para sair de <b>81,8%</b> e chegar em <b>90%</b> são necessárias cerca de <b>27 reclamações positivas</b> ("Resolvida" + "Sim" em voltaria a fazer negócio).</li>
+          <li>Considerando um volume médio de <b>~5 reclamações/mês</b>, seriam aproximadamente <b>6 meses consecutivos</b> com 100% de resolução para fechar o gap.</li>
+          <li>O fator complicador é a <b>taxa de avaliação</b>: nem todo consumidor retorna para avaliar — apenas <b>122 das 175</b> reclamações no histórico Geral foram avaliadas (69,7%).</li>
+          <li>Historicamente o volume de reclamações <b>cai no Q4</b>, o que reduz a oportunidade de novas avaliações positivas no fim do ano.</li>
+        </ul>
+
+        <div class="note">
+          <b>Projeção realista:</b> mantendo o ritmo atual de 2026 (100% de resolução e 100% de "voltaria a fazer negócio" nas avaliadas), o selo <b>RA1000 fica viável para 2027</b>. Em 2026 o foco deve ser preservar o 100% recente e estimular a avaliação das reclamações já resolvidas.
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <footer>
+    <div>Painel interno · Vitta Saúde · Dados extraídos do portal Reclame Aqui em 23/06/2026.<br/>
+      Informações pessoais sensíveis (CPF, telefone, e-mail) foram suprimidas conforme política interna de privacidade.</div>
+  </footer>
+</main>
+
+<script>
+/* ============================================================
+   DADOS — Reclamações 2026 (extraídas do portal RA)
+   Nota: sem CPF, telefone ou e-mail.
+============================================================ */
+const COMPLAINTS = [
+  { date:'2026-06-12T09:59', month:6, name:'José Batista de Oliveira Neto', city:'São Pedro',
+    theme:'App', subject:'Problemas com agendamento e documentos após consulta médica, com falta de retorno e suporte',
+    response:'2026-06-12T16:14', closed:'2026-06-17T17:38', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Identificada instabilidade que afetou agendamento e suporte; sistema corrigido, agenda ajustada e atendimentos remarcados; supervisor entrou em contato pessoalmente.' },
+
+  { date:'2026-06-09T12:36', month:6, name:'Jessica Amanda dos Santos', city:'Praia Grande',
+    theme:'Tele consulta', subject:'Consulta de nutrição com status cancelado e instruções alimentares não recebidas',
+    response:'2026-06-09T14:33', closed:'2026-06-11T10:01', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Confirmado que o atendimento ocorreu; status "cancelado" era temporário até a finalização do prontuário; orientações enviadas pela equipe.' },
+
+  { date:'2026-05-29T08:27', month:5, name:'Renata Speransa Fraga', city:'Santo Antônio da Patrulha',
+    theme:'Benefício medicamentos', subject:'Falha na requisição de medicamento impede a compra',
+    response:'2026-05-29T14:05', closed:'2026-06-05T15:33', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Caso encaminhado ao time técnico para análise da inconsistência; cliente orientada sobre o processo de reembolso para não interromper o tratamento.' },
+
+  { date:'2026-05-27T18:45', month:5, name:'Vagner Pellegrini de Andrade', city:'Anápolis',
+    theme:'Benefício medicamentos', subject:'Receita e autorização de medicamento controlado da filha não disponíveis no app',
+    response:'2026-05-29T13:55', closed:'2026-06-02T08:24', status:'Resolvida',
+    evaluated:true, rating:8, returns:true,
+    resolution:'Caso em verificação interna para análise da inconsistência; cliente orientado sobre o processo de reembolso enquanto a análise corria.' },
+
+  { date:'2026-05-21T11:25', month:5, name:'Camile Vitoria da Silva Santos', city:'São Paulo',
+    theme:'App', subject:'Erro ao aceitar termos do app, não consegue marcar consulta nem usar o WhatsApp',
+    response:'2026-05-22T15:27', closed:'2026-06-22T16:26', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Acesso à conta regularizado; consulta posterior realizada com sucesso; feedback sobre app e WhatsApp encaminhado para melhoria.' },
+
+  { date:'2026-05-13T19:01', month:5, name:'Fabiana Nascimento', city:'São Paulo',
+    theme:'Tele consulta', subject:'Consultas psicológicas com problemas técnicos recorrentes e sem solução do suporte',
+    response:'2026-05-14T16:18', closed:'2026-05-20T21:22', status:'Resolvida',
+    evaluated:true, rating:7, returns:true,
+    resolution:'Atendimento reorganizado com a mesma profissional; nova consulta agendada para 20/05 conforme disponibilidade da paciente.' },
+
+  { date:'2026-05-12T12:42', month:5, name:'Juliana Melo da Silva', city:'Itaquaquecetuba',
+    theme:'Prontuário', subject:'Solicitação urgente de prontuário com a psiquiatra sem retorno desde abril',
+    response:'2026-05-20T16:20', closed:'2026-06-03T22:21', status:'Resolvida',
+    evaluated:true, rating:8, returns:true,
+    resolution:'Prontuário encaminhado em 15/05, confirmação de recebimento via WhatsApp em 20/05; atendimento conduzido pelo supervisor Renan.' },
+
+  { date:'2026-05-10T11:02', month:5, name:'Thiago Henrique Sampaio do Nascimento', city:'Brasília',
+    theme:'Prontuário', subject:'Sem retorno para solicitação de relatório psicológico após múltiplos contatos',
+    response:'2026-05-15T15:30', closed:'2026-05-19T15:02', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Prontuário enviado com sucesso; recebimento confirmado por contato telefônico em 15/05.' },
+
+  { date:'2026-04-22T22:04', month:4, name:'Juliane Fregadolli', city:'Maringá',
+    theme:'Benefício medicamentos', subject:'Benefício de medicamento bloqueado por "divergência na nota fiscal" sem explicação',
+    response:'2026-04-23T12:15', closed:'2026-04-25T10:22', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Comprovante inicial incompleto; nova NF válida recebida via WhatsApp; análise concluída e benefício liberado.' },
+
+  { date:'2026-04-13T21:35', month:4, name:'Juliane Fregadolli', city:'Maringá',
+    theme:'App', subject:'Bloqueio de acesso a consultas por política de cancelamento considerada inflexível',
+    response:'2026-04-22T10:46', closed:'2026-04-25T10:21', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Bloqueio ocorreu por regra automática aplicada igualmente a todos; equipe entrou em contato para apoiar a continuidade do tratamento; apontamento registrado para revisão da regra.' },
+
+  { date:'2026-04-07T09:46', month:4, name:'Alanne Brandão', city:'São Paulo',
+    theme:'Documentos da consulta', subject:'Atestado médico não recebido após consulta online',
+    response:'2026-04-07T15:18', closed:'2026-04-08T20:11', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Instabilidade pontual identificada; atestado reenviado por WhatsApp e, na sequência, por e-mail conforme solicitado.' },
+
+  { date:'2026-04-06T17:10', month:4, name:'Cleyton Messias Dos Santos', city:'São Paulo',
+    theme:'Tele consulta', subject:'Agendamentos online com falhas e médica que não compareceu',
+    response:'2026-04-07T15:07', closed:'2026-06-08T13:42', status:'Resolvida',
+    evaluated:true, rating:8, returns:true,
+    resolution:'Ocorrências anteriores verificadas; correções aplicadas no processo; última consulta ocorreu como esperado.' },
+
+  { date:'2026-03-16T10:07', month:3, name:'Paulo Aparecido de Lima Junior', city:'Mauá',
+    theme:'Prontuário', subject:'Demora no envio de prontuário médico para acompanhamento terapêutico',
+    response:'2026-03-17T15:54', closed:'2026-05-08T11:46', status:'Resolvida',
+    evaluated:true, rating:6, returns:true,
+    resolution:'Prontuário encaminhado para o e-mail informado; cliente orientado a verificar spam e a acionar o WhatsApp em caso de dificuldade.' },
+
+  { date:'2026-03-13T10:30', month:3, name:'Jéssica Almeida Tolentino', city:'São Paulo',
+    theme:'Documentos da consulta', subject:'Médica não anexou atestado após consulta',
+    response:'2026-03-16T15:36', closed:'2026-03-17T12:59', status:'Resolvida',
+    evaluated:true, rating:8, returns:true,
+    resolution:'Atestado localizado e enviado pela equipe via WhatsApp após contato da paciente.' },
+
+  { date:'2026-02-20T18:33', month:2, name:'Juliane Fregadolli', city:'Maringá',
+    theme:'App', subject:'Benefício bloqueado e nota fiscal de reembolso reprovada sem justificativa plausível',
+    response:'2026-02-23T12:18', closed:'2026-03-02T20:23', status:'Resolvida',
+    evaluated:true, rating:9, returns:true,
+    resolution:'Bloqueio gerado por divergência entre unidades informadas (2) e o cupom fiscal (1); benefício desbloqueado após análise e orientação ao consumidor sobre o preenchimento correto.' },
+
+  { date:'2026-02-19T09:34', month:2, name:'Vagner Pellegrini de Andrade', city:'Anápolis',
+    theme:'App', subject:'Impossibilidade de agendar consulta online; cadastro inativo e 0800 indisponível',
+    response:'2026-02-20T19:38', closed:'2026-05-07T09:09', status:'Resolvida',
+    evaluated:true, rating:9, returns:true,
+    resolution:'Cadastro normalizado e ajustes feitos no app; agendamento desbloqueado com retorno por telefone à beneficiária.' },
+
+  { date:'2026-02-12T09:30', month:2, name:'Ana Paula Portoghese', city:'São Paulo',
+    theme:'Tele consulta', subject:'Não foi atendida no horário marcado da consulta',
+    response:'2026-02-12T13:11', closed:'2026-02-20T11:39', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Consulta realocada com a mesma médica no mesmo dia; caso direcionado internamente para evitar reincidência.' },
+
+  { date:'2026-01-26T20:42', month:1, name:'Wilker Alves da Silva', city:'Rio Verde',
+    theme:'Cadastro', subject:'Falha no agendamento para dependentes: disponibilidade seletiva entre titular e dependente',
+    response:'2026-01-29T10:47', closed:'2026-02-01T11:27', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Inconsistência cadastral corrigida; agendamento normalizado para dependentes no app.' },
+
+  { date:'2026-01-17T00:55', month:1, name:'Vitoria Medeiros da Rosa', city:'Tramandaí',
+    theme:'WhatsApp', subject:'Atendimento médico inadequado, falta de suporte e prescrição equivocada de medicamento',
+    response:'2026-01-21T12:28', closed:null, status:'Respondida',
+    evaluated:false, rating:null, returns:null,
+    resolution:'Diversas tentativas de contato (telefone, e-mail, WhatsApp) sem retorno conclusivo; oferta de nova avaliação médica, inclusive com outro profissional. Aguardando avaliação até 21/07/2026.' },
+
+  { date:'2026-01-06T23:23', month:1, name:'Julia Neles Costa', city:'Porto Alegre',
+    theme:'Benefício medicamentos', subject:'Erro no aplicativo durante o pagamento e solicitação urgente de reembolso',
+    response:'2026-01-07T09:53', closed:'2026-06-08T14:15', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Reembolso processado e valor creditado na chave Pix informada; canal de WhatsApp reforçado para próximas demandas.' },
+
+  { date:'2026-01-05T13:13', month:1, name:'David de Almeida Cruz', city:'Belo Horizonte',
+    theme:'Documentos da consulta', subject:'Solicitação de histórico de atendimentos, laudos e atestados sem retorno',
+    response:'2026-01-06T16:46', closed:'2026-01-06T16:47', status:'Resolvida',
+    evaluated:true, rating:10, returns:true,
+    resolution:'Solicitação atendida dentro do prazo legal e abertura de canal por e-mail disponibilizada para dúvidas adicionais.' },
+];
+
+/* ============================================================
+   HELPERS
+============================================================ */
+const MES_NOMES = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const TEMAS = ['App','Tele consulta','Prontuário','Documentos da consulta','Benefício medicamentos','WhatsApp','Cadastro'];
+const TEMA_COLOR = {
+  'App':'#0891b2',
+  'Tele consulta':'#1d4ed8',
+  'Prontuário':'#3730a3',
+  'Documentos da consulta':'#6d28d9',
+  'Benefício medicamentos':'#d97706',
+  'WhatsApp':'#16a34a',
+  'Cadastro':'#be123c'
+};
+const TEMA_CLASS = {
+  'App':'t-app',
+  'Tele consulta':'t-teleconsulta',
+  'Prontuário':'t-prontuario',
+  'Documentos da consulta':'t-documentos',
+  'Benefício medicamentos':'t-beneficio',
+  'WhatsApp':'t-whatsapp',
+  'Cadastro':'t-cadastro'
+};
+
+function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString('pt-BR') }
+function fmtHourDiff(a,b){
+  const ms = new Date(b)-new Date(a);
+  const h = ms/3600000;
+  if (h < 24) return `${Math.round(h)}h`;
+  const d = h/24;
+  if (d < 2) return `1 dia`;
+  return `${Math.round(d)} dias`;
+}
+function notaClass(n){ if(n>=9) return 'alta'; if(n>=7) return 'media'; return 'baixa'; }
+
+/* ============================================================
+   KPIs
+============================================================ */
+function renderKpis(){
+  const total = COMPLAINTS.length;
+  const respondidas = COMPLAINTS.filter(c=>c.response).length;
+  const avaliadas = COMPLAINTS.filter(c=>c.evaluated).length;
+  const notaMedia = (COMPLAINTS.filter(c=>c.rating!=null).reduce((a,c)=>a+c.rating,0)/avaliadas);
+  const voltaria = COMPLAINTS.filter(c=>c.returns===true).length;
+  const voltariaPct = (voltaria/avaliadas)*100;
+  const resolvidas = COMPLAINTS.filter(c=>c.status==='Resolvida').length;
+  const solucaoPct = (resolvidas/avaliadas)*100;
+  // SLA médio
+  const slaHours = COMPLAINTS.filter(c=>c.response).map(c=> (new Date(c.response)-new Date(c.date))/3600000);
+  const slaMed = slaHours.reduce((a,b)=>a+b,0)/slaHours.length;
+  const slaDias = Math.floor(slaMed/24);
+  const slaHrs = Math.round(slaMed - slaDias*24);
+
+  document.getElementById('kQtd').textContent = total;
+  document.getElementById('kResp').firstChild.nodeValue = respondidas;
+  document.getElementById('kRespTot').textContent = total;
+  document.getElementById('kRespPct').textContent = `${Math.round(respondidas/total*100)}%`;
+  document.getElementById('kAval').textContent = avaliadas;
+  document.getElementById('kAvalPct').textContent = `${Math.round(avaliadas/total*100)}% das reclamações`;
+  document.getElementById('kAvalBar').style.width = `${(avaliadas/total*100)}%`;
+  document.getElementById('kNota').firstChild.nodeValue = notaMedia.toFixed(2).replace('.',',');
+  document.getElementById('kNotaBar').style.width = `${(notaMedia/10*100)}%`;
+  document.getElementById('kVolt').firstChild.nodeValue = voltariaPct.toFixed(0);
+  document.getElementById('kVoltBar').style.width = `${voltariaPct}%`;
+  document.getElementById('kSol').firstChild.nodeValue = solucaoPct.toFixed(1).replace('.',',');
+  document.getElementById('kSolBar').style.width = `${solucaoPct}%`;
+  document.getElementById('kSla').textContent = slaDias>0 ? `${slaDias}d ${slaHrs}h` : `${slaHrs}h`;
+}
+
+/* ============================================================
+   CHARTS
+============================================================ */
+function renderChartMes(){
+  const byMes = {};
+  for (let m=1;m<=6;m++) byMes[m] = 0;
+  COMPLAINTS.forEach(c=>{ byMes[c.month]++; });
+  const labels = [];
+  const totals = [];
+  for (let m=1;m<=6;m++){
+    labels.push(MES_NOMES[m]);
+    totals.push(byMes[m]);
+  }
+  new Chart(document.getElementById('chMes'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'Reclamações', data:totals, backgroundColor:'#1d4ed8', borderRadius:8, barPercentage:.6 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ callbacks:{ label:(ctx)=>` ${ctx.parsed.y} reclamação${ctx.parsed.y===1?'':'es'}` } }
+      },
+      scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } }, x:{ grid:{display:false} } }
+    }
+  });
+}
+
+function renderChartTema(){
+  const byTema = {};
+  TEMAS.forEach(t=>byTema[t]=0);
+  COMPLAINTS.forEach(c=>{ byTema[c.theme] = (byTema[c.theme]||0)+1; });
+  const labels = TEMAS;
+  const data = labels.map(t=>byTema[t]);
+  const colors = labels.map(t=>TEMA_COLOR[t]);
+  new Chart(document.getElementById('chTema'), {
+    type:'doughnut',
+    data:{ labels, datasets:[{ data, backgroundColor:colors, borderWidth:0 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{
+        legend:{ position:'right', labels:{ boxWidth:12, font:{family:'IBM Plex Sans',size:12}, padding:10 } },
+        tooltip:{ callbacks:{ label:(ctx)=>` ${ctx.label}: ${ctx.parsed} reclamações`}}
+      }
+    }
+  });
+}
+
+function renderChartTemaMes(){
+  const labels = [];
+  const series = {};
+  TEMAS.forEach(t=>series[t]=[]);
+  for (let m=1;m<=6;m++){
+    labels.push(MES_NOMES[m]);
+    const ofMonth = COMPLAINTS.filter(c=>c.month===m);
+    TEMAS.forEach(t=> series[t].push(ofMonth.filter(c=>c.theme===t).length));
+  }
+  new Chart(document.getElementById('chTemaMes'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets: TEMAS.map(t=>({
+        label:t, data:series[t], backgroundColor:TEMA_COLOR[t], borderRadius:6, stack:'s1', barPercentage:.7
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, font:{family:'IBM Plex Sans',size:12}, padding:14 } } },
+      scales:{
+        x:{ stacked:true, grid:{display:false} },
+        y:{ stacked:true, beginAtZero:true, ticks:{ precision:0 } }
+      }
+    }
+  });
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+function renderTable(){
+  const tbody = document.getElementById('complBody');
+  const search = document.getElementById('tblSearch').value.toLowerCase();
+  const fMes = document.getElementById('filterMes').value;
+  const fTema = document.getElementById('filterTema').value;
+  const fStatus = document.getElementById('filterStatus').value;
+
+  const rows = COMPLAINTS
+    .slice()
+    .sort((a,b)=> new Date(b.date) - new Date(a.date))
+    .filter(c=>{
+      if (fMes && String(c.month)!==fMes) return false;
+      if (fTema && c.theme!==fTema) return false;
+      if (fStatus && c.status!==fStatus) return false;
+      if (search){
+        const hay = (c.name+' '+c.subject+' '+c.theme+' '+c.city+' '+c.resolution).toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+
+  tbody.innerHTML = rows.map(c=>{
+    const sla = c.response ? fmtHourDiff(c.date, c.response) : '—';
+    const aval = c.evaluated ? `<span class="badge b-ok">Sim</span>` : `<span class="badge b-pend">Pendente</span>`;
+    const nota = c.rating!=null ? `<span class="nota ${notaClass(c.rating)}">${c.rating}</span>` : `<span style="color:var(--muted)">—</span>`;
+    let resolBadge;
+    if (c.status==='Resolvida') resolBadge = `<span class="badge b-ok">Resolvida</span>`;
+    else resolBadge = `<span class="badge b-warn">Respondida</span>`;
+    const volta = c.returns===true ? `<span class="badge b-ok">Sim</span>` :
+                  c.returns===false ? `<span class="badge b-no">Não</span>` :
+                  `<span class="badge b-pend">—</span>`;
+    return `<tr>
+      <td>${fmtDate(c.date)}</td>
+      <td>${MES_NOMES[c.month]}</td>
+      <td>${sla}</td>
+      <td><span class="tag ${TEMA_CLASS[c.theme]}">${c.theme}</span></td>
+      <td>${c.subject}</td>
+      <td>${c.name}<br/><span style="color:var(--muted);font-size:11px">${c.city}</span></td>
+      <td class="resol-cell">${c.resolution}</td>
+      <td>${aval}</td>
+      <td>${nota}</td>
+      <td>${resolBadge}</td>
+      <td>${volta}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="11" style="text-align:center;padding:30px;color:var(--muted)">Nenhuma reclamação corresponde aos filtros.</td></tr>`;
+}
+
+function populateFilters(){
+  const meses = [...new Set(COMPLAINTS.map(c=>c.month))].sort((a,b)=>a-b);
+  const selMes = document.getElementById('filterMes');
+  meses.forEach(m=>{
+    const o = document.createElement('option'); o.value = m; o.textContent = MES_NOMES[m]; selMes.appendChild(o);
+  });
+  const selTema = document.getElementById('filterTema');
+  TEMAS.forEach(t=>{
+    const o = document.createElement('option'); o.value=t; o.textContent=t; selTema.appendChild(o);
+  });
+  ['tblSearch','filterMes','filterTema','filterStatus'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', renderTable);
+  });
+}
+
+/* ============================================================
+   TABS
+============================================================ */
+function setupTabs(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.tab-pane').forEach(p=>p.classList.add('hidden'));
+      document.getElementById('pane-'+btn.dataset.tab).classList.remove('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+}
+
+/* ============================================================
+   BOOT
+============================================================ */
+renderKpis();
+renderChartMes();
+renderChartTema();
+renderChartTemaMes();
+populateFilters();
+renderTable();
+setupTabs();
+</script>
+</body>
+</html>

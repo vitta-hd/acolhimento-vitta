@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dossiê · Caso Maressa Ribeiro Figueiredo · Vitta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f6fb;--ink:#0d1b3e;--ink-2:#374151;--muted:#6b7280;--line:#e5eaf3;
+    --card:#fff;--brand-900:#071f42;--brand-800:#0a2d5e;--brand-700:#0e3a78;
+    --brand-600:#1a4f9e;--brand-500:#1d4ed8;--brand-50:#eff4ff;
+    --good:#16a34a;--warn:#d97706;--bad:#dc2626;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+  .page{max-width:880px;margin:24px auto;padding:0 22px;}
+  /* Header */
+  .hd{
+    background:linear-gradient(135deg,var(--brand-900) 0%,var(--brand-800) 60%,var(--brand-700) 100%);
+    color:#fff;border-radius:18px;padding:26px 30px;display:flex;justify-content:space-between;align-items:center;gap:22px;flex-wrap:wrap;
+    box-shadow:0 14px 36px rgba(7,31,66,.16)
+  }
+  .hd .ttl{font-size:11px;letter-spacing:1.6px;font-weight:700;color:#9bc0ff;text-transform:uppercase;margin:0}
+  .hd h1{margin:6px 0 4px;font-size:24px;font-weight:700;letter-spacing:-.2px}
+  .hd p{margin:0;opacity:.78;font-size:13px}
+  .hd .badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600}
+
+  /* Meta strip */
+  .meta{
+    margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:18px;box-shadow:0 4px 14px rgba(7,31,66,.04)
+  }
+  @media(max-width:680px){.meta{grid-template-columns:repeat(2,1fr)}}
+  .meta .it{font-size:13px}
+  .meta .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:4px}
+  .meta .val{color:var(--ink);font-weight:600}
+
+  /* Section / card */
+  section{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:0 4px 14px rgba(7,31,66,.05)}
+  section h2{margin:0 0 4px;font-size:16px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:10px}
+  section h2 .num{
+    width:26px;height:26px;border-radius:8px;background:var(--brand-50);color:var(--brand-700);display:grid;place-items:center;
+    font-size:13px;font-weight:700
+  }
+  section .when{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.4px;margin:2px 0 14px}
+  section p{margin:0 0 10px;color:var(--ink-2);line-height:1.6;font-size:14px}
+  section p b{color:var(--ink)}
+  ul.bullets{margin:6px 0 4px;padding-left:20px;color:var(--ink-2);line-height:1.65;font-size:14px}
+  ul.bullets li{margin-bottom:4px}
+
+  /* Print frame */
+  .print-frame{
+    margin:14px 0 6px;background:#f7fafc;border:1px dashed #c7d2e6;border-radius:12px;padding:12px;
+    text-align:center
+  }
+  .print-frame img{max-width:100%;max-height:520px;border-radius:8px;box-shadow:0 6px 22px rgba(7,31,66,.12)}
+  .print-frame .cap{display:block;font-size:11.5px;color:var(--muted);margin-top:8px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .print-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
+  @media(max-width:680px){.print-row{grid-template-columns:1fr}}
+  .print-row .print-frame{margin:0}
+
+  /* Tag */
+  .tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.4px}
+  .tag-fail{background:#fee2e2;color:#b91c1c}
+  .tag-warn{background:#fef3c7;color:#92400e}
+  .tag-info{background:#dbeafe;color:#1d4ed8}
+  .tag-ok{background:#dcfce7;color:#15803d}
+
+  /* Callout */
+  .callout{
+    background:var(--brand-50);border-left:4px solid var(--brand-600);padding:12px 16px;border-radius:8px;
+    font-size:13.5px;color:#1e3a5f;margin:14px 0 6px;line-height:1.6
+  }
+  .callout.bad{background:#fef2f2;border-left-color:var(--bad);color:#7f1d1d}
+  .callout.warn{background:#fffbeb;border-left-color:var(--warn);color:#78350f}
+
+  /* Email render (print 8) */
+  .email{
+    margin-top:14px;background:#fff;border:1px solid #d6dde8;border-radius:14px;overflow:hidden;
+    box-shadow:0 8px 26px rgba(7,31,66,.08);font-size:13.5px
+  }
+  .email .ehead{
+    background:#f6f8fc;padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px
+  }
+  .email .avatar{
+    width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0a2d5e,#1d4ed8);color:#fff;
+    display:grid;place-items:center;font-weight:700;font-size:15px;flex-shrink:0
+  }
+  .email .efrom{font-size:13px;color:var(--ink)}
+  .email .efrom b{font-weight:700}
+  .email .efrom .row{color:var(--muted);font-size:12px;margin-top:2px}
+  .email .esubj{padding:14px 18px 6px;font-weight:700;color:var(--ink);font-size:15px}
+  .email .ebody{padding:6px 18px 18px;color:var(--ink-2);line-height:1.65}
+  .email .ebody p{margin:0 0 12px;font-size:13.5px}
+  .email .ebody .sig{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--ink)}
+  .email .stamp{display:inline-block;background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:10px;letter-spacing:.4px}
+
+  /* Final block */
+  .final{
+    margin-top:18px;background:linear-gradient(135deg,#0a2d5e,#1a4f9e);color:#fff;border-radius:16px;padding:22px 24px;
+    box-shadow:0 14px 36px rgba(7,31,66,.18)
+  }
+  .final h3{margin:0 0 8px;font-size:16px}
+  .final p,.final li{color:#dde6f5;font-size:13.5px;line-height:1.65;margin:0 0 8px}
+  .final ul{margin:0;padding-left:20px}
+
+  footer{text-align:center;color:var(--muted);font-size:11.5px;padding:18px 0 6px}
+
+  /* Print */
+  @media print{
+    body{background:#fff}
+    .page{margin:0;padding:0;max-width:none}
+    section,.meta,.email,.final{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+    .hd{box-shadow:none}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hd">
+    <div>
+      <p class="ttl">Estudo de caso · Vitta Hospital Digital</p>
+      <h1>Caso Maressa Ribeiro Figueiredo</h1>
+      <p>Falha em teleconsulta · bloqueio automático · revisão da regra de no-show</p>
+    </div>
+    <div class="badge">Reclamação formal (SAC + Ouvidoria)</div>
+  </div>
+
+  <div class="meta">
+    <div class="it">
+      <div class="lbl">Membro</div>
+      <div class="val">Maressa Ariely Ribeiro Figueiredo</div>
+    </div>
+    <div class="it">
+      <div class="lbl">Convênio</div>
+      <div class="val">Sicredi</div>
+    </div>
+    <div class="it">
+      <div class="lbl">Período do caso</div>
+      <div class="val">12/06/2026 — 17/06/2026</div>
+    </div>
+    <div class="it">
+      <div class="lbl">Status final</div>
+      <div class="val" style="color:#15803d">Em tratativa via WhatsApp</div>
+    </div>
+  </div>
+
+  <!-- 1. Primeira consulta -->
+  <section>
+    <h2><span class="num">1</span> Primeira consulta — Dra. Sara Ravena <span class="tag tag-fail" style="margin-left:6px">Falha técnica Vitta</span></h2>
+    <div class="when">12/06/2026 · 16:50</div>
+    <p>Membro tinha consulta agendada com a <b>Dra. Sara Ravena</b>. Ao tentar acessar a teleconsulta pelo app, recebeu o erro <i>"Os dados da sua teleconsulta ainda não estão disponíveis. Por favor, fale com a equipe de saúde."</i></p>
+    <div class="print-frame">
+      <img src="prints/print1.png" alt="Erro 'Os dados da sua teleconsulta ainda não estão disponíveis' no app Vitta" />
+      <span class="cap">Print 1 · Erro no app no momento da consulta (12/06 · 16:52)</span>
+    </div>
+    <p>A membro acionou o WhatsApp <b>às 16:52</b>, dois minutos depois do horário da consulta. Devido à fila de atendimento, a primeira resposta da equipe só ocorreu <b>às 17:02</b> (10 minutos depois). A analista reenviou o link, porém o aparelho da membro <b>não estava liberando microfone</b>, e até a permissão ser ajustada o tempo de tolerância já havia se esgotado — não foi possível gerar um Meet alternativo a tempo.</p>
+    <div class="print-frame">
+      <img src="prints/print2.png" alt="Conversa de WhatsApp com a membro, incluindo a tela de permissão de câmera e microfone" />
+      <span class="cap">Print 2 · Conversa via WhatsApp e tela de permissão de câmera/microfone (12/06 · 17:13)</span>
+    </div>
+    <div class="callout bad">
+      <b>Causa raiz desta primeira falta:</b> erro do app no momento da consulta + tempo de resposta acima do ideal. O membro tentou seguir o fluxo correto, mas a tecnologia não permitiu. <b>A consulta foi marcada como "falta", mesmo a falha sendo nossa.</b>
+    </div>
+    <p><b>Encaminhamento:</b> consulta reagendada para o dia 16/06. Feedback foi repassado à analista Bruna sobre a janela de resposta e a importância de gerar o Meet alternativo no primeiro contato em casos de erro do app.</p>
+  </section>
+
+  <!-- 2. Segunda consulta -->
+  <section>
+    <h2><span class="num">2</span> Segunda consulta — Dr. Victor Alves <span class="tag tag-warn" style="margin-left:6px">Atraso do membro</span></h2>
+    <div class="when">16/06/2026 · 07:40</div>
+    <p>Por já conhecermos a falha do atendimento anterior, a equipe ficou atenta a esta consulta. No horário marcado a membro <b>não acessou</b> o app. A equipe partiu para o protocolo de contingência: <b>ligação, mensagem e envio de link Meet alternativo</b> — sem sucesso, a membro não acessou nenhum dos canais.</p>
+    <div class="print-row">
+      <div class="print-frame">
+        <img src="prints/print3.png" alt="Tela 'Aguarde um momento' do app de teleconsulta com o Dr. Victor Alves" />
+        <span class="cap">Print 3 · Tela de espera da consulta com Dr. Victor (16/06 · 07:50)</span>
+      </div>
+      <div class="print-frame">
+        <img src="prints/print4.png" alt="Tela do Google Meet alternativo enviado à membro" />
+        <span class="cap">Print 4 · Link Meet alternativo enviado pela equipe (16/06 · 07:50)</span>
+      </div>
+    </div>
+    <p>No dia <b>17/06</b>, um dia após o horário marcado, a membro voltou a entrar em contato dizendo que <i>"havia acessado a consulta no dia anterior e não foi atendida"</i>. Ao revisar os registros, identificamos que:</p>
+    <ul class="bullets">
+      <li>O acesso ocorreu <b>fora da janela de tolerância</b> do agendamento;</li>
+      <li>No dia 16/06 não houve retorno da membro nos contatos ativos feitos pela equipe (ligação, WhatsApp e Meet alternativo).</li>
+    </ul>
+    <div class="print-frame">
+      <img src="prints/print5.png" alt="Registros de disparos ativos de mensagem para a membro" />
+      <span class="cap">Print 5 · Disparos ativos de mensagem feitos pela equipe no Vision (16/06 · 07:48 e 07:53)</span>
+    </div>
+    <div class="callout warn">
+      <b>Causa desta segunda falta:</b> atraso do membro, fora da janela de tolerância. <b>A equipe cumpriu o protocolo de contingência</b> (ligação, mensagem e link Meet alternativo).
+    </div>
+  </section>
+
+  <!-- 3. Reclamação formal -->
+  <section>
+    <h2><span class="num">3</span> Reclamação formal — SAC + Ouvidoria <span class="tag tag-fail" style="margin-left:6px">Bloqueio de 30 dias</span></h2>
+    <div class="when">17/06/2026 · 11:05</div>
+    <p>Após receber a notificação de <b>bloqueio do app por 30 dias</b> (regra automática de duas faltas seguidas), a membro registrou reclamação formal no SAC e na Ouvidoria, pelo email cadastrado.</p>
+    <p>O ponto central da reclamação: <b>"a primeira falta foi por falha da Vitta"</b> e <b>"a segunda também teve atraso por parte do membro"</b>, portanto considera o bloqueio indevido.</p>
+    <div class="print-frame">
+      <img src="prints/print6.png" alt="E-mail de reclamação enviado para sac@vitta.me e ouvidoria.vittasaude@vitta.me" />
+      <span class="cap">Print 6 · E-mail de reclamação enviado para SAC e Ouvidoria (17/06 · 11:05)</span>
+    </div>
+  </section>
+
+  <!-- 4. Regra de produto -->
+  <section>
+    <h2><span class="num">4</span> Regra de produto aplicável <span class="tag tag-info" style="margin-left:6px">Limitadores · Vision</span></h2>
+    <div class="when">Definição vigente (papo reunião 31/03 · Dressa, Jes e Jaq)</div>
+    <p>A regra que impactou esta membro é a <b>Regra 5 — Punição por falta (no-show)</b>, já documentada e levantada como ponto de atenção em discussões anteriores entre Atendimento e Produto:</p>
+    <ul class="bullets">
+      <li><b>Em casos de falha por problemas Vitta</b>, o membro só consegue reagendar pelo time front;</li>
+      <li><b>Em ausência profissional</b>, fica como faltou e o membro é penalizado — o reagendamento só ocorre via Vision;</li>
+      <li><b>Impacto:</b> ao registrar a <b>segunda falta</b>, o membro fica bloqueado por <b>30 dias corridos</b>, incluindo plantão médico.</li>
+    </ul>
+    <div class="print-frame">
+      <img src="prints/print7.png" alt="Documento 'Regras e Limitadores' mostrando a Regra 5 - Punição por falta (no-show)" />
+      <span class="cap">Print 7 · Documento "Regras e Limitadores" — Regra 5 (No-show)</span>
+    </div>
+    <div class="callout">
+      <b>Orientação vigente de produto:</b> em casos de bloqueio, <b>não há opção de desbloqueio manual</b>. O app permanece bloqueado pelos 30 dias, mas o membro pode seguir agendando consultas <b>com o time de saúde via WhatsApp</b>.
+    </div>
+  </section>
+
+  <!-- 5. Pontos de oportunidade -->
+  <section>
+    <h2><span class="num">5</span> Pontos de oportunidade identificados</h2>
+    <ul class="bullets">
+      <li><b>Geração imediata do Meet em casos de erro do app:</b> no primeiro contato (12/06), a analista deveria ter gerado o link Meet imediatamente para preservar a consulta — e só depois investigar o problema no app. A inversão dessa ordem fez o tempo de tolerância expirar.</li>
+      <li><b>Tempo de resposta no momento da consulta:</b> 10 minutos entre o acionamento da membro e a primeira resposta da equipe é tempo demais para um cenário onde a consulta já está em andamento. Reforço com a analista Bruna realizado.</li>
+      <li><b>Regra de no-show indiferente ao motivo:</b> hoje, o sistema não diferencia uma falta por <b>falha técnica nossa</b> de uma falta por <b>atraso do membro</b>. As duas contam igual e somam para o bloqueio. Esse ponto já havia sido levantado em discussões anteriores com Produto e segue como dor recorrente.</li>
+      <li><b>Sem mecanismo de "perdão" para a primeira falta nossa:</b> mesmo quando reconhecemos a falha, a marcação como "falta" permanece no sistema — o que cria o gatilho para o bloqueio em uma eventual segunda ocorrência.</li>
+    </ul>
+  </section>
+
+  <!-- 6. Resposta enviada -->
+  <section>
+    <h2><span class="num">6</span> Resposta enviada à membro <span class="tag tag-ok" style="margin-left:6px">Por Renan Machado</span></h2>
+    <div class="when">17/06/2026 · após escalonamento ao SAC e à liderança</div>
+    <p>Após a reclamação, o analista Renan, em conjunto com a liderança, repassou à membro a orientação vigente de produto — com cautela e contexto, deixando claro que o bloqueio do app não a deixaria sem atendimento.</p>
+
+    <div class="email">
+      <div class="ehead">
+        <div class="avatar">RM</div>
+        <div class="efrom">
+          <b>Renan Machado</b> · Equipe Vitta <span class="stamp">Enviado</span>
+          <div class="row"><b>De:</b> sac@vitta.me</div>
+          <div class="row"><b>Para:</b> Maressa Ariely Ribeiro Figueiredo &lt;maressafigueiredoo@gmail.com&gt;</div>
+          <div class="row"><b>Cc:</b> ouvidoria.vittasaude@vitta.me</div>
+        </div>
+      </div>
+      <div class="esubj">Assunto: Reclamação – Hospital Digital Vitta (Colaboradora Sicredi)</div>
+      <div class="ebody">
+        <p>Olá, Maressa.</p>
+        <p>Agradecemos por compartilhar seu relato conosco.</p>
+        <p>Antes de tudo, gostaríamos de pedir sinceras desculpas pela experiência vivenciada. Compreendemos a frustração gerada pelas tentativas sucessivas de atendimento sem sucesso e reconhecemos o impacto que essa situação pode causar, especialmente quando há uma necessidade legítima de assistência e expectativa de acesso ao serviço.</p>
+        <p>Recebemos sua manifestação com a devida atenção e já iniciamos uma análise detalhada do histórico de atendimentos mencionados. Nosso objetivo é compreender de forma aprofundada quais fatores influenciaram a não realização das consultas agendadas, incluindo os eventos relacionados ao acesso à plataforma, à condução dos atendimentos e aos registros associados às consultas em questão.</p>
+        <p>Sabemos que a experiência relatada está aquém do padrão de qualidade que buscamos oferecer aos nossos beneficiários e, por isso, trataremos o caso com a prioridade necessária para identificar a causa dos ocorridos e adotar as medidas cabíveis.</p>
+        <p>Enquanto a análise estiver em andamento, informamos que, durante o período de bloqueio, novos agendamentos deverão ser realizados por intermédio do nosso time de atendimento, por meio do WhatsApp <b>(11) 4949-3663</b>. Dessa forma, conseguiremos oferecer um acompanhamento mais próximo e garantir o suporte necessário para suas próximas solicitações.</p>
+        <p>Já realizamos o envio de uma mensagem em seu WhatsApp para que, assim que possível, nos retorne e possamos prosseguir com seu novo agendamento.</p>
+        <p>Agradecemos pela oportunidade de apurar o ocorrido e reforçamos nosso compromisso em conduzir essa avaliação com o devido cuidado e atenção.</p>
+        <p>Permanecemos à disposição e retornaremos assim que tivermos uma conclusão sobre o caso.</p>
+        <div class="sig">
+          Atenciosamente,<br/>
+          <b>Renan Machado</b><br/>
+          <span style="color:var(--muted)">Equipe Vitta · SAC</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final -->
+  <div class="final">
+    <h3>Encaminhamento final</h3>
+    <ul>
+      <li><b>Bloqueio mantido</b> conforme regra vigente de produto, sem desbloqueio manual.</li>
+      <li><b>Atendimento garantido pelo WhatsApp</b> durante os 30 dias do bloqueio — membro não fica sem cobertura.</li>
+      <li>Caso reforça a <b>necessidade de revisitar a Regra 5</b> de no-show com Produto, criando diferenciação entre falta por falha Vitta e falta por atraso do membro.</li>
+      <li>Feedbacks individuais já passados à analista envolvida no primeiro atendimento.</li>
+    </ul>
+  </div>
+
+  <footer>
+    Documento interno · Vitta Hospital Digital · gerado em 24/06/2026 para alinhamento entre Atendimento, SAC, Ouvidoria e Produto.
+  </footer>
+</div>
+</body>
+</html>

@@ -144,16 +144,29 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
            class="h-10 mb-6 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
       <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">Hospital Digital Vitta</h1>
+      <p id="role-subtitle" class="text-blue-100 text-sm font-medium" style="display:none">Seja bem vindo analista ao portal do atendimento.</p>
       
     </div>
-    <div id="tab-buttons" class="flex flex-col sm:flex-row gap-3">
+    <div id="tab-buttons" class="flex flex-wrap gap-3">
       <button onclick="showTab('rules')" id="btn-rules"
         class="tab-btn active px-7 py-4 font-semibold text-sm tracking-wide">
-        📋 Regras Gerais
+        <span id="btn-rules-label">📋 Regras Gerais</span>
       </button>
       <button onclick="showTab('elig')" id="btn-elig"
         class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide">
         🏥 Elegibilidade
+      </button>
+      <button onclick="showTab('escala')" id="btn-escala"
+        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
+        🗓️ Escala
+      </button>
+      <button onclick="showTab('exames')" id="btn-exames"
+        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
+        🧪 Agendamento de Exames
+      </button>
+      <button onclick="showTab('avisos')" id="btn-avisos"
+        class="tab-btn px-7 py-4 font-semibold text-sm tracking-wide front-only" style="display:none">
+        📢 Avisos Internos
       </button>
     </div>
   </div>
@@ -4477,6 +4490,53 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
     </div>
   </div>
 </div><!-- /tab-rules -->
+
+<!-- ═══════════════════════════════════════════════
+     ABA ESCALA (Front2026)
+═══════════════════════════════════════════════ -->
+<div id="tab-escala" class="max-w-6xl mx-auto px-6 py-10 hidden">
+  <div class="bg-white border border-gray-200 rounded-lg p-6">
+    <div class="flex items-center gap-3 mb-4">
+      <span style="font-size:1.6rem">🗓️</span>
+      <div>
+        <h2 class="text-xl font-bold" style="color:#0a2d5e">Escala</h2>
+        <p class="text-sm text-gray-500">Escala de plantão e cobertura do time de atendimento</p>
+      </div>
+    </div>
+    <div class="mt-6 p-8 rounded-lg" style="background:#fffbeb;border:2px dashed #f59e0b;text-align:center">
+      <p class="text-3xl mb-3">📎</p>
+      <p class="font-semibold text-gray-800 mb-1">Aguardando envio do PDF da escala</p>
+      <p class="text-sm text-gray-600">O conteúdo visual será inserido aqui assim que o PDF da escala for compartilhado.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABA AGENDAMENTO DE EXAMES (Front2026)
+═══════════════════════════════════════════════ -->
+<div id="tab-exames" class="hidden">
+  <div class="max-w-6xl mx-auto px-6 py-6">
+    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden" style="height:calc(100vh - 220px);min-height:600px">
+      <iframe src="exames.html" id="exames-iframe" style="width:100%;height:100%;border:0;display:block" title="Agendamento de Exames — Vitta"></iframe>
+    </div>
+    <p class="text-xs text-gray-500 mt-2 text-center">
+      Painel de exames carregado de <a href="exames.html" target="_blank" class="text-blue-700 underline">exames.html</a> ·
+      <a href="exames.html" target="_blank" class="text-blue-700 underline">abrir em nova aba</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABA AVISOS INTERNOS (Front2026)
+═══════════════════════════════════════════════ -->
+<div id="tab-avisos" class="max-w-6xl mx-auto px-6 py-10 hidden">
+  <div class="bg-white border border-gray-200 rounded-lg p-12 text-center">
+    <p class="text-5xl mb-4">🚧</p>
+    <h2 class="text-xl font-bold mb-2" style="color:#0a2d5e">Avisos Internos</h2>
+    <p class="text-sm text-gray-500 max-w-md mx-auto">Área em construção. Em breve, comunicados, alertas e atualizações do time vão aparecer aqui.</p>
+  </div>
+</div>
+
 </div><!-- /content-area -->
 
 <!-- ══════════════════════════════════════════
@@ -4565,36 +4625,78 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 </div>
 
 <footer class="mt-12 py-5 text-center text-white" style="background:#071f42">
-  <p class="text-lg font-bold">Painel Interno</p>
+  <p class="text-lg font-bold"><span id="footer-label">Painel Interno</span></p>
+  <p class="text-xs mt-1" style="color:#bfdbfe"><a href="#" onclick="logout();return false" style="color:#bfdbfe;text-decoration:underline">Sair</a></p>
 </footer>
 </div><!-- /main-content -->
 
 <script>
+var USER_ROLE = null; // 'admin' | 'front'
+
 function checkPass(){
-  var v=document.getElementById('lock-input').value;
-  if(v==='Vitta2026'){
-    document.getElementById('lock-screen').style.display='none';
-    document.getElementById('main-content').style.display='block';
-    sessionStorage.setItem('vitta-auth','1');
+  var v = document.getElementById('lock-input').value;
+  if (v === 'Vitta2026'){
+    USER_ROLE = 'admin';
+  } else if (v === 'Front2026'){
+    USER_ROLE = 'front';
   } else {
-    document.getElementById('lock-err').textContent='Senha incorreta. Tente novamente.';
-    document.getElementById('lock-input').value='';
+    document.getElementById('lock-err').textContent = 'Senha incorreta. Tente novamente.';
+    document.getElementById('lock-input').value = '';
     document.getElementById('lock-input').focus();
+    return;
   }
+  sessionStorage.setItem('vitta-auth','1');
+  sessionStorage.setItem('vitta-role', USER_ROLE);
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  applyRole();
 }
-if(sessionStorage.getItem('vitta-auth')==='1'){
-  document.getElementById('lock-screen').style.display='none';
-  document.getElementById('main-content').style.display='block';
+
+function applyRole(){
+  var role = USER_ROLE || sessionStorage.getItem('vitta-role') || 'admin';
+  USER_ROLE = role;
+  var isFront = (role === 'front');
+  // Subtitle
+  var subt = document.getElementById('role-subtitle');
+  if (subt) subt.style.display = isFront ? '' : 'none';
+  // Footer label
+  var ft = document.getElementById('footer-label');
+  if (ft) ft.textContent = isFront ? 'Painel Interno — Front/Rede' : 'Painel Interno';
+  // Rules tab label
+  var rlbl = document.getElementById('btn-rules-label');
+  if (rlbl) rlbl.textContent = isFront ? '📋 Fluxo e Scripts' : '📋 Regras Gerais';
+  // Show/hide front-only tabs
+  document.querySelectorAll('.front-only').forEach(function(b){
+    b.style.display = isFront ? '' : 'none';
+  });
+}
+
+function logout(){
+  sessionStorage.removeItem('vitta-auth');
+  sessionStorage.removeItem('vitta-role');
+  location.reload();
+}
+
+if (sessionStorage.getItem('vitta-auth') === '1'){
+  USER_ROLE = sessionStorage.getItem('vitta-role') || 'admin';
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  document.addEventListener('DOMContentLoaded', applyRole);
+  // If DOMContentLoaded already fired (script loaded after parse), run immediately
+  if (document.readyState !== 'loading') applyRole();
 }
 </script>
 
 <script>
 function showTab(t){
   document.getElementById('content-area').style.display='';
-  document.getElementById('tab-elig').classList.toggle('hidden', t!=='elig');
-  document.getElementById('tab-rules').classList.toggle('hidden', t!=='rules');
-  document.getElementById('btn-elig').classList.toggle('active', t==='elig');
-  document.getElementById('btn-rules').classList.toggle('active', t==='rules');
+  var tabs = ['rules','elig','escala','exames','avisos'];
+  tabs.forEach(function(name){
+    var el = document.getElementById('tab-'+name);
+    if (el) el.classList.toggle('hidden', t !== name);
+    var btn = document.getElementById('btn-'+name);
+    if (btn) btn.classList.toggle('active', t === name);
+  });
 }
 
 function toggleContent(){

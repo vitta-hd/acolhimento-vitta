@@ -54,9 +54,9 @@
   /* Print frame */
   .print-frame{
     margin:14px 0 6px;background:#f7fafc;border:1px dashed #c7d2e6;border-radius:12px;padding:12px;
-    text-align:center
+    text-align:center;position:relative
   }
-  .print-frame img{max-width:100%;max-height:520px;border-radius:8px;box-shadow:0 6px 22px rgba(7,31,66,.12)}
+  .print-frame img{max-width:100%;max-height:520px;border-radius:8px;box-shadow:0 6px 22px rgba(7,31,66,.12);display:block;margin:0 auto}
   .print-frame .cap{display:block;font-size:11.5px;color:var(--muted);margin-top:8px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
   .ph{
     padding:46px 22px;background:#f3f4f6;color:#6b7280;border:2px dashed #c7d2e6;border-radius:8px;
@@ -65,6 +65,15 @@
   .ph b{display:block;font-size:14px;color:#374151;margin-bottom:6px}
   .ph code{background:#fff;border:1px solid #e5e7eb;padding:2px 8px;border-radius:6px;font-size:12.5px;color:#1d4ed8;font-family:'IBM Plex Sans',monospace}
   .ph small{display:block;color:#9ca3af;margin-top:8px;font-size:11.5px}
+  /* Attach button (edit mode) */
+  .attach{
+    display:inline-block;margin-top:10px;background:var(--brand-600);color:#fff;border:0;border-radius:8px;
+    padding:8px 14px;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;letter-spacing:.3px
+  }
+  .attach:hover{background:var(--brand-700)}
+  .attach.replace{background:#fff;color:var(--brand-600);border:1px solid var(--brand-600);font-size:11.5px;padding:5px 10px;position:absolute;top:8px;right:8px}
+  .attach.replace:hover{background:var(--brand-50)}
+  .print-frame.locked .attach{display:none}
   .print-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
   @media(max-width:680px){.print-row{grid-template-columns:1fr}}
   .print-row .print-frame{margin:0}
@@ -114,6 +123,28 @@
   .final p,.final li{color:#dde6f5;font-size:13.5px;line-height:1.65;margin:0 0 8px}
   .final ul{margin:0;padding-left:20px}
 
+  /* Edit bar */
+  .editbar{
+    position:sticky;top:0;z-index:90;background:#fef9c3;border:1px solid #fcd34d;border-radius:0 0 12px 12px;
+    padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    margin:-24px -22px 14px;box-shadow:0 6px 18px rgba(120,53,15,.08)
+  }
+  .editbar .txt{font-size:13px;color:#78350f;line-height:1.45}
+  .editbar .txt b{color:#451a03}
+  .editbar .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .editbar button{
+    background:#0a2d5e;color:#fff;border:0;border-radius:8px;padding:9px 16px;font-family:inherit;
+    font-weight:600;font-size:13px;cursor:pointer;letter-spacing:.3px
+  }
+  .editbar button:hover{background:#071f42}
+  .editbar button.ghost{background:transparent;color:#78350f;border:1px solid #d97706}
+  .editbar button.ghost:hover{background:#fef3c7}
+  .editbar.done{background:#dcfce7;border-color:#16a34a}
+  .editbar.done .txt{color:#14532d}
+  .editbar.done .txt b{color:#052e16}
+  .editbar.done button.ghost{color:#14532d;border-color:#16a34a}
+  .editbar.hidden{display:none}
+
   footer{text-align:center;color:var(--muted);font-size:11.5px;padding:18px 0 6px}
 
   /* Print */
@@ -128,6 +159,17 @@
 </head>
 <body>
 <div class="page">
+
+  <!-- Edit bar (não aparece na versão final exportada) -->
+  <div class="editbar" id="editbar">
+    <div class="txt"><b>Modo edição</b> · clique em <b>"📎 Anexar imagem"</b> em cada print. Quando terminar, use o botão à direita para salvar a versão final pronta para compartilhar.</div>
+    <div class="actions">
+      <button id="btnExport" onclick="exportFinal()">💾 Salvar versão final</button>
+      <button class="ghost" onclick="document.getElementById('editbar').classList.add('hidden')">Ocultar barra</button>
+    </div>
+  </div>
+
+  <input type="file" id="filePicker" accept="image/*" style="display:none">
 
   <div class="hd">
     <div>
@@ -162,13 +204,13 @@
     <h2><span class="num">1</span> Primeira consulta — Dra. Sara Ravena <span class="tag tag-fail" style="margin-left:6px">Falha na teleconsulta</span></h2>
     <div class="when">12/06/2026 · 16:50</div>
     <p>Membro tinha consulta agendada com a <b>Dra. Sara Ravena</b>. Ao tentar acessar a teleconsulta pelo app, recebeu o erro <i>"Os dados da sua teleconsulta ainda não estão disponíveis. Por favor, fale com a equipe de saúde."</i></p>
-    <div class="print-frame">
-      <img src="prints/print1.png" alt="Erro 'Os dados da sua teleconsulta ainda não estão disponíveis' no app Vitta" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print1.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+    <div class="print-frame" data-print="1">
+      <div class="ph"><b>📷 Print 1 ainda não anexado</b>Erro no app no momento da consulta<small>Clique abaixo para anexar a imagem do seu computador</small><button class="attach" onclick="pickImg(1)">📎 Anexar imagem</button></div>
       <span class="cap">Print 1 · Erro no app no momento da consulta (12/06 · 16:52)</span>
     </div>
     <p>A membro acionou o WhatsApp <b>às 16:52</b>, dois minutos depois do horário da consulta. Devido à fila de atendimento, a primeira resposta da equipe só ocorreu <b>às 17:02</b> (10 minutos depois). A analista reenviou o link, porém o aparelho da membro <b>não estava liberando microfone</b>, e até a permissão ser ajustada o tempo de tolerância já havia se esgotado — não foi possível gerar um Meet alternativo a tempo.</p>
-    <div class="print-frame">
-      <img src="prints/print2.png" alt="Conversa de WhatsApp com a membro, incluindo a tela de permissão de câmera e microfone" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print2.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+    <div class="print-frame" data-print="2">
+      <div class="ph"><b>📷 Print 2 ainda não anexado</b>WhatsApp + tela de permissão de câmera/microfone<small>Clique abaixo para anexar a imagem do seu computador</small><button class="attach" onclick="pickImg(2)">📎 Anexar imagem</button></div>
       <span class="cap">Print 2 · Conversa via WhatsApp e tela de permissão de câmera/microfone (12/06 · 17:13)</span>
     </div>
     <div class="callout bad">
@@ -183,12 +225,12 @@
     <div class="when">16/06/2026 · 07:40</div>
     <p>Por já conhecermos a falha do atendimento anterior, a equipe ficou atenta a esta consulta. No horário marcado a membro <b>não acessou</b> o app. A equipe partiu para o protocolo de contingência: <b>ligação, mensagem e envio de link Meet alternativo</b> — sem sucesso, a membro não acessou nenhum dos canais.</p>
     <div class="print-row">
-      <div class="print-frame">
-        <img src="prints/print3.png" alt="Tela 'Aguarde um momento' do app de teleconsulta com o Dr. Victor Alves" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print3.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+      <div class="print-frame" data-print="3">
+        <div class="ph"><b>📷 Print 3 ainda não anexado</b>"Aguarde um momento" — Dr. Victor<small>Clique abaixo para anexar</small><button class="attach" onclick="pickImg(3)">📎 Anexar imagem</button></div>
         <span class="cap">Print 3 · Tela de espera da consulta com Dr. Victor (16/06 · 07:50)</span>
       </div>
-      <div class="print-frame">
-        <img src="prints/print4.png" alt="Registros de disparos ativos de mensagem para a membro no Vision" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print4.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+      <div class="print-frame" data-print="4">
+        <div class="ph"><b>📷 Print 4 ainda não anexado</b>Vision — disparos ativos<small>Clique abaixo para anexar</small><button class="attach" onclick="pickImg(4)">📎 Anexar imagem</button></div>
         <span class="cap">Print 4 · Disparos ativos feitos pela equipe no Vision (16/06 · 07:48 e 07:53)</span>
       </div>
     </div>
@@ -197,8 +239,8 @@
       <li>O acesso ocorreu <b>fora da janela de tolerância</b> do agendamento (consulta às 07:40, acesso da membro registrado às 07:50);</li>
       <li>No dia 16/06 não houve retorno da membro nos contatos ativos feitos pela equipe (ligação, WhatsApp e Meet alternativo).</li>
     </ul>
-    <div class="print-frame">
-      <img src="prints/print5.png" alt="Tela do Google Meet 'Pedindo para participar' mostrando o acesso da membro às 07:50" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print5.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+    <div class="print-frame" data-print="5">
+      <div class="ph"><b>📷 Print 5 ainda não anexado</b>Google Meet — "Pedindo para participar" (07:50)<small>Clique abaixo para anexar</small><button class="attach" onclick="pickImg(5)">📎 Anexar imagem</button></div>
       <span class="cap">Print 5 · Acesso da membro ao Meet alternativo registrado às 07:50 (10 minutos após o horário marcado)</span>
     </div>
     <div class="callout warn">
@@ -212,8 +254,8 @@
     <div class="when">17/06/2026 · 11:05</div>
     <p>Após receber a notificação de <b>bloqueio do app por 30 dias</b> (regra automática de duas faltas seguidas), a membro registrou reclamação formal no SAC e na Ouvidoria, pelo email cadastrado.</p>
     <p>O ponto central da reclamação: <b>"a primeira falta foi por falha da Vitta"</b> e <b>"a segunda também teve atraso por parte do membro"</b>, portanto considera o bloqueio indevido.</p>
-    <div class="print-frame">
-      <img src="prints/print6.png" alt="E-mail de reclamação enviado para sac@vitta.me e ouvidoria.vittasaude@vitta.me" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print6.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+    <div class="print-frame" data-print="6">
+      <div class="ph"><b>📷 Print 6 ainda não anexado</b>E-mail para SAC + Ouvidoria<small>Clique abaixo para anexar</small><button class="attach" onclick="pickImg(6)">📎 Anexar imagem</button></div>
       <span class="cap">Print 6 · E-mail de reclamação enviado para SAC e Ouvidoria (17/06 · 11:05)</span>
     </div>
   </section>
@@ -228,8 +270,8 @@
       <li><b>Em ausência profissional</b>, fica como faltou e o membro é penalizado — o reagendamento só ocorre via Vision;</li>
       <li><b>Impacto:</b> ao registrar a <b>segunda falta</b>, o membro fica bloqueado por <b>30 dias corridos</b>, incluindo plantão médico.</li>
     </ul>
-    <div class="print-frame">
-      <img src="prints/print7.png" alt="Documento 'Regras e Limitadores' mostrando a Regra 5 - Punição por falta (no-show)" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print7.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
+    <div class="print-frame" data-print="7">
+      <div class="ph"><b>📷 Print 7 ainda não anexado</b>Documento "Regras e Limitadores"<small>Clique abaixo para anexar</small><button class="attach" onclick="pickImg(7)">📎 Anexar imagem</button></div>
       <span class="cap">Print 7 · Documento "Regras e Limitadores" — Regra 5 (No-show)</span>
     </div>
     <div class="callout">
@@ -288,5 +330,64 @@
     Documento interno · Vitta Hospital Digital · gerado em 24/06/2026 para alinhamento entre Atendimento, SAC, Ouvidoria e Produto.
   </footer>
 </div>
+
+<script>
+  /* ====== Anexar imagens e exportar versão final ====== */
+  let currentSlot = null;
+  const picker = document.getElementById('filePicker');
+
+  function pickImg(n){
+    currentSlot = n;
+    picker.value = '';
+    picker.click();
+  }
+
+  picker.addEventListener('change', e=>{
+    const f = e.target.files[0];
+    if (!f || currentSlot==null) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      const frame = document.querySelector(`.print-frame[data-print="${currentSlot}"]`);
+      if (!frame) return;
+      const cap = frame.querySelector('.cap').outerHTML;
+      const alt = 'Print ' + currentSlot;
+      frame.innerHTML = `<img src="${ev.target.result}" alt="${alt}" />
+        <button class="attach replace" onclick="pickImg(${currentSlot})">↻ Trocar</button>
+        ${cap}`;
+      frame.classList.add('locked');
+      updateExportState();
+    };
+    reader.readAsDataURL(f);
+  });
+
+  function updateExportState(){
+    const total = document.querySelectorAll('.print-frame').length;
+    const done = document.querySelectorAll('.print-frame img').length;
+    const bar = document.getElementById('editbar');
+    const btn = document.getElementById('btnExport');
+    btn.textContent = `💾 Salvar versão final (${done}/${total})`;
+    if (done===total){
+      bar.classList.add('done');
+      bar.querySelector('.txt').innerHTML = `<b>Tudo pronto!</b> Os 7 prints já estão embutidos. Clique no botão à direita para baixar o HTML final, pronto para enviar para outra pessoa.`;
+    }
+  }
+
+  function exportFinal(){
+    // remove a barra de edição, o input file e os botões "Trocar"
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.editbar, #filePicker, .attach.replace, script').forEach(el=>el.remove());
+    // remove os ph que ainda restarem (prints não anexados ficam como placeholder estático)
+    clone.querySelectorAll('.print-frame .attach').forEach(el=>el.remove());
+    const html = '<!doctype html>\n' + clone.outerHTML;
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dossie-maressa-final.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  updateExportState();
+</script>
 </body>
 </html>

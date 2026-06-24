@@ -82,8 +82,8 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-<!-- HERO -->
-<div style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%);position:relative;overflow:hidden">
+<!-- HERO (hidden when ?embed=1) -->
+<div id="exames-hero" style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%);position:relative;overflow:hidden">
   <div style="position:absolute;right:-40px;top:-40px;width:240px;height:240px;border-radius:50%;background:rgba(96,165,250,.08);pointer-events:none"></div>
   <div style="position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(96,165,250,.06);pointer-events:none"></div>
   <div class="max-w-6xl mx-auto px-6 py-10 relative">
@@ -1064,5 +1064,16 @@ window.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+<script>
+// Quando carregado dentro de iframe com ?embed=1, esconde o hero/cabeçalho
+(function(){
+  try {
+    if (new URLSearchParams(location.search).get('embed') === '1'){
+      var h = document.getElementById('exames-hero');
+      if (h) h.style.display = 'none';
+    }
+  } catch(e){}
+})();
+</script>
 </body>
 </html>

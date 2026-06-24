@@ -37,9 +37,23 @@ tailwind.config={theme:{extend:{
 .badge-conv{background:#dcfce7;color:#166534;}
 .badge-sub{background:#fef9c3;color:#854d0e;}
 .badge-part{background:#fee2e2;color:#991b1b;}
+.badge-cap{background:#ede9fe;color:#6d28d9;}
+.badge-capplus{background:#e0e7ff;color:#3730a3;}
+.badge-vamplia{background:#cffafe;color:#155e75;}
+.badge-vessencial{background:#fce7f3;color:#9d174d;}
 .badge-sim{background:#dcfce7;color:#166534;}
 .badge-nao{background:#fee2e2;color:#991b1b;}
 .badge-wpp{background:#dbeafe;color:#1e40af;}
+.filter-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid #d1d5db;background:#fff;font-size:.78rem;font-weight:500;color:#374151;cursor:pointer;transition:all .15s;border-radius:999px;font-family:inherit;}
+.filter-pill:hover{background:#f3f4f6;border-color:#9ca3af;}
+.filter-pill.active{background:#0a4dbe;color:#fff;border-color:#0a4dbe;}
+.filter-pill.active:hover{background:#0e3a78;}
+.filter-group{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px;}
+.filter-group-lbl{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#6b7280;margin-right:4px;min-width:90px;}
+.filter-clear{font-size:.7rem;color:#0a4dbe;background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;padding:4px 8px;}
+.filter-clear:hover{text-decoration:underline;}
+.company-bubble{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem;flex-shrink:0;letter-spacing:.5px;}
+.empty-state{padding:60px 20px;text-align:center;color:#6b7280;font-size:.9rem;grid-column:1/-1;}
 .highlight-box{background:#f0f6ff;border-left:3px solid #0a4dbe;padding:12px 16px;margin:12px 0;}
 .warn-box{background:#fffbeb;border-left:3px solid #f59e0b;padding:12px 16px;margin:12px 0;}
 .rule-box{background:#f8faff;border:1px solid #c7d8f5;border-radius:0;padding:16px;margin:12px 0;}
@@ -101,437 +115,72 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 <div id="content-area" style="display:none">
 <div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10 hidden">
 
+  <!-- Legenda (no topo) -->
+  <div class="mb-6 bg-white border border-gray-200 p-4">
+    <p class="text-xs font-mono uppercase text-gray-400 mb-3">Legenda — tipos de cobertura</p>
+    <div class="flex flex-wrap gap-3 text-xs">
+      <div class="flex items-center gap-2"><span class="badge-conv px-3 py-1 font-medium">Convênio</span><span class="text-gray-600">Faturado no convênio do membro</span></div>
+      <div class="flex items-center gap-2"><span class="badge-sub px-3 py-1 font-medium">Subsidiado</span><span class="text-gray-600">Subsidiado pela Vitta ou empresa</span></div>
+      <div class="flex items-center gap-2"><span class="badge-cap px-3 py-1 font-medium">Capitado</span><span class="text-gray-600">Coberto pelo capitado</span></div>
+      <div class="flex items-center gap-2"><span class="badge-capplus px-3 py-1 font-medium">Capitado Plus</span><span class="text-gray-600">Coberto pelo capitado plus</span></div>
+      <div class="flex items-center gap-2"><span class="badge-vamplia px-3 py-1 font-medium">Vitta Amplia</span><span class="text-gray-600">Plano Vitta Amplia</span></div>
+      <div class="flex items-center gap-2"><span class="badge-vessencial px-3 py-1 font-medium">Vitta Essencial</span><span class="text-gray-600">Plano Vitta Essencial</span></div>
+      <div class="flex items-center gap-2"><span class="badge-part px-3 py-1 font-medium">Particular</span><span class="text-gray-600">Membro paga à Vitta</span></div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="mb-5 bg-white border border-gray-200 p-4" id="elig-filters">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-mono uppercase text-gray-400">Filtros</p>
+      <button class="filter-clear" onclick="clearFilters()">Limpar filtros</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-lbl">Convênio</span>
+      <button class="filter-pill" data-f="conv" data-v="bradesco" onclick="toggleFilter(this)">Bradesco</button>
+      <button class="filter-pill" data-f="conv" data-v="amil" onclick="toggleFilter(this)">Amil</button>
+      <button class="filter-pill" data-f="conv" data-v="sulamerica" onclick="toggleFilter(this)">Sul América</button>
+      <button class="filter-pill" data-f="conv" data-v="unimed" onclick="toggleFilter(this)">Unimed</button>
+      <button class="filter-pill" data-f="conv" data-v="seguros-unimed" onclick="toggleFilter(this)">Seguros Unimed</button>
+      <button class="filter-pill" data-f="conv" data-v="cnu" onclick="toggleFilter(this)">CNU</button>
+      <button class="filter-pill" data-f="conv" data-v="porto" onclick="toggleFilter(this)">Porto Seguro</button>
+      <button class="filter-pill" data-f="conv" data-v="omint" onclick="toggleFilter(this)">Omint / Careplus</button>
+      <button class="filter-pill" data-f="conv" data-v="notredame" onclick="toggleFilter(this)">Notre Dame</button>
+      <button class="filter-pill" data-f="conv" data-v="lincx" onclick="toggleFilter(this)">Lincx</button>
+      <button class="filter-pill" data-f="conv" data-v="vittahd" onclick="toggleFilter(this)">Vitta HD</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-lbl">Modalidade</span>
+      <button class="filter-pill" data-f="mod" data-v="convenio" onclick="toggleFilter(this)">Convênio</button>
+      <button class="filter-pill" data-f="mod" data-v="subsidiado" onclick="toggleFilter(this)">Subsidiado</button>
+      <button class="filter-pill" data-f="mod" data-v="capitado" onclick="toggleFilter(this)">Capitado</button>
+      <button class="filter-pill" data-f="mod" data-v="capitado-plus" onclick="toggleFilter(this)">Capitado Plus</button>
+      <button class="filter-pill" data-f="mod" data-v="vamplia" onclick="toggleFilter(this)">Vitta Amplia</button>
+      <button class="filter-pill" data-f="mod" data-v="vessencial" onclick="toggleFilter(this)">Vitta Essencial</button>
+      <button class="filter-pill" data-f="mod" data-v="particular" onclick="toggleFilter(this)">Particular</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-lbl">Auto agendamento</span>
+      <button class="filter-pill" data-f="auto" data-v="sim" onclick="toggleFilter(this)">Com auto</button>
+      <button class="filter-pill" data-f="auto" data-v="nao" onclick="toggleFilter(this)">Sem auto</button>
+      <span class="filter-group-lbl" style="margin-left:14px">Exames</span>
+      <button class="filter-pill" data-f="exames" data-v="sim" onclick="toggleFilter(this)">Faz exames</button>
+      <button class="filter-pill" data-f="exames" data-v="nao" onclick="toggleFilter(this)">Sem exames</button>
+    </div>
+  </div>
+
   <!-- Busca -->
-  <div class="mb-8">
-    <input id="elig-search" oninput="filterCompanies()" type="text" placeholder="Buscar empresa..."
-      class="w-full md:w-80 border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+  <div class="mb-6 flex items-center justify-between gap-4 flex-wrap">
+    <input id="elig-search" oninput="applyFilters()" type="text" placeholder="Buscar empresa..."
+      class="flex-1 md:max-w-md border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-600 bg-white"/>
+    <p class="text-xs text-gray-500"><span id="elig-count">0</span> empresas exibidas</p>
   </div>
 
-  <!-- Cards -->
-  <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-
-    <!-- FOSNOR -->
-    <div class="company-card bg-white border border-gray-200" data-name="fosnor galvani fosfatados">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://galvanifertilizantes.com/wp-content/themes/wp-boilerplate/assets/images/logos/galvani.svg" alt="Galvani" class="w-11 h-11 object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#0a2d5e">FN</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">GALVANI (FOSNOR FOSFATADOS)</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Fee for Service</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco: Fee for Service</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- KOVI -->
-    <div class="company-card bg-white border border-gray-200" data-name="kovi cnu bradesco">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden border border-gray-100" style="background:#e85d04">
-          <img src="https://www.kovi.com.br/hubfs/Kovi-2024/Images/Logo%20branco%20-%20horizontal.svg" alt="KOVI" class="w-10 h-10 object-contain p-1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#e85d04">KV</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">KOVI</p>
-          <p class="text-xs text-gray-500">CNU / Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Híbrido (Fee for Service e Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4 space-y-5">
-          <div>
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">CNU + Bradesco Plano Efetivo</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 text-xs font-medium">Particular</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-wpp px-2 py-0.5 text-xs font-medium">Bradesco: Sim | CNU: via WhatsApp</span></div>
-            </div>
-          </div>
-          <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CDV -->
-    <div class="company-card bg-white border border-gray-200" data-name="cdv casa dos ventos bradesco">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/casadosventos.com.br" alt="Casa dos Ventos" data-fb="casadosventos.com.br" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#0891b2">CDV</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">CDV (CASA DOS VENTOS)</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Fee for Service</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LOPES -->
-    <div class="company-card bg-white border border-gray-200" data-name="lopes bradesco">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/lopes.com.br" alt="Lopes" data-fb="lopes.com.br" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#7c3aed">LP</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">LOPES</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Fee for Service</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convenio Bradesco</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FCL -->
-    <div class="company-card bg-white border border-gray-200" data-name="fundacao casper libero fcl bradesco capitado plus">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden border border-gray-100" style="background:#0d1b3e">
-          <img src="https://vitta-hd.github.io/acolhimento-vitta/Screenshot%20(33).png" alt="Casper Libero" class="w-11 h-11 object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#be123c">FCL</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">FUNDAÇÃO CASPER LIBERO</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Capitado Plus (Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Capitado Plus</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ESPM -->
-    <div class="company-card bg-white border border-gray-200" data-name="espm bradesco capitado plus">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/espm.br" alt="ESPM" data-fb="espm.br" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#0a4dbe">ESPM</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">ESPM</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Capitado Plus (Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Capitado Plus</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- INSPER -->
-    <div class="company-card bg-white border border-gray-200" data-name="insper bradesco fee for service">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/insper.edu.br" alt="Insper" data-fb="insper.edu.br" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#065f46">INS</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">INSPER</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Fee for Service</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Fee for Service</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MOSTEIRO -->
-    <div class="company-card bg-white border border-gray-200" data-name="mosteiro bradesco efetivo ideal fee for service">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://www.msg.org.br/images/logos/black.png" alt="Mosteiro" class="w-11 h-11 object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#78350f">MOS</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">MOSTEIRO SÃO GERALDO</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Híbrido (Fee for Service e Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4 space-y-5">
-          <div>
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Planos Efetivo e Ideal</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            </div>
-          </div>
-          <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WEWORK -->
-    <div class="company-card bg-white border border-gray-200" data-name="wework bradesco efetivo ideal fee for service">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/wework.com" alt="WeWork" data-fb="wework.com" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#1d4ed8">WW</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">WEWORK</p>
-          <p class="text-xs text-gray-500">Bradesco</p>
-          <p class="text-xs text-gray-400 mt-0.5">Híbrido (Fee for Service e Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4 space-y-5">
-          <div>
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco: Planos Efetivo e Ideal</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            </div>
-          </div>
-          <div class="border-t border-gray-100 pt-4">
-            <p class="text-xs font-mono uppercase text-gray-400 mb-3">Bradesco Demais Planos: Fee for Service</p>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 text-xs font-medium">Convênio</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-              <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BRITISH -->
-    <div class="company-card bg-white border border-gray-200" data-name="british vitta hd capitado plus">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/britishschool.com.br" alt="British School" data-fb="britishschool.com.br" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-lg" style="background:#166534">BR</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">BRITISH</p>
-          <p class="text-xs text-gray-500">Vitta HD</p>
-          <p class="text-xs text-gray-400 mt-0.5">Capitado Plus (Subsidiado)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4">
-          <p class="text-xs font-mono uppercase text-gray-400 mb-3">Convênio Vitta HD: Capitado Plus</p>
-          <div class="space-y-2">
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 text-xs font-medium">Subsidiado</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span></div>
-            <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TOTAL ENERGIES -->
-    <div class="company-card bg-white border border-gray-200" data-name="total energies totalenergies tembra nexta omint careplus bradesco unimed sul america">
-      <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
-        <div class="w-12 h-12 shrink-0 flex items-center justify-center rounded overflow-hidden bg-white border border-gray-100">
-          <img src="https://logo.clearbit.com/totalenergies.com" alt="TotalEnergies" data-fb="totalenergies.com" class="w-11 h-11 object-contain" onerror="logoErr(this)">
-          <span class="hidden w-12 h-12 items-center justify-center text-white font-bold text-sm" style="background:#dc2626">TE</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-900 text-sm">TOTALENERGIES</p>
-          <p class="text-xs text-gray-500">Omint · Bradesco · Unimed · Sul América</p>
-          <p class="text-xs text-gray-400 mt-0.5">Híbrido (Fee for Service, Subsidiado e Particular)</p>
-        </div>
-        <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <div class="expand-body border-t border-gray-100 px-5 pb-5">
-        <div class="mt-4 grid grid-cols-1 gap-3">
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">TOTALENERGIES EP BRASIL LTDA.</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Omint / Careplus</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">TEMBRA</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Bradesco</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">TE DIESEL COMERCIO E TRANSPORTES</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Unimed Araxá</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsídio Vitta</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Unimed Araxá</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Unimed Araxá</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Sul América</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Sul América (Vitta Amplia)</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-part px-2 py-0.5 font-medium">Particular</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-sub px-2 py-0.5 font-medium">Subsidiada</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-nao px-2 py-0.5 font-medium">Não</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 p-4">
-            <p class="text-xs font-semibold text-gray-700 mb-1">NEXTA DISTRIBUIDORA: Bradesco</p>
-            <p class="text-xs font-mono text-gray-400 mb-3">Bradesco</p>
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Consultas Médicas</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Psicologia</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Nutrição</span><span class="badge-conv px-2 py-0.5 font-medium">Convênio</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Exames</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-              <div class="flex justify-between text-xs"><span class="text-gray-600">Auto agendamento</span><span class="badge-sim px-2 py-0.5 font-medium">Sim</span></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /grid -->
-
-  <!-- Legenda -->
-  <div class="mt-10 bg-white border border-gray-200 p-6">
-    <p class="text-xs font-mono uppercase text-gray-400 mb-4">Legenda</p>
-    <div class="flex flex-wrap gap-4 text-sm">
-      <div class="flex items-center gap-2"><span class="badge-conv px-3 py-1 text-xs font-medium">Convênio</span><span class="text-gray-600">Consulta faturada no convênio do membro</span></div>
-      <div class="flex items-center gap-2"><span class="badge-sub px-3 py-1 text-xs font-medium">Subsidiado</span><span class="text-gray-600">Consulta subsidiada pela Vitta ou empresa</span></div>
-      <div class="flex items-center gap-2"><span class="badge-part px-3 py-1 text-xs font-medium">Particular</span><span class="text-gray-600">Membro paga diretamente à Vitta</span></div>
-    </div>
-  </div>
+  <!-- Cards (renderizados dinamicamente) -->
+  <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
 
 </div><!-- /tab-elig -->
+
 
 
 <!-- ═══════════════════════════════════════════════
@@ -1432,12 +1081,446 @@ function toggle(btn){
   chev.classList.toggle('open',!open);
 }
 
-function filterCompanies(){
-  var q=document.getElementById('elig-search').value.toLowerCase();
-  document.querySelectorAll('#companies-grid .company-card').forEach(function(c){
-    c.style.display=(c.dataset.name||'').includes(q)?'':'none';
-  });
+/* ============================================================
+   DADOS DE EMPRESAS ELEGÍVEIS · Vitta Hospital Digital
+============================================================ */
+const ELIG_COMPANIES = [
+  // ----- Existentes -----
+  { name:'GALVANI (FOSNOR FOSFATADOS)', ini:'FN', color:'#0a2d5e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco — Fee for Service', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'KOVI', ini:'KV', color:'#e85d04', conv:['bradesco','cnu'], convLabel:'CNU · Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'CNU + Bradesco Plano Efetivo', med:'subsidiado', nut:'subsidiado', psi:'particular', exames:'nao', auto:'sim' },
+      { label:'Bradesco Demais Planos — Fee for Service', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'CDV (CASA DOS VENTOS)', ini:'CDV', color:'#0891b2', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco — Fee for Service', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'LOPES', ini:'LP', color:'#7c3aed', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'FUNDAÇÃO CASPER LIBERO', ini:'FCL', color:'#be123c', conv:['bradesco'], convLabel:'Bradesco', tipo:'Capitado Plus',
+    plans:[{ label:'Bradesco — Capitado Plus', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'sim', auto:'sim' }] },
+  { name:'ESPM', ini:'ESP', color:'#0a4dbe', conv:['bradesco'], convLabel:'Bradesco', tipo:'Capitado Plus',
+    plans:[{ label:'Bradesco — Capitado Plus', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'INSPER', ini:'INS', color:'#065f46', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco — Fee for Service', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'MOSTEIRO SÃO GERALDO', ini:'MOS', color:'#78350f', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Efetivo e Ideal', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' },
+      { label:'Bradesco Nacional e Nacional Plus', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' },
+      { label:'Bradesco (demais)', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }
+    ] },
+  { name:'WEWORK', ini:'WW', color:'#1d4ed8', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Efetivo e Ideal', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' },
+      { label:'Bradesco Demais Planos — FFS', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'BRITISH', ini:'BR', color:'#166534', conv:['vittahd'], convLabel:'Vitta HD', tipo:'Capitado Plus',
+    plans:[{ label:'Vitta HD — Capitado Plus', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'TOTALENERGIES', ini:'TE', color:'#dc2626', conv:['omint','bradesco','unimed','sulamerica'], convLabel:'Omint · Bradesco · Unimed · Sul América', tipo:'Híbrido',
+    plans:[
+      { label:'TOTALENERGIES EP — Omint / Careplus', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' },
+      { label:'TEMBRA — Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' },
+      { label:'TE Diesel Comércio — Unimed Araxá', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Nexta Distribuidora — Unimed Araxá', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Nexta Distribuidora — Sul América (Vitta Amplia)', med:'vamplia', nut:'vamplia', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Nexta Distribuidora — Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+
+  // ----- Novas (do PDF) -----
+  { name:'PROATIVE SOLUÇÕES EM TECNOLOGIA', ini:'PR', color:'#0e3a78', conv:['amil'], convLabel:'Amil', tipo:'Subsidiado',
+    plans:[{ label:'Amil S380 eFacil S80', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'NATURAL ONE', ini:'NO', color:'#16a34a', conv:['sulamerica','unimed','bradesco'], convLabel:'Sul América · Unimed Jundiaí · Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Sul América e Unimed Jundiaí', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' },
+      { label:'Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'GWM BRASIL', ini:'GWM', color:'#0d1b3e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Efetivo e Ideal', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' },
+      { label:'Bradesco Nacional e Nacional Plus', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'SANTA COLOMBA AGROPECUÁRIA', ini:'SC', color:'#854d0e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Subsidiado',
+    plans:[{ label:'Bradesco Saúde Top Nacional Q CE copart A', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'DATARISK', ini:'DR', color:'#1a4f9e', conv:['amil'], convLabel:'Amil', tipo:'Subsidiado',
+    plans:[{ label:'Amil S750 QP Nac R-1.0 / One S2500 QP Nac R-2.0 (Copart PJ)', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'DOCK TECNOLOGIA', ini:'DK', color:'#0891b2', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'subsidiado', psi:'subsidiado', exames:'sim', auto:'sim' }] },
+  { name:'ORGANIZAÇÃO SETE DE SETEMBRO', ini:'7S', color:'#7c3aed', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'RECLAME AQUI', ini:'RA', color:'#16a34a', conv:['amil','bradesco'], convLabel:'Amil · Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Amil / Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'ANDRADE TREINAMENTO', ini:'AT', color:'#92400e', conv:['amil'], convLabel:'Amil', tipo:'Subsidiado',
+    plans:[{ label:'Amil', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'ECOTRACE TECNOLOGIA', ini:'ET', color:'#0a4dbe', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Saúde Efetivo IV Q CE', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' },
+      { label:'Bradesco Saúde Top Nacional Q CE A / Nacional Flex Q CE A', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }
+    ] },
+  { name:'FRESENIUS KABI BRASIL', ini:'FK', color:'#0a2d5e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Saúde Nacional Flex SPP E CE', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' },
+      { label:'Bradesco Top Nacional / Top Plus / Saúde Nacional Flex Q CE A', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }
+    ] },
+  { name:'INSTITUTO MAUÁ DE TECNOLOGIA (IMT)', ini:'IMT', color:'#be123c', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Efetivo e Ideal', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' },
+      { label:'Bradesco Nacional e Nacional Plus', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'GREAT WALL MOTOR BRASIL', ini:'GWB', color:'#dc2626', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Nacional', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' },
+      { label:'Bradesco Ideal', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }
+    ] },
+  { name:'LF SOLUÇÕES DE ENSINO (EDIFY)', ini:'LF', color:'#1d4ed8', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[
+      { label:'Bradesco Top Nacional Plus e Nacional 2', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' },
+      { label:'Bradesco Ideal e Efetivo', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }
+    ] },
+  { name:'MUSA TECNOLOGIA', ini:'MT', color:'#6d28d9', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco Ideal', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'ALTERDATA TECNOLOGIA', ini:'AD', color:'#3730a3', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'BVP ENGENHARIA E PROJETOS', ini:'BVP', color:'#0e3a78', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'JOBHOME', ini:'JH', color:'#16a34a', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil S350 / S60 / S80 / S75', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'NASAJON SISTEMAS', ini:'NJ', color:'#155e75', conv:['lincx'], convLabel:'Lincx', tipo:'Fee for Service',
+    plans:[{ label:'Lincx LT3/LT4 NAC · Blue 300/500/600 Plus NAC QP', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'EDEL & WHITE (SCANDERRA)', ini:'EW', color:'#9d174d', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'LW PARTNERS BRASIL', ini:'LW', color:'#1d4ed8', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'ESTANTE MÁGICA', ini:'EM', color:'#d97706', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'BMC', ini:'BMC', color:'#0a4dbe', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'DELOITTE', ini:'DT', color:'#065f46', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'ZOOX', ini:'ZX', color:'#7c3aed', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'CHS DO BRASIL', ini:'CHS', color:'#0891b2', conv:['omint'], convLabel:'Omint', tipo:'Capitado Plus',
+    plans:[{ label:'Omint — Capitado Plus', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'sim' }] },
+  { name:'4 BIO MEDICAMENTOS', ini:'4B', color:'#0e3a78', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'MINDSIGHT', ini:'MS', color:'#be123c', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'BANCO SICREDI', ini:'SD', color:'#16a34a', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado — Capitado Plus', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'sim' }] },
+  { name:'PIER SEGURADORA', ini:'PIE', color:'#1a4f9e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Nacional Plus e Nacional 2', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'DECATRON AUTOMAÇÃO', ini:'DC', color:'#525252', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'REDSPARK TECHNOLOGY', ini:'RS', color:'#dc2626', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'AUTOPASS', ini:'AP', color:'#854d0e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'LPS SÃO PAULO CONSULTORIA DE IMÓVEIS', ini:'LPS', color:'#7c3aed', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'subsidiado', psi:'subsidiado', exames:'sim', auto:'sim' }] },
+  { name:'TARGET SISTEMAS & TECNOLOGIA', ini:'TS', color:'#0a4dbe', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'ENGELMIG', ini:'EG', color:'#065f46', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'SUPORTEK TECNOLOGIA E TREINAMENTO', ini:'SP', color:'#1d4ed8', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil Blue 300 e 500 Nacional', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'OPENCADD ADVANCED TECHNOLOGY', ini:'OC', color:'#92400e', conv:['amil'], convLabel:'Amil', tipo:'Fee for Service',
+    plans:[{ label:'Amil', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' }] },
+  { name:'RAMPER DESENVOLVIMENTO DE SOFTWARE', ini:'RM', color:'#be123c', conv:['porto'], convLabel:'Porto Seguro', tipo:'Fee for Service',
+    plans:[{ label:'Porto Seguro', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'AGROBIOLÓGICA SOLUÇÕES NATURAIS', ini:'AG', color:'#16a34a', conv:['seguros-unimed'], convLabel:'Seguros Unimed', tipo:'Híbrido',
+    plans:[{ label:'Seguros Unimed', med:'subsidiado', nut:'particular', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'EVTEC SERVIÇOS', ini:'EV', color:'#0891b2', conv:['porto'], convLabel:'Porto Seguro', tipo:'Fee for Service',
+    plans:[{ label:'Porto Seguro', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'ESPRESSO CONTROLE DE DESPESAS', ini:'EC', color:'#0d1b3e', conv:['seguros-unimed'], convLabel:'Seguros Unimed', tipo:'Híbrido',
+    plans:[{ label:'Seguros Unimed', med:'subsidiado', nut:'particular', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'PRUMO ENGENHARIA', ini:'PE', color:'#3730a3', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'GW PNEUS & TRANSPORTADORA', ini:'GW', color:'#525252', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'EDITORA NOVA FRONTEIRA', ini:'NF', color:'#854d0e', conv:['amil'], convLabel:'Amil', tipo:'Subsidiado',
+    plans:[{ label:'Amil', med:'subsidiado', nut:'subsidiado', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'EDIOURO', ini:'ED', color:'#9d174d', conv:['amil'], convLabel:'Amil', tipo:'Capitado',
+    plans:[{ label:'Amil', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'JAMEF TRANSPORTES', ini:'JF', color:'#d97706', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'AGILETHOUGHT BRASIL (AGILE | MOTIVUS)', ini:'AG', color:'#0e3a78', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Top Nacional e DNQ2', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'SYNERGIA — CONSULTORIA URBANA E SOCIAL', ini:'SY', color:'#1a4f9e', conv:['seguros-unimed'], convLabel:'Seguros Unimed', tipo:'Híbrido',
+    plans:[{ label:'Seguros Unimed', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'TBB PUBLICIDADE', ini:'TBB', color:'#7c3aed', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Saúde Top Nacional Q CE A / Q CE copart B', med:'convenio', nut:'subsidiado', psi:'subsidiado', exames:'sim', auto:'sim' }] },
+  { name:'PLAN', ini:'PL', color:'#dc2626', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Saúde Nacional Flex Q CE copart B / Top Nacional Q CE copart A', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'GRUPO M3 (LEAN SOLUTION)', ini:'M3', color:'#0a2d5e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Saúde Top Nacional Q CE A', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'WWF', ini:'WWF', color:'#16a34a', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Top Nacional', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'VISAGIO', ini:'VS', color:'#0891b2', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco Saúde Top NPlus Q CE A / Top Nacional 2 Q CE copart B', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'DOX BRASIL', ini:'DX', color:'#92400e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco Saúde Top NPlus Q CE A / Top Nacional Q CE A', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'MEZA LOCAÇÃO E SERVIÇOS', ini:'MZ', color:'#525252', conv:['cnu','unimed'], convLabel:'CNU · Central Nacional Unimed', tipo:'Particular',
+    plans:[
+      { label:'CNU', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Central Nacional Unimed', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }
+    ] },
+  { name:'VANILDO CARLOS DOS SANTOS AÇOUGUE', ini:'VC', color:'#854d0e', conv:['cnu'], convLabel:'CNU', tipo:'Particular',
+    plans:[{ label:'CNU', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'NEXOOS', ini:'NX', color:'#1d4ed8', conv:['cnu'], convLabel:'CNU', tipo:'Particular',
+    plans:[{ label:'CNU', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'PROVU SERVIÇOS', ini:'PV', color:'#0e3a78', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'BUZZMONITOR TECNOLOGIA', ini:'BZ', color:'#7c3aed', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'BOMCONSÓRCIO', ini:'BC', color:'#dc2626', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'ZOOP TECNOLOGIA & INSTITUIÇÃO DE PAGAMENTO', ini:'ZP', color:'#155e75', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'GABRIEL LIBARDI COLOCERO (MEI)', ini:'GL', color:'#16a34a', conv:['unimed'], convLabel:'Central Nacional Unimed', tipo:'Particular',
+    plans:[{ label:'Central Nacional Unimed', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'APLLOS SOLUTIONS CONSULTORIA', ini:'AS', color:'#1a4f9e', conv:['sulamerica'], convLabel:'Sul América', tipo:'Híbrido',
+    plans:[
+      { label:'Sul América — Particular', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Subsídio Vitta', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }
+    ] },
+  { name:'LEC BRASIL GESTÃO COMERCIAL', ini:'LC', color:'#92400e', conv:['notredame'], convLabel:'Notre Dame', tipo:'Particular',
+    plans:[{ label:'Notre Dame', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'OBUC', ini:'OB', color:'#0a4dbe', conv:['amil'], convLabel:'Amil', tipo:'Subsidiado',
+    plans:[{ label:'Amil', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }] },
+  { name:'NEWAVE', ini:'NW', color:'#0891b2', conv:[], convLabel:'Sem convênio informado', tipo:'Híbrido',
+    plans:[{ label:'Sem convênio informado', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'NEOMODE', ini:'NM', color:'#7c3aed', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'ANCAR', ini:'AC', color:'#3730a3', conv:['capitado'], convLabel:'Capitado Plus', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'sim' }] },
+  { name:'EDN UTILIDADES DOMÉSTICAS', ini:'EDN', color:'#525252', conv:['capitado'], convLabel:'Capitado Plus', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'sim' }] },
+  { name:'SKEELO EDITORA', ini:'SK', color:'#16a34a', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'ESTOK COMÉRCIO (GRUPO TOKY)', ini:'TK', color:'#be123c', conv:['notredame','seguros-unimed'], convLabel:'Notre Dame · Seguros Unimed', tipo:'Híbrido',
+    plans:[
+      { label:'Notre Dame', med:'subsidiado', nut:'subsidiado', psi:'particular', exames:'nao', auto:'nao' },
+      { label:'Seguros Unimed', med:'convenio', nut:'particular', psi:'convenio', exames:'sim', auto:'sim' }
+    ] },
+  { name:'BLP DESENVOLVIMENTO DE SOFTWARE', ini:'BLP', color:'#0e3a78', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'ESMERALDA SERVIÇOS DIGITAIS', ini:'ES', color:'#065f46', conv:['bradesco'], convLabel:'Bradesco', tipo:'Híbrido',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'particular', psi:'particular', exames:'sim', auto:'sim' }] },
+  { name:'VAGAS TECNOLOGIA', ini:'VG', color:'#dc2626', conv:['porto'], convLabel:'Porto Seguro', tipo:'Fee for Service',
+    plans:[{ label:'Porto Seguro', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'REMOPT', ini:'RP', color:'#3730a3', conv:['capitado'], convLabel:'Capitado Plus', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'sim' }] },
+  { name:'PROZYN INDÚSTRIA E COMÉRCIO', ini:'PZ', color:'#854d0e', conv:['seguros-unimed'], convLabel:'Seguros Unimed', tipo:'Híbrido',
+    plans:[{ label:'Seguros Unimed', med:'convenio', nut:'particular', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'SANKHYA', ini:'SK', color:'#155e75', conv:[], convLabel:'Vitta Amplia', tipo:'Vitta Amplia',
+    plans:[{ label:'Vitta Amplia', med:'capitado-plus', nut:'capitado-plus', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'CTA ENGENHARIA', ini:'CTA', color:'#9d174d', conv:[], convLabel:'Vitta Essencial', tipo:'Vitta Essencial',
+    plans:[{ label:'Vitta Essencial', med:'capitado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'TB COMÉRCIO DE PRESENTES (TÂNIA BULHÕES)', ini:'TB', color:'#be123c', conv:[], convLabel:'FFS · Ideal', tipo:'Híbrido',
+    plans:[
+      { label:'FFS — Fee for Service', med:'convenio', nut:'convenio', psi:'convenio', exames:'nao', auto:'sim' },
+      { label:'Ideal', med:'subsidiado', nut:'subsidiado', psi:'subsidiado', exames:'nao', auto:'sim' }
+    ] },
+  { name:'SÃO JOSÉ AGRÍCOLA OPERACIONAL', ini:'SJ', color:'#92400e', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'BEST CENTER EMPREENDIMENTOS', ini:'BS', color:'#525252', conv:['sulamerica'], convLabel:'Sul América', tipo:'Particular',
+    plans:[{ label:'Sul América', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'BIZAPP TREINAMENTO', ini:'BZ', color:'#0891b2', conv:['sulamerica'], convLabel:'Sul América', tipo:'Híbrido',
+    plans:[{ label:'Sul América', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'nao' }] },
+  { name:'FOCUS CLÍNICA OFTALMOLÓGICA', ini:'FC', color:'#16a34a', conv:[], convLabel:'Subsídio Vitta', tipo:'Híbrido',
+    plans:[{ label:'Subsídio Vitta', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'REMEMBER GESTÃO HOSPITALAR', ini:'RH', color:'#1d4ed8', conv:[], convLabel:'Subsídio Vitta', tipo:'Híbrido',
+    plans:[{ label:'Subsídio Vitta', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'WEHANDLE CONSULTORIA EM INOVAÇÃO', ini:'WH', color:'#7c3aed', conv:[], convLabel:'Subsídio Vitta', tipo:'Híbrido',
+    plans:[{ label:'Subsídio Vitta', med:'subsidiado', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'RM FARMA (HIPER SAÚDE)', ini:'RMF', color:'#dc2626', conv:['capitado'], convLabel:'Capitado', tipo:'Capitado',
+    plans:[{ label:'Capitado', med:'capitado', nut:'capitado', psi:'particular', exames:'nao', auto:'sim' }] },
+  { name:'OBVIO BRASIL SOFTWARE', ini:'OBV', color:'#0a2d5e', conv:['bradesco'], convLabel:'Bradesco', tipo:'Fee for Service',
+    plans:[{ label:'Bradesco', med:'convenio', nut:'convenio', psi:'convenio', exames:'sim', auto:'sim' }] },
+  { name:'VG RESÍDUOS PLATAFORMA ONLINE', ini:'VG', color:'#854d0e', conv:[], convLabel:'Sem convênio informado', tipo:'Particular',
+    plans:[{ label:'Sem convênio informado', med:'particular', nut:'particular', psi:'particular', exames:'nao', auto:'sim' }] },
+  // ----- "Não tem auto agendamento" — todos Capitado Plus -----
+  { name:'NIKY BENEFÍCIOS E PAGAMENTOS', ini:'NK', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'ZEN TECNOLOGIA', ini:'ZN', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'LOGUBER GESTÃO EM TRANSPORTES', ini:'LG', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'NERUS SALES VENDAS', ini:'NS', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'BRAZICOM SISTEMAS E SERVIÇOS', ini:'BZC', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'BMR CONSTRUTORA E GERENCIADORA', ini:'BMR', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'CEPEL — COOP. TRABALHO EDUCACIONAL PONTES E LACERDA', ini:'CEP', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'LEAF PAY SOLUÇÕES ADMINISTRATIVAS', ini:'LP', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'APAS — ASSOC. PAULISTA DE SUPERMERCADOS', ini:'AP', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'COMSTAR VEÍCULOS', ini:'CS', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'ARTHENTINA BOLCACE (SEFIROT)', ini:'SF', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'PRO TIME CONSULTORIA E VENDA', ini:'PT', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] },
+  { name:'EXEMPLO EVENTOS CORPORATIVOS', ini:'EE', color:'#3730a3', conv:[], convLabel:'Capitado Plus · Sem auto', tipo:'Capitado Plus',
+    plans:[{ label:'Capitado Plus — sem auto agendamento', med:'capitado-plus', nut:'capitado-plus', psi:'capitado-plus', exames:'nao', auto:'nao' }] }
+];
+
+/* ============================================================
+   FILTRO E RENDERIZAÇÃO
+============================================================ */
+const ELIG_FILTERS = { conv:new Set(), mod:new Set(), auto:new Set(), exames:new Set() };
+
+const MOD_BADGE = {
+  'convenio':['badge-conv','Convênio'],
+  'subsidiado':['badge-sub','Subsidiado'],
+  'capitado':['badge-cap','Capitado'],
+  'capitado-plus':['badge-capplus','Capitado Plus'],
+  'vamplia':['badge-vamplia','Vitta Amplia'],
+  'vessencial':['badge-vessencial','Vitta Essencial'],
+  'particular':['badge-part','Particular']
+};
+function badgeHTML(modKey){
+  const [cls, lbl] = MOD_BADGE[modKey] || ['','—'];
+  return `<span class="${cls} px-2 py-0.5 text-xs font-medium">${lbl}</span>`;
 }
+function simNaoHTML(v){
+  return v==='sim'
+    ? `<span class="badge-sim px-2 py-0.5 text-xs font-medium">Sim</span>`
+    : `<span class="badge-nao px-2 py-0.5 text-xs font-medium">Não</span>`;
+}
+function escHTML(s){
+  return String(s||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function renderCompanyCard(c){
+  const aliases = (c.name+' '+(c.convLabel||'')+' '+(c.tipo||'')+' '+c.plans.map(p=>p.label).join(' ')).toLowerCase();
+  const modsSet = new Set();
+  let autoSim=false, autoNao=false, examesSim=false, examesNao=false;
+  c.plans.forEach(p=>{
+    ['med','nut','psi'].forEach(k=>modsSet.add(p[k]));
+    if (p.auto==='sim') autoSim=true; else autoNao=true;
+    if (p.exames==='sim') examesSim=true; else examesNao=true;
+  });
+  const autoAttr = [autoSim?'sim':null, autoNao?'nao':null].filter(Boolean).join(',');
+  const exAttr   = [examesSim?'sim':null, examesNao?'nao':null].filter(Boolean).join(',');
+  const modAttr  = [...modsSet].join(',');
+  const convAttr = (c.conv||[]).join(',');
+  const tipoLine = c.tipo ? `<p class="text-xs text-gray-400 mt-0.5">${escHTML(c.tipo)}</p>` : '';
+
+  const plansHTML = c.plans.map(p=>{
+    const head = c.plans.length>1
+      ? `<p class="text-xs font-semibold text-gray-700 mb-1">${escHTML(p.label)}</p><div class="space-y-1.5">`
+      : `<p class="text-xs font-mono uppercase text-gray-400 mb-3">${escHTML(p.label)}</p><div class="space-y-2">`;
+    const rows = `
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Consultas Médicas</span>${badgeHTML(p.med)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Psicologia</span>${badgeHTML(p.psi)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Nutrição</span>${badgeHTML(p.nut)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Exames</span>${simNaoHTML(p.exames)}</div>
+        <div class="flex justify-between items-center text-sm"><span class="text-gray-600">Auto agendamento</span>${simNaoHTML(p.auto)}</div>`;
+    const wrapped = c.plans.length>1
+      ? `<div class="bg-gray-50 p-4">${head}${rows}</div></div>`
+      : `<div>${head}${rows}</div></div>`;
+    return wrapped;
+  }).join('');
+
+  const expandedInner = c.plans.length>1
+    ? `<div class="mt-4 grid grid-cols-1 gap-3">${plansHTML}</div>`
+    : `<div class="mt-4">${plansHTML}</div>`;
+
+  return `<div class="company-card bg-white border border-gray-200"
+       data-name="${escHTML(aliases)}"
+       data-conv="${convAttr}"
+       data-mod="${modAttr}"
+       data-auto="${autoAttr}"
+       data-exames="${exAttr}">
+    <button onclick="toggle(this)" class="w-full text-left p-5 flex items-center gap-4">
+      <div class="company-bubble" style="background:${c.color}">${escHTML(c.ini)}</div>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-gray-900 text-sm">${escHTML(c.name)}</p>
+        <p class="text-xs text-gray-500">${escHTML(c.convLabel||'')}</p>
+        ${tipoLine}
+      </div>
+      <svg class="chevron w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+    <div class="expand-body border-t border-gray-100 px-5 pb-5">${expandedInner}</div>
+  </div>`;
+}
+
+function renderCompanies(){
+  const grid = document.getElementById('companies-grid');
+  if (!grid) return;
+  grid.innerHTML = ELIG_COMPANIES
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'))
+    .map(renderCompanyCard)
+    .join('');
+  applyFilters();
+}
+
+function toggleFilter(btn){
+  const f = btn.dataset.f, v = btn.dataset.v;
+  if (ELIG_FILTERS[f].has(v)){
+    ELIG_FILTERS[f].delete(v);
+    btn.classList.remove('active');
+  } else {
+    ELIG_FILTERS[f].add(v);
+    btn.classList.add('active');
+  }
+  applyFilters();
+}
+
+function clearFilters(){
+  ['conv','mod','auto','exames'].forEach(k=>ELIG_FILTERS[k].clear());
+  document.querySelectorAll('#elig-filters .filter-pill.active').forEach(b=>b.classList.remove('active'));
+  const s = document.getElementById('elig-search');
+  if (s) s.value = '';
+  applyFilters();
+}
+
+function applyFilters(){
+  const q = (document.getElementById('elig-search')?.value||'').toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll('#companies-grid .company-card').forEach(c=>{
+    const matchQ = !q || (c.dataset.name||'').includes(q);
+    const cardConv = (c.dataset.conv||'').split(',').filter(Boolean);
+    const cardMod  = (c.dataset.mod||'').split(',').filter(Boolean);
+    const cardAuto = (c.dataset.auto||'').split(',').filter(Boolean);
+    const cardEx   = (c.dataset.exames||'').split(',').filter(Boolean);
+    const matchSet = (set, vals) => set.size===0 || vals.some(v=>set.has(v));
+    const show = matchQ
+      && matchSet(ELIG_FILTERS.conv, cardConv)
+      && matchSet(ELIG_FILTERS.mod, cardMod)
+      && matchSet(ELIG_FILTERS.auto, cardAuto)
+      && matchSet(ELIG_FILTERS.exames, cardEx);
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const counter = document.getElementById('elig-count');
+  if (counter) counter.textContent = visible;
+  let empty = document.getElementById('elig-empty');
+  const grid = document.getElementById('companies-grid');
+  if (visible===0){
+    if (!empty && grid){
+      empty = document.createElement('div');
+      empty.id = 'elig-empty';
+      empty.className = 'empty-state';
+      empty.innerHTML = '🔍 Nenhuma empresa corresponde aos filtros selecionados. <button onclick="clearFilters()" class="filter-clear" style="margin-left:6px">Limpar filtros</button>';
+      grid.appendChild(empty);
+    }
+  } else if (empty){
+    empty.remove();
+  }
+}
+
+// Render on load
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', renderCompanies);
+} else {
+  renderCompanies();
+}
+
 
 function openSection(id){
   document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});

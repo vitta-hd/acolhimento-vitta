@@ -58,6 +58,13 @@
   }
   .print-frame img{max-width:100%;max-height:520px;border-radius:8px;box-shadow:0 6px 22px rgba(7,31,66,.12)}
   .print-frame .cap{display:block;font-size:11.5px;color:var(--muted);margin-top:8px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .ph{
+    padding:46px 22px;background:#f3f4f6;color:#6b7280;border:2px dashed #c7d2e6;border-radius:8px;
+    font-size:13px;line-height:1.55
+  }
+  .ph b{display:block;font-size:14px;color:#374151;margin-bottom:6px}
+  .ph code{background:#fff;border:1px solid #e5e7eb;padding:2px 8px;border-radius:6px;font-size:12.5px;color:#1d4ed8;font-family:'IBM Plex Sans',monospace}
+  .ph small{display:block;color:#9ca3af;margin-top:8px;font-size:11.5px}
   .print-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
   @media(max-width:680px){.print-row{grid-template-columns:1fr}}
   .print-row .print-frame{margin:0}
@@ -146,26 +153,26 @@
     </div>
     <div class="it">
       <div class="lbl">Status final</div>
-      <div class="val" style="color:#15803d">Em tratativa via WhatsApp</div>
+      <div class="val" style="color:#15803d">Finalizado</div>
     </div>
   </div>
 
   <!-- 1. Primeira consulta -->
   <section>
-    <h2><span class="num">1</span> Primeira consulta — Dra. Sara Ravena <span class="tag tag-fail" style="margin-left:6px">Falha técnica Vitta</span></h2>
+    <h2><span class="num">1</span> Primeira consulta — Dra. Sara Ravena <span class="tag tag-fail" style="margin-left:6px">Falha na teleconsulta</span></h2>
     <div class="when">12/06/2026 · 16:50</div>
     <p>Membro tinha consulta agendada com a <b>Dra. Sara Ravena</b>. Ao tentar acessar a teleconsulta pelo app, recebeu o erro <i>"Os dados da sua teleconsulta ainda não estão disponíveis. Por favor, fale com a equipe de saúde."</i></p>
     <div class="print-frame">
-      <img src="prints/print1.png" alt="Erro 'Os dados da sua teleconsulta ainda não estão disponíveis' no app Vitta" />
+      <img src="prints/print1.png" alt="Erro 'Os dados da sua teleconsulta ainda não estão disponíveis' no app Vitta" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print1.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
       <span class="cap">Print 1 · Erro no app no momento da consulta (12/06 · 16:52)</span>
     </div>
     <p>A membro acionou o WhatsApp <b>às 16:52</b>, dois minutos depois do horário da consulta. Devido à fila de atendimento, a primeira resposta da equipe só ocorreu <b>às 17:02</b> (10 minutos depois). A analista reenviou o link, porém o aparelho da membro <b>não estava liberando microfone</b>, e até a permissão ser ajustada o tempo de tolerância já havia se esgotado — não foi possível gerar um Meet alternativo a tempo.</p>
     <div class="print-frame">
-      <img src="prints/print2.png" alt="Conversa de WhatsApp com a membro, incluindo a tela de permissão de câmera e microfone" />
+      <img src="prints/print2.png" alt="Conversa de WhatsApp com a membro, incluindo a tela de permissão de câmera e microfone" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print2.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
       <span class="cap">Print 2 · Conversa via WhatsApp e tela de permissão de câmera/microfone (12/06 · 17:13)</span>
     </div>
     <div class="callout bad">
-      <b>Causa raiz desta primeira falta:</b> erro do app no momento da consulta + tempo de resposta acima do ideal. O membro tentou seguir o fluxo correto, mas a tecnologia não permitiu. <b>A consulta foi marcada como "falta", mesmo a falha sendo nossa.</b>
+      <b>Causa raiz desta primeira falta:</b> erro do app no momento da consulta + tempo de resposta acima do ideal. O membro tentou seguir o fluxo correto, mas a tecnologia não permitiu.
     </div>
     <p><b>Encaminhamento:</b> consulta reagendada para o dia 16/06. Feedback foi repassado à analista Bruna sobre a janela de resposta e a importância de gerar o Meet alternativo no primeiro contato em casos de erro do app.</p>
   </section>
@@ -177,11 +184,11 @@
     <p>Por já conhecermos a falha do atendimento anterior, a equipe ficou atenta a esta consulta. No horário marcado a membro <b>não acessou</b> o app. A equipe partiu para o protocolo de contingência: <b>ligação, mensagem e envio de link Meet alternativo</b> — sem sucesso, a membro não acessou nenhum dos canais.</p>
     <div class="print-row">
       <div class="print-frame">
-        <img src="prints/print3.png" alt="Tela 'Aguarde um momento' do app de teleconsulta com o Dr. Victor Alves" />
+        <img src="prints/print3.png" alt="Tela 'Aguarde um momento' do app de teleconsulta com o Dr. Victor Alves" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print3.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
         <span class="cap">Print 3 · Tela de espera da consulta com Dr. Victor (16/06 · 07:50)</span>
       </div>
       <div class="print-frame">
-        <img src="prints/print4.png" alt="Registros de disparos ativos de mensagem para a membro no Vision" />
+        <img src="prints/print4.png" alt="Registros de disparos ativos de mensagem para a membro no Vision" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print4.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
         <span class="cap">Print 4 · Disparos ativos feitos pela equipe no Vision (16/06 · 07:48 e 07:53)</span>
       </div>
     </div>
@@ -191,7 +198,7 @@
       <li>No dia 16/06 não houve retorno da membro nos contatos ativos feitos pela equipe (ligação, WhatsApp e Meet alternativo).</li>
     </ul>
     <div class="print-frame">
-      <img src="prints/print5.png" alt="Tela do Google Meet 'Pedindo para participar' mostrando o acesso da membro às 07:50" />
+      <img src="prints/print5.png" alt="Tela do Google Meet 'Pedindo para participar' mostrando o acesso da membro às 07:50" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print5.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
       <span class="cap">Print 5 · Acesso da membro ao Meet alternativo registrado às 07:50 (10 minutos após o horário marcado)</span>
     </div>
     <div class="callout warn">
@@ -201,19 +208,19 @@
 
   <!-- 3. Reclamação formal -->
   <section>
-    <h2><span class="num">3</span> Reclamação formal — SAC + Ouvidoria <span class="tag tag-fail" style="margin-left:6px">Bloqueio de 30 dias</span></h2>
+    <h2><span class="num">3</span> Reclamação formal — SAC + Ouvidoria</h2>
     <div class="when">17/06/2026 · 11:05</div>
     <p>Após receber a notificação de <b>bloqueio do app por 30 dias</b> (regra automática de duas faltas seguidas), a membro registrou reclamação formal no SAC e na Ouvidoria, pelo email cadastrado.</p>
     <p>O ponto central da reclamação: <b>"a primeira falta foi por falha da Vitta"</b> e <b>"a segunda também teve atraso por parte do membro"</b>, portanto considera o bloqueio indevido.</p>
     <div class="print-frame">
-      <img src="prints/print6.png" alt="E-mail de reclamação enviado para sac@vitta.me e ouvidoria.vittasaude@vitta.me" />
+      <img src="prints/print6.png" alt="E-mail de reclamação enviado para sac@vitta.me e ouvidoria.vittasaude@vitta.me" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print6.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
       <span class="cap">Print 6 · E-mail de reclamação enviado para SAC e Ouvidoria (17/06 · 11:05)</span>
     </div>
   </section>
 
   <!-- 4. Regra de produto -->
   <section>
-    <h2><span class="num">4</span> Regra de produto aplicável <span class="tag tag-info" style="margin-left:6px">Limitadores · Vision</span></h2>
+    <h2>Regra de produto aplicável <span class="tag tag-info" style="margin-left:6px">Limitadores · app</span></h2>
     <div class="when">Definição vigente (papo reunião 31/03 · Dressa, Jes e Jaq)</div>
     <p>A regra que impactou esta membro é a <b>Regra 5 — Punição por falta (no-show)</b>, já documentada e levantada como ponto de atenção em discussões anteriores entre Atendimento e Produto:</p>
     <ul class="bullets">
@@ -222,7 +229,7 @@
       <li><b>Impacto:</b> ao registrar a <b>segunda falta</b>, o membro fica bloqueado por <b>30 dias corridos</b>, incluindo plantão médico.</li>
     </ul>
     <div class="print-frame">
-      <img src="prints/print7.png" alt="Documento 'Regras e Limitadores' mostrando a Regra 5 - Punição por falta (no-show)" />
+      <img src="prints/print7.png" alt="Documento 'Regras e Limitadores' mostrando a Regra 5 - Punição por falta (no-show)" onerror="this.outerHTML='&lt;div class=ph&gt;&lt;b&gt;📷 Imagem ausente&lt;/b&gt;&lt;code&gt;prints/print7.png&lt;/code&gt;&lt;small&gt;Salve o screenshot com este nome na pasta &lt;code&gt;prints/&lt;/code&gt; ao lado deste arquivo&lt;/small&gt;&lt;/div&gt;'" />
       <span class="cap">Print 7 · Documento "Regras e Limitadores" — Regra 5 (No-show)</span>
     </div>
     <div class="callout">
@@ -230,20 +237,9 @@
     </div>
   </section>
 
-  <!-- 5. Pontos de oportunidade -->
+  <!-- 5. Resposta enviada -->
   <section>
-    <h2><span class="num">5</span> Pontos de oportunidade identificados</h2>
-    <ul class="bullets">
-      <li><b>Geração imediata do Meet em casos de erro do app:</b> no primeiro contato (12/06), a analista deveria ter gerado o link Meet imediatamente para preservar a consulta — e só depois investigar o problema no app. A inversão dessa ordem fez o tempo de tolerância expirar.</li>
-      <li><b>Tempo de resposta no momento da consulta:</b> 10 minutos entre o acionamento da membro e a primeira resposta da equipe é tempo demais para um cenário onde a consulta já está em andamento. Reforço com a analista Bruna realizado.</li>
-      <li><b>Regra de no-show indiferente ao motivo:</b> hoje, o sistema não diferencia uma falta por <b>falha técnica nossa</b> de uma falta por <b>atraso do membro</b>. As duas contam igual e somam para o bloqueio. Esse ponto já havia sido levantado em discussões anteriores com Produto e segue como dor recorrente.</li>
-      <li><b>Sem mecanismo de "perdão" para a primeira falta nossa:</b> mesmo quando reconhecemos a falha, a marcação como "falta" permanece no sistema — o que cria o gatilho para o bloqueio em uma eventual segunda ocorrência.</li>
-    </ul>
-  </section>
-
-  <!-- 6. Resposta enviada -->
-  <section>
-    <h2><span class="num">6</span> Resposta enviada à membro <span class="tag tag-ok" style="margin-left:6px">Por Renan Machado</span></h2>
+    <h2><span class="num">5</span> Resposta enviada à membro <span class="tag tag-ok" style="margin-left:6px">Por Renan Machado</span></h2>
     <div class="when">17/06/2026 · após escalonamento ao SAC e à liderança</div>
     <p>Após a reclamação, o analista Renan, em conjunto com a liderança, repassou à membro a orientação vigente de produto — com cautela e contexto, deixando claro que o bloqueio do app não a deixaria sem atendimento.</p>
 
@@ -277,16 +273,16 @@
     </div>
   </section>
 
-  <!-- Final -->
-  <div class="final">
-    <h3>Encaminhamento final</h3>
-    <ul>
-      <li><b>Bloqueio mantido</b> conforme regra vigente de produto, sem desbloqueio manual.</li>
-      <li><b>Atendimento garantido pelo WhatsApp</b> durante os 30 dias do bloqueio — membro não fica sem cobertura.</li>
-      <li>Caso reforça a <b>necessidade de revisitar a Regra 5</b> de no-show com Produto, criando diferenciação entre falta por falha Vitta e falta por atraso do membro.</li>
-      <li>Feedbacks individuais já passados à analista envolvida no primeiro atendimento.</li>
-    </ul>
-  </div>
+  <!-- 6. Desfecho -->
+  <section>
+    <h2><span class="num">6</span> Desfecho — escalonamento e correção sistêmica <span class="tag tag-ok" style="margin-left:6px">Resolvido</span></h2>
+    <p>Após o retorno do Renan, o caso foi escalado para a <b>Claudia</b>, que envolveu os times de <b>Produto</b> e <b>Tecnologia</b> para que fosse criada uma alternativa de <b>desbloqueio no app</b> para esse tipo de cenário.</p>
+    <p>Em caráter de exceção, o time de Tecnologia adotou uma medida paliativa para resolver o caso da Maressa: <b>alterou o status de uma das consultas para "Atendido"</b>, o que <b>liberou o app</b> para uso normal da membro.</p>
+    <p>Em seguida foi feito <b>contato telefônico com a Maressa</b> para informar sobre a liberação do app e o retorno do acesso.</p>
+    <div class="callout">
+      <b>Solução estrutural:</b> a partir desse caso, o time de Tecnologia construiu o status <b>"Agendado 2"</b> no CW. Ele deve ser usado para os casos de <b>falha na teleconsulta</b> registrados pelo time no CW — esses casos seguem sendo considerados no-show, porém <b>o membro não é penalizado pela falta</b>.
+    </div>
+  </section>
 
   <footer>
     Documento interno · Vitta Hospital Digital · gerado em 24/06/2026 para alinhamento entre Atendimento, SAC, Ouvidoria e Produto.

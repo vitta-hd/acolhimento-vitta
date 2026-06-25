@@ -261,26 +261,21 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 ═══════════════════════════════════════════════ -->
 <div id="welcome-area" style="flex:1;display:none">
   <div class="max-w-6xl mx-auto px-6" style="padding-top:14px;padding-bottom:14px">
-    <!-- Banner hero -->
-    <div style="background:linear-gradient(135deg,#0e3a78 0%,#1a4f9e 50%,#1d4ed8 100%);border-radius:14px;padding:18px 22px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;box-shadow:0 8px 22px rgba(7,31,66,.16)">
-      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.10;pointer-events:none">
-        <svg width="220" height="220" viewBox="0 0 200 200" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 50 Q60 100 100 60 Q140 100 180 50 L100 160 Z"/>
-        </svg>
-      </div>
-      <div style="flex:1;min-width:240px;position:relative;z-index:2">
-        <h2 style="font-size:1.2rem;font-weight:800;line-height:1.25;margin:0 0 4px">Saúde sem sair de casa, do seu jeito.</h2>
-        <p style="font-size:.78rem;color:#dde6f5;line-height:1.5;max-width:520px;margin:0">Atendimento médico digital com tecnologia própria, agenda flexível e cobertura 24/7 para você e sua família.</p>
-      </div>
-      <div style="position:relative;z-index:2;flex-shrink:0">
-        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:18px;width:90px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
-          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:22px">👨‍⚕️</div>
-          <div style="display:flex;gap:6px;margin-top:8px">
-            <div style="width:18px;height:18px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:9px">📞</div>
-            <div style="width:18px;height:18px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;transform:rotate(135deg)">📞</div>
-            <div style="width:18px;height:18px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:9px">🎥</div>
-          </div>
+    <!-- Banner hero (imagem oficial Vitta com texto sobreposto) -->
+    <div style="position:relative;border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(7,31,66,.16);background:#0e3a78">
+      <img src="https://www.vitta.com.br/wp-content/uploads/2026/02/s01-hd-1536x376.jpg"
+           alt="Hospital Digital Vitta — atendimento médico digital"
+           style="display:block;width:100%;height:auto;max-height:260px;object-fit:cover"
+           onerror="this.style.display='none';this.parentElement.querySelector('.hero-fallback').style.display='flex'"/>
+      <!-- Texto sobreposto à imagem -->
+      <div style="position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;padding:18px 28px;background:linear-gradient(90deg,rgba(7,31,66,.78) 0%,rgba(7,31,66,.45) 55%,rgba(7,31,66,0) 80%);max-width:62%">
+        <div style="color:#fff">
+          <h2 style="font-size:1.6rem;font-weight:800;line-height:1.15;margin:0 0 4px;text-shadow:0 2px 8px rgba(0,0,0,.4)">Saúde sem sair de casa,<br/>do seu jeito.</h2>
         </div>
+      </div>
+      <!-- Fallback caso a imagem não carregue -->
+      <div class="hero-fallback" style="display:none;background:linear-gradient(135deg,#0e3a78 0%,#1a4f9e 50%,#1d4ed8 100%);color:#fff;padding:24px;align-items:center;justify-content:center;min-height:160px;text-align:center">
+        <h2 style="font-size:1.4rem;font-weight:800;margin:0">Saúde sem sair de casa,<br/>do seu jeito.</h2>
       </div>
     </div>
 
@@ -320,6 +315,10 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
   #welcome-area .welcome-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
   @media (max-width:980px){#welcome-area .welcome-cards{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:540px){#welcome-area .welcome-cards{grid-template-columns:1fr}}
+  #welcome-area .hero-fallback{box-sizing:border-box}
+  @media (max-width:640px){
+    #welcome-area h2{font-size:1.1rem!important}
+  }
 </style>
 
 <div id="content-area" style="display:none;flex:1">

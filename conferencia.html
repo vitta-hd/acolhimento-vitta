@@ -75,6 +75,33 @@
   footer{text-align:center;color:var(--muted);font-size:.72rem;padding:20px 0 6px}
   body.embed .hero{display:none}
   body.embed .wrap{padding-top:14px}
+  /* Looker shortcut links */
+  .looker-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  @media(max-width:760px){.looker-links{grid-template-columns:1fr}}
+  .looker-link{display:flex;align-items:center;gap:12px;background:#0e3a78;color:#fff;text-decoration:none;border-radius:10px;padding:10px 14px;font-size:.82rem;transition:all .15s;box-shadow:0 2px 8px rgba(7,31,66,.12)}
+  .looker-link:hover{background:#1a4f9e;transform:translateY(-1px);box-shadow:0 4px 12px rgba(7,31,66,.2)}
+  .looker-link .lk-ico{font-size:1.1rem;flex-shrink:0}
+  .looker-link b{display:block;font-size:.85rem;font-weight:700}
+  .looker-link .lk-sub{display:block;font-size:.7rem;color:#bfdbfe;margin-top:1px}
+  .looker-link .lk-arrow{margin-left:auto;font-size:1.2rem;opacity:.85}
+  /* Botão excluir linha */
+  .del-row{background:transparent;border:0;cursor:pointer;color:#9ca3af;font-size:1rem;padding:2px 6px;border-radius:4px;line-height:1;font-family:inherit}
+  .del-row:hover{background:#fee2e2;color:#dc2626}
+  /* Botão snapshot */
+  .toolbar .btn.snap{background:#15803d;color:#fff;border:0}
+  .toolbar .btn.snap:hover{background:#166534}
+  .toolbar .btn.print{background:#0e3a78;color:#fff;border:0}
+  .toolbar .btn.print:hover{background:#1a4f9e}
+  /* Print rules - so PDF export looks clean */
+  @media print{
+    .hero,.looker-links,.uploads,.toolbar,.tabs,.summary{display:none!important}
+    body{background:#fff}
+    .pane{display:block!important;page-break-after:always}
+    .pane:last-child{page-break-after:auto}
+    .tbl-wrap{box-shadow:none;border:1px solid #ddd}
+    .pane::before{content:attr(data-print-title);display:block;font-size:1rem;font-weight:700;color:#0a2d5e;margin:18px 0 8px;padding-top:12px;border-top:2px solid #0e3a78}
+    .del-row{display:none!important}
+  }
 </style>
 </head>
 <body>
@@ -89,18 +116,38 @@
     <div class="date" id="last-update">Dados pré-carregados · 26/06/2026</div>
   </div>
 
+  <!-- Atalhos para exportar relatórios no Looker -->
+  <div class="looker-links">
+    <a class="looker-link" href="https://vittame.sa.looker.com/explore/vitta360/agendamento?qid=GFE7brrcLJZoIcggNThlJA&toggle=fil,vis" target="_blank" rel="noopener">
+      <span class="lk-ico">📊</span>
+      <span>
+        <b>Relatório de agendamentos · CW</b>
+        <span class="lk-sub">abrir no Looker → exportar HTML → carregar aqui ao lado</span>
+      </span>
+      <span class="lk-arrow">↗</span>
+    </a>
+    <a class="looker-link" href="https://vittame.sa.looker.com/explore/gestao_equipe_saude/gestao_de_equipe_de_saude?qid=boJcd3twbzRdLbdDU2tUd4&toggle=vis" target="_blank" rel="noopener">
+      <span class="lk-ico">📈</span>
+      <span>
+        <b>Relatório de agendamentos · Vision</b>
+        <span class="lk-sub">abrir no Looker → exportar HTML → carregar aqui ao lado</span>
+      </span>
+      <span class="lk-arrow">↗</span>
+    </a>
+  </div>
+
   <div class="uploads">
     <div class="upload" id="drop-cw" onclick="document.getElementById('input-cw').click()">
       <p class="ttl">📊 CW · Vitta360</p>
-      <p class="nm">Carregar nova exportação (CSV)</p>
+      <p class="nm">Carregar nova exportação (CSV ou HTML)</p>
       <p class="desc">Colunas esperadas: Data Evento · Nome do Paciente · Profissional · Especialidade · Status</p>
       <p class="file-info" id="info-cw">✓ Dados pré-carregados (149 agendamentos)</p>
-      <input type="file" id="input-cw" accept=".csv,text/csv" style="display:none" onchange="loadCW(this.files[0])"/>
+      <input type="file" id="input-cw" accept=".csv,.html,.htm,text/csv,text/html" style="display:none" onchange="loadCW(this.files[0])"/>
     </div>
     <div class="upload" id="drop-vs" onclick="document.getElementById('input-vs').click()">
       <p class="ttl">📈 Vision · Looker</p>
       <p class="nm">Carregar nova exportação (HTML)</p>
-      <p class="desc">Colunas esperadas: Nome · Profissional · Data · Vida CPF · Status</p>
+      <p class="desc">Colunas esperadas: Nome · Profissional · Data · Status</p>
       <p class="file-info" id="info-vs">✓ Dados pré-carregados (183 agendamentos)</p>
       <input type="file" id="input-vs" accept=".html,.htm,text/html" style="display:none" onchange="loadVision(this.files[0])"/>
     </div>
@@ -123,12 +170,14 @@
     <div class="search"><span>🔍</span><input type="search" id="search" placeholder="Buscar paciente ou profissional..." oninput="render()"/></div>
     <select class="filter" id="filter-prof" onchange="render()"><option value="">Todos os profissionais</option></select>
     <select class="filter" id="filter-status" onchange="render()"><option value="">Todos os status</option></select>
-    <button class="btn ghost" onclick="exportCSV()">⬇️ Exportar CSV</button>
+    <button class="btn ghost" onclick="exportCSV()">⬇️ CSV</button>
+    <button class="btn snap" onclick="exportSnapshotHTML()" title="Salva uma versão HTML da conferência atual (com suas edições)">💾 Salvar HTML revisado</button>
+    <button class="btn print" onclick="window.print()" title="Imprime ou salva como PDF pelo navegador">🖨️ Imprimir / PDF</button>
   </div>
 
-  <div class="pane active" id="pane-both"><div class="tbl-wrap"><table class="data" id="tbl-both"></table></div></div>
-  <div class="pane" id="pane-only-v"><div class="tbl-wrap"><table class="data" id="tbl-only-v"></table></div></div>
-  <div class="pane" id="pane-only-cw"><div class="tbl-wrap"><table class="data" id="tbl-only-cw"></table></div></div>
+  <div class="pane active" id="pane-both" data-print-title="✅ Em ambos os sistemas"><div class="tbl-wrap"><table class="data" id="tbl-both"></table></div></div>
+  <div class="pane" id="pane-only-v" data-print-title="🟡 Só no Vision"><div class="tbl-wrap"><table class="data" id="tbl-only-v"></table></div></div>
+  <div class="pane" id="pane-only-cw" data-print-title="🔵 Só no CW"><div class="tbl-wrap"><table class="data" id="tbl-only-cw"></table></div></div>
 
   <footer>Conferência interna · Vitta Hospital Digital</footer>
 </div>
@@ -215,6 +264,8 @@ function render(){
   else renderOnlyCW(q, fp, fs);
 }
 
+const delBtn = (src, key) => `<button class="del-row" title="Excluir esta linha" onclick="removeRow('${src}','${key.replace(/'/g,"\\'")}')">🗑️</button>`;
+
 function renderBoth(q, fp, fs){
   const rows = RESULT.both.filter(r=>{
     if (q && !(N(r.paciente).includes(q) || N(r.profissional).includes(q))) return false;
@@ -225,7 +276,7 @@ function renderBoth(q, fp, fs){
   const tbl = document.getElementById('tbl-both');
   if (!rows.length){ tbl.innerHTML = `<tbody><tr><td class="empty">Nenhum agendamento corresponde aos filtros.</td></tr></tbody>`; return; }
   tbl.innerHTML = `<thead><tr>
-    <th>Data</th><th>Paciente</th><th>Profissional</th><th>Especialidade</th><th>Status CW</th><th>Status Vision</th>
+    <th>Data</th><th>Paciente</th><th>Profissional</th><th>Especialidade</th><th>Status CW</th><th>Status Vision</th><th></th>
   </tr></thead><tbody>${rows.map(r=>`<tr>
     <td>${fmtDate(r.data)}</td>
     <td>${escHTML(r.paciente)}</td>
@@ -233,6 +284,7 @@ function renderBoth(q, fp, fs){
     <td>${escHTML(r.especialidade||'—')}</td>
     <td>${badgeStatus(r.status_cw)}</td>
     <td>${badgeStatus(r.status_vs)}</td>
+    <td>${delBtn('both', key(r))}</td>
   </tr>`).join('')}</tbody>`;
 }
 
@@ -246,13 +298,13 @@ function renderOnlyV(q, fp, fs){
   const tbl = document.getElementById('tbl-only-v');
   if (!rows.length){ tbl.innerHTML = `<tbody><tr><td class="empty">Nenhum agendamento corresponde aos filtros.</td></tr></tbody>`; return; }
   tbl.innerHTML = `<thead><tr>
-    <th>Data</th><th>Paciente</th><th>Profissional</th><th>CPF</th><th>Status Vision</th>
+    <th>Data</th><th>Paciente</th><th>Profissional</th><th>Status Vision</th><th></th>
   </tr></thead><tbody>${rows.map(r=>`<tr>
     <td>${fmtDate(r.data)}</td>
     <td>${escHTML(r.paciente)}</td>
     <td>${escHTML(r.profissional)}</td>
-    <td style="font-family:monospace;font-size:.78rem">${escHTML(r.cpf||'')}</td>
     <td>${badgeStatus(r.status)}</td>
+    <td>${delBtn('vision', key(r))}</td>
   </tr>`).join('')}</tbody>`;
 }
 
@@ -266,14 +318,89 @@ function renderOnlyCW(q, fp, fs){
   const tbl = document.getElementById('tbl-only-cw');
   if (!rows.length){ tbl.innerHTML = `<tbody><tr><td class="empty">Nenhum agendamento corresponde aos filtros.</td></tr></tbody>`; return; }
   tbl.innerHTML = `<thead><tr>
-    <th>Data</th><th>Paciente</th><th>Profissional</th><th>Especialidade</th><th>Status CW</th>
+    <th>Data</th><th>Paciente</th><th>Profissional</th><th>Especialidade</th><th>Status CW</th><th></th>
   </tr></thead><tbody>${rows.map(r=>`<tr>
     <td>${fmtDate(r.data)}</td>
     <td>${escHTML(r.paciente)}</td>
     <td>${escHTML(r.profissional)}</td>
     <td>${escHTML(r.especialidade||'—')}</td>
     <td>${badgeStatus(r.status)}</td>
+    <td>${delBtn('cw', key(r))}</td>
   </tr>`).join('')}</tbody>`;
+}
+
+function removeRow(source, k){
+  if (!confirm('Excluir esta linha? Isso só afeta a sessão atual (não altera a base original).')) return;
+  if (source === 'both'){
+    CW_DATA = CW_DATA.filter(r => key(r) !== k);
+    VS_DATA = VS_DATA.filter(r => key(r) !== k);
+  } else if (source === 'vision'){
+    VS_DATA = VS_DATA.filter(r => key(r) !== k);
+  } else if (source === 'cw'){
+    CW_DATA = CW_DATA.filter(r => key(r) !== k);
+  }
+  refresh();
+}
+
+/* ====== Exportar snapshot HTML revisado ====== */
+function exportSnapshotHTML(){
+  const today = new Date().toISOString().slice(0,10);
+  const sty = `
+    body{font-family:'Segoe UI',Arial,sans-serif;color:#0d1b3e;background:#f6f8fc;margin:0;padding:24px}
+    h1{color:#0a2d5e;margin:0 0 4px;font-size:1.4rem}
+    .meta{color:#6b7280;font-size:.85rem;margin-bottom:18px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+    .stat{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:12px 14px;border-left:5px solid #0e3a78}
+    .stat.both{border-left-color:#16a34a}.stat.vs{border-left-color:#a16207}.stat.cw{border-left-color:#1d4ed8}
+    .stat .lbl{font-size:.7rem;color:#6b7280;text-transform:uppercase;font-weight:700;letter-spacing:.05em}
+    .stat .val{font-size:1.7rem;font-weight:800;margin-top:4px;line-height:1.1}
+    h2{font-size:1rem;color:#0a2d5e;margin:24px 0 8px;border-bottom:2px solid #0e3a78;padding-bottom:4px}
+    table{width:100%;border-collapse:collapse;background:#fff;font-size:.78rem;border:1px solid #e5eaf3;border-radius:8px;overflow:hidden}
+    th{background:#f6f8fc;text-align:left;padding:8px 10px;font-size:.68rem;text-transform:uppercase;color:#5b6b85;border-bottom:2px solid #c7d8f5}
+    td{padding:8px 10px;border-bottom:1px solid #f3f4f6}
+    tr:nth-child(even) td{background:#fafbff}
+    .badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.7rem;font-weight:700}
+    .b-ok{background:#dcfce7;color:#15803d}
+    .b-warn{background:#fef3c7;color:#a16207}
+    .b-bad{background:#fee2e2;color:#b91c1c}
+    .b-neut{background:#e5e7eb;color:#374151}
+    .footer-note{margin-top:30px;text-align:center;color:#6b7280;font-size:.72rem}
+  `;
+  function fmt(s){
+    const t=(s||'').toLowerCase();
+    if (t.includes('reagend')) return `<span class="badge b-warn">${escHTML(s)}</span>`;
+    if (t.includes('cancel')||t.includes('falt')) return `<span class="badge b-bad">${escHTML(s)}</span>`;
+    if (t.includes('agendad')||t.includes('confirm')||t.includes('atendid')) return `<span class="badge b-ok">${escHTML(s)}</span>`;
+    return `<span class="badge b-neut">${escHTML(s||'—')}</span>`;
+  }
+  const totalSet = new Set([...VS_DATA.map(key), ...CW_DATA.map(key)]);
+  const sec = (title, ths, rows) => `<h2>${title} <span style="color:#6b7280;font-weight:500;font-size:.85rem">(${rows.length})</span></h2>` +
+    (rows.length ? `<table><thead><tr>${ths.map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>` : `<p style="color:#6b7280;font-size:.85rem">Nenhum registro nesta seção.</p>`);
+
+  const bothRows = RESULT.both.map(r=>`<tr><td>${fmtDate(r.data)}</td><td>${escHTML(r.paciente)}</td><td>${escHTML(r.profissional)}</td><td>${escHTML(r.especialidade||'—')}</td><td>${fmt(r.status_cw)}</td><td>${fmt(r.status_vs)}</td></tr>`);
+  const onlyVRows = RESULT.onlyV.map(r=>`<tr><td>${fmtDate(r.data)}</td><td>${escHTML(r.paciente)}</td><td>${escHTML(r.profissional)}</td><td>${fmt(r.status)}</td></tr>`);
+  const onlyCWRows = RESULT.onlyCW.map(r=>`<tr><td>${fmtDate(r.data)}</td><td>${escHTML(r.paciente)}</td><td>${escHTML(r.profissional)}</td><td>${escHTML(r.especialidade||'—')}</td><td>${fmt(r.status)}</td></tr>`);
+
+  const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Conferência CW × Vision — ${today}</title><style>${sty}</style></head><body>
+<h1>🔄 Conferência CW × Vision — ${today}</h1>
+<p class="meta">Snapshot da revisão · CW: ${CW_DATA.length} agendamentos · Vision: ${VS_DATA.length} agendamentos · Universo total: ${totalSet.size}</p>
+<div class="summary">
+  <div class="stat"><div class="lbl">Universo total</div><div class="val">${totalSet.size}</div></div>
+  <div class="stat both"><div class="lbl">Em ambos</div><div class="val">${RESULT.both.length}</div></div>
+  <div class="stat vs"><div class="lbl">Só Vision</div><div class="val">${RESULT.onlyV.length}</div></div>
+  <div class="stat cw"><div class="lbl">Só CW</div><div class="val">${RESULT.onlyCW.length}</div></div>
+</div>
+${sec('✅ Em ambos os sistemas', ['Data','Paciente','Profissional','Especialidade','Status CW','Status Vision'], bothRows)}
+${sec('🟡 Só no Vision', ['Data','Paciente','Profissional','Status Vision'], onlyVRows)}
+${sec('🔵 Só no CW', ['Data','Paciente','Profissional','Especialidade','Status CW'], onlyCWRows)}
+<p class="footer-note">Gerado em ${new Date().toLocaleString('pt-BR')} · Conferência CW × Vision · Vitta Hospital Digital</p>
+</body></html>`;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `conferencia-revisada-${today}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function exportCSV(){
@@ -283,8 +410,8 @@ function exportCSV(){
     rows.push(['Data','Paciente','Profissional','Especialidade','Status CW','Status Vision']);
     RESULT.both.forEach(r=>rows.push([fmtDate(r.data),r.paciente,r.profissional,r.especialidade,r.status_cw,r.status_vs]));
   } else if (CURRENT_TAB==='only-v'){
-    rows.push(['Data','Paciente','Profissional','CPF','Status Vision']);
-    RESULT.onlyV.forEach(r=>rows.push([fmtDate(r.data),r.paciente,r.profissional,r.cpf,r.status]));
+    rows.push(['Data','Paciente','Profissional','Status Vision']);
+    RESULT.onlyV.forEach(r=>rows.push([fmtDate(r.data),r.paciente,r.profissional,r.status]));
   } else {
     rows.push(['Data','Paciente','Profissional','Especialidade','Status CW']);
     RESULT.onlyCW.forEach(r=>rows.push([fmtDate(r.data),r.paciente,r.profissional,r.especialidade,r.status]));

@@ -120,55 +120,76 @@ ol.body-list{color:#374151;line-height:1.7;font-size:.9rem;padding-left:20px;lis
 .escala-hd h2{margin:0;font-size:1.3rem;color:#0a2d5e;font-weight:800}
 .escala-hd p{margin:2px 0 0;font-size:.85rem;color:#6b7280}
 .escala-hd .period{margin-left:auto;background:#eff4ff;color:#0e3a78;border:1px solid #c7d8f5;padding:8px 14px;border-radius:8px;font-size:.78rem;font-weight:700;letter-spacing:.4px}
-.escala-legend{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.escala-legend .lbl{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;font-weight:700;margin-right:6px}
-.shift-chip{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:999px;color:#fff}
-.shift-7{background:#1d4ed8}
-.shift-8{background:#0891b2}
-.shift-9{background:#065f46}
-.shift-10{background:#16a34a}
-.shift-11{background:#a16207}
-.shift-12{background:#c2410c}
-.shift-13{background:#9d174d}
-.shift-folga{background:#e5e7eb;color:#374151!important}
-.shift-ferias{background:#67e8f9;color:#0e7490!important}
-.shift-at{background:#fcd34d;color:#78350f!important}
-.shift-dayoff{background:#f9a8d4;color:#831843!important}
+.escala-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.escala-filters .lbl{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#6b7280}
+.escala-filters select,.escala-filters input{font-family:inherit;font-size:.82rem;border:1px solid #d1d5db;border-radius:8px;padding:7px 10px;background:#fff;color:#0a2d5e}
+.escala-filters .clear{background:none;border:0;color:#0a4dbe;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:underline;margin-left:auto;font-family:inherit}
+.escala-legend{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.escala-legend .lbl{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;font-weight:700;margin-right:4px}
+.shift-chip{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px}
+.shift-folga{background:#e5e7eb;color:#374151}
+.shift-ferias{background:#cffafe;color:#0e7490}
+.shift-at{background:#fcd34d;color:#78350f}
+.shift-dayoff{background:#f9a8d4;color:#831843}
+.shift-work{background:#fff;color:#0e3a78}
 .escala-tbl-wrap{background:#fff;border:1px solid #e5eaf3;border-radius:12px;overflow:auto;box-shadow:0 4px 14px rgba(7,31,66,.05)}
 table.escala{border-collapse:separate;border-spacing:0;width:100%;font-size:.7rem;font-family:'IBM Plex Sans',sans-serif}
-table.escala thead th{
-  background:#f6f8fc;position:sticky;top:0;z-index:2;
-  padding:8px 4px;font-weight:700;color:#0a2d5e;border-bottom:2px solid #c7d8f5;
-  text-align:center;min-width:42px;
-}
+table.escala thead th{background:#f6f8fc;position:sticky;top:0;z-index:2;padding:8px 4px;font-weight:700;color:#0a2d5e;border-bottom:2px solid #c7d8f5;text-align:center;min-width:54px}
 table.escala thead th.assistente{position:sticky;left:0;z-index:3;background:#eff4ff;text-align:left;padding-left:14px;min-width:200px;border-right:2px solid #c7d8f5}
 table.escala thead th.weekend{background:#fef3c7;color:#92400e}
 table.escala thead th .dow{display:block;font-size:.6rem;color:#6b7280;font-weight:600;margin-top:2px;text-transform:uppercase}
-table.escala tbody td{
-  text-align:center;padding:6px 4px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;
-  white-space:nowrap;font-weight:600;font-size:.66rem
-}
-table.escala tbody td.assistente{
-  position:sticky;left:0;background:#fafbff;color:#0a2d5e;font-weight:700;text-align:left;padding-left:14px;
-  z-index:1;border-right:2px solid #c7d8f5;font-size:.78rem
-}
+table.escala tbody td{text-align:center;padding:6px 4px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;white-space:nowrap;font-weight:600;font-size:.7rem;color:#0a2d5e}
+table.escala tbody td.assistente{position:sticky;left:0;background:#fafbff;color:#0a2d5e;font-weight:700;text-align:left;padding-left:14px;z-index:1;border-right:2px solid #c7d8f5;font-size:.78rem}
 table.escala tbody td.weekend{background:#fffbeb}
-table.escala tbody td.shift{color:#fff}
-table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escala tbody td.shift-at,table.escala tbody td.shift-dayoff{color:#1f2937!important}
-.off-demand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
-.off-card{background:#fff;border:1px solid #e5eaf3;border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
-.off-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#0a4dbe,#1a4f9e)}
-.off-card .who{font-size:.85rem;font-weight:700;color:#0a2d5e;margin:0}
-.off-card .what{font-size:.75rem;color:#374151;margin:4px 0 6px}
-.off-card .when{display:inline-block;background:#eff4ff;color:#0e3a78;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:6px;font-family:'IBM Plex Sans',monospace}
-.off-section{background:#fff;border:1px solid #e5eaf3;border-radius:12px;padding:18px 20px;margin-top:22px}
-.off-section h3{margin:0;font-size:.95rem;color:#0a2d5e;font-weight:700;display:flex;align-items:center;gap:8px}
-.off-section p.sub{margin:4px 0 0;font-size:.78rem;color:#6b7280}
-@media (max-width: 640px){
+table.escala tbody td.cell-folga{background:#e5e7eb;color:#374151}
+table.escala tbody td.cell-ferias{background:#cffafe;color:#0e7490}
+table.escala tbody td.cell-at{background:#fcd34d;color:#78350f;font-weight:800}
+table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
+@media (max-width:640px){
   table.escala thead th.assistente{min-width:140px}
   table.escala tbody td.assistente{font-size:.7rem}
 }
+.avisos-wrap{max-width:880px;margin:0 auto;padding:20px}
+.avisos-hd{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.avisos-hd .ico{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0a2d5e,#1a4f9e);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px}
+.avisos-hd h2{margin:0;font-size:1.3rem;color:#0a2d5e;font-weight:800}
+.avisos-hd p{margin:2px 0 0;font-size:.82rem;color:#6b7280}
+.avisos-hd .add-link{margin-left:auto;background:none;border:0;color:#0a4dbe;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:underline}
+.avisos-hd .add-link:hover{color:#0e3a78}
+.avisos-empty{background:#fff;border:1px dashed #c7d2e6;border-radius:10px;padding:32px 18px;text-align:center;color:#6b7280;font-size:.85rem}
+.aviso{background:#fff;border:1px solid #e5eaf3;border-radius:12px;padding:14px 18px;margin-bottom:12px;display:flex;gap:14px;box-shadow:0 2px 6px rgba(7,31,66,.04)}
+.aviso .emoji{font-size:1.6rem;line-height:1;flex-shrink:0;margin-top:2px}
+.aviso .body{flex:1;min-width:0}
+.aviso .meta{font-size:.7rem;color:#6b7280;font-weight:600;letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px}
+.aviso .text{color:#0a2d5e;font-size:.92rem;line-height:1.55;white-space:pre-wrap;word-wrap:break-word}
+.aviso .reads{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px dashed #e5eaf3;padding-top:8px}
+.aviso .reads .cnt{font-size:.7rem;color:#6b7280;font-weight:600}
+.aviso .reads .who{display:inline-block;background:#eff4ff;color:#0e3a78;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px}
+.aviso .reads .read-btn{background:#dcfce7;color:#15803d;border:1px solid #16a34a;border-radius:6px;font-size:.72rem;font-weight:700;padding:4px 10px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px}
+.aviso .reads .read-btn:hover{background:#bbf7d0}
+.aviso .reads .read-btn.done{background:#fef3c7;color:#92400e;border-color:#d97706}
+.aviso .del{background:none;border:0;color:#9ca3af;font-size:.85rem;cursor:pointer;padding:0 4px;font-family:inherit}
+.aviso .del:hover{color:#dc2626}
+.aviso-form{background:#fff;border:1px solid #e5eaf3;border-radius:12px;padding:18px 20px;margin-bottom:18px;box-shadow:0 4px 12px rgba(7,31,66,.05)}
+.aviso-form h3{margin:0 0 10px;font-size:.95rem;color:#0a2d5e;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.aviso-form .row{display:flex;gap:10px;align-items:flex-start}
+.aviso-form .row .ej{font-size:1.6rem;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;background:#fafbff;width:54px;text-align:center;cursor:pointer}
+.aviso-form textarea{flex:1;min-height:80px;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:.88rem;resize:vertical;outline:none}
+.aviso-form textarea:focus{border-color:#0a4dbe}
+.aviso-form .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.aviso-form button{padding:8px 14px;border-radius:8px;font-family:inherit;font-weight:600;font-size:.78rem;cursor:pointer;border:0}
+.aviso-form .save{background:#0a4dbe;color:#fff}
+.aviso-form .save:hover{background:#0e3a78}
+.aviso-form .cancel{background:#f3f4f6;color:#374151;border:1px solid #d1d5db}
+.aviso-form .emoji-picker{display:none;position:absolute;background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px;box-shadow:0 8px 20px rgba(7,31,66,.15);z-index:50;max-width:280px;flex-wrap:wrap;gap:4px}
+.aviso-form .emoji-picker.open{display:flex}
+.aviso-form .emoji-picker span{font-size:1.3rem;padding:4px 6px;cursor:pointer;border-radius:4px}
+.aviso-form .emoji-picker span:hover{background:#eff4ff}
+.aviso-toolbar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.aviso-toolbar button{background:none;border:1px solid #d1d5db;border-radius:6px;padding:5px 10px;font-size:.7rem;font-weight:600;color:#0a2d5e;cursor:pointer;font-family:inherit}
+.aviso-toolbar button:hover{background:#eff4ff}
 </style>
+
 
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -196,15 +217,14 @@ table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escal
      HERO
 ═══════════════════════════════════════════════ -->
 <div class="bg-navy-dark" style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
-  <div class="max-w-6xl mx-auto px-6 py-14 flex flex-col md:flex-row md:items-center gap-8">
-    <div class="flex-1">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div>
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
-           class="h-10 mb-6 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
-      <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">Hospital Digital Vitta</h1>
-      <p id="role-subtitle" class="text-blue-100 text-sm font-medium" style="display:none">Seja bem vindo analista ao portal do atendimento.</p>
-      
+           class="h-10 mb-5 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
+      <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-2" style="white-space:nowrap">Hospital Digital Vitta</h1>
+      <p id="role-subtitle" class="text-blue-100 text-sm font-medium mb-5" style="display:none">Seja bem-vindo, analista, ao portal do atendimento.</p>
     </div>
-    <div id="tab-buttons" class="flex flex-wrap gap-2">
+    <div id="tab-buttons" class="flex flex-wrap gap-2 mt-4">
       <button onclick="showTab('avisos')" id="btn-avisos"
         class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
         📢 Avisos Internos
@@ -224,10 +244,6 @@ table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escal
       <button onclick="showTab('exames')" id="btn-exames"
         class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
         🧪 Agendamento de Exames
-      </button>
-      <button onclick="showTab('conf')" id="btn-conf"
-        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
-        🔄 Conferência CW × Vision
       </button>
     </div>
   </div>
@@ -4566,21 +4582,30 @@ table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escal
       <div class="period">Julho de 2026 · 01/jul → 02/ago</div>
     </div>
 
-    <div class="escala-legend"><span class="lbl">Legenda</span><span class="shift-chip shift-7">7h–16h</span><span class="shift-chip shift-8">8h–17h</span><span class="shift-chip shift-9">9h–18h</span><span class="shift-chip shift-10">10h–19h</span><span class="shift-chip shift-11">11h–20h</span><span class="shift-chip shift-12">12h–21h</span><span class="shift-chip shift-13">13h–22h</span><span class="shift-chip shift-folga">Folga</span><span class="shift-chip shift-ferias">Férias</span><span class="shift-chip shift-at">Atestado</span><span class="shift-chip shift-dayoff">Day-off</span></div>
+    <div class="escala-filters">
+      <span class="lbl">Analista</span>
+      <select id="esc-filter-analista" onchange="renderEscala()">
+        <option value="">Todos os analistas</option>
+      </select>
+      <span class="lbl" style="margin-left:8px">De</span>
+      <input type="date" id="esc-filter-from" onchange="renderEscala()"/>
+      <span class="lbl">até</span>
+      <input type="date" id="esc-filter-to" onchange="renderEscala()"/>
+      <button class="clear" onclick="clearEscalaFilters()">Limpar filtros</button>
+    </div>
+
+    <div class="escala-legend">
+      <span class="lbl">Legenda</span>
+      <span class="shift-chip shift-folga">Folga</span>
+      <span class="shift-chip shift-ferias">Férias</span>
+      <span class="shift-chip shift-at">AT</span>
+      <span class="shift-chip shift-dayoff">Day-off</span>
+      <span style="font-size:.7rem;color:#6b7280;margin-left:8px">Demais células = horário do plantão (texto preto)</span>
+    </div>
 
     <div class="escala-tbl-wrap">
-      <table class="escala">
-        <thead><tr><th class="assistente">Assistente</th><th class="">01/jul<span class="dow">Qua</span></th><th class="">02/jul<span class="dow">Qui</span></th><th class="">03/jul<span class="dow">Sex</span></th><th class="weekend">04/jul<span class="dow">Sáb</span></th><th class="weekend">05/jul<span class="dow">Dom</span></th><th class="">06/jul<span class="dow">Seg</span></th><th class="">07/jul<span class="dow">Ter</span></th><th class="">08/jul<span class="dow">Qua</span></th><th class="">09/jul<span class="dow">Qui</span></th><th class="">10/jul<span class="dow">Sex</span></th><th class="weekend">11/jul<span class="dow">Sáb</span></th><th class="weekend">12/jul<span class="dow">Dom</span></th><th class="">13/jul<span class="dow">Seg</span></th><th class="">14/jul<span class="dow">Ter</span></th><th class="">15/jul<span class="dow">Qua</span></th><th class="">16/jul<span class="dow">Qui</span></th><th class="">17/jul<span class="dow">Sex</span></th><th class="weekend">18/jul<span class="dow">Sáb</span></th><th class="weekend">19/jul<span class="dow">Dom</span></th><th class="">20/jul<span class="dow">Seg</span></th><th class="">21/jul<span class="dow">Ter</span></th><th class="">22/jul<span class="dow">Qua</span></th><th class="">23/jul<span class="dow">Qui</span></th><th class="">24/jul<span class="dow">Sex</span></th><th class="weekend">25/jul<span class="dow">Sáb</span></th><th class="weekend">26/jul<span class="dow">Dom</span></th><th class="">27/jul<span class="dow">Seg</span></th><th class="">28/jul<span class="dow">Ter</span></th><th class="">29/jul<span class="dow">Qua</span></th><th class="">30/jul<span class="dow">Qui</span></th><th class="">31/jul<span class="dow">Sex</span></th><th class="weekend">01/ago<span class="dow">Sáb</span></th><th class="weekend">02/ago<span class="dow">Dom</span></th></tr></thead>
-        <tbody><tr><td class="assistente">Andressa Vitoria</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-ferias weekend" title="Férias">Férias</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-7" title="7h–16h">07:00–16:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td></tr><tr><td class="assistente">Renan Machado de Matos Pontes</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-8" title="8h–17h">08:00–17:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Igor Cordeiro Aarão</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-9" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Jessica Clemente</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-10" title="10h–19h">10:00–19:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Bruna Pereira</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-11" title="11h–20h">11:00–20:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Ilton Oliveira Da Silva Neto</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-12" title="12h–21h">12:00–21:00</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr><tr><td class="assistente">Ana Claudia Silva</td><td class="shift shift-dayoff" title="Day-off">Day-off</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-at" title="Atestado">Atestado</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-9 weekend" title="9h–18h">09:00–18:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-13" title="13h–22h">13:00–22:00</td><td class="shift shift-folga weekend" title="Folga">Folga</td><td class="shift shift-folga weekend" title="Folga">Folga</td></tr></tbody>
-      </table>
+      <table class="escala" id="escala-tbl"></table>
     </div>
-
-    <div class="off-section">
-      <h3>⏱️ Horários OFF demanda — ADM</h3>
-      <p class="sub">Janelas reservadas no dia a dia para tarefas administrativas específicas.</p>
-      <div class="off-demand-grid"><div class="off-card"><p class="who">Isabella</p><p class="what">SAC</p><span class="when">15:00 – 16:00</span></div><div class="off-card"><p class="who">Renan</p><p class="what">Demandas</p><span class="when">08:00 – 09:00</span></div><div class="off-card"><p class="who">Igor</p><p class="what">Conferência Amil</p><span class="when">14:00 – 15:00</span></div><div class="off-card"><p class="who">Barbara</p><p class="what">Cérebro e autorizações</p><span class="when">18:00 – 19:00</span></div><div class="off-card"><p class="who">Ilton</p><p class="what">Autorizações e check médico</p><span class="when">20:30 – 21:30</span></div><div class="off-card"><p class="who">Vaga nova</p><p class="what">Tarefas e exames</p><span class="when">12:00 – 13:00</span></div><div class="off-card"><p class="who">Andressa</p><p class="what">Token Amil</p><span class="when">09:00 – 10:00</span></div></div>
-    </div>
-
   </div>
 </div>
 
@@ -4600,31 +4625,22 @@ table.escala tbody td.shift-folga,table.escala tbody td.shift-ferias,table.escal
 </div>
 
 <!-- ═══════════════════════════════════════════════
-     ABA CONFERÊNCIA CW × VISION (Front2026)
-═══════════════════════════════════════════════ -->
-<div id="tab-conf" class="hidden">
-  <div class="max-w-6xl mx-auto px-6 py-6">
-    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden" style="height:calc(100vh - 220px);min-height:600px">
-      <iframe src="conferencia.html?embed=1" id="conf-iframe" style="width:100%;height:100%;border:0;display:block" title="Conferência CW × Vision — Vitta"></iframe>
-    </div>
-    <p class="text-xs text-gray-500 mt-2 text-center">
-      Ferramenta carregada de <a href="conferencia.html" target="_blank" class="text-blue-700 underline">conferencia.html</a> ·
-      <a href="conferencia.html" target="_blank" class="text-blue-700 underline">abrir em nova aba</a>
-    </p>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
      ABA AVISOS INTERNOS (Front2026)
 ═══════════════════════════════════════════════ -->
-<div id="tab-avisos" class="max-w-6xl mx-auto px-6 py-10 hidden">
-  <div class="bg-white border border-gray-200 rounded-lg p-12 text-center">
-    <p class="text-5xl mb-4">🚧</p>
-    <h2 class="text-xl font-bold mb-2" style="color:#0a2d5e">Avisos Internos</h2>
-    <p class="text-sm text-gray-500 max-w-md mx-auto">Área em construção. Em breve, comunicados, alertas e atualizações do time vão aparecer aqui.</p>
+<div id="tab-avisos" class="hidden">
+  <div class="avisos-wrap">
+    <div class="avisos-hd">
+      <div class="ico">📢</div>
+      <div>
+        <h2>Avisos Internos</h2>
+        <p>Linha do tempo de recados e atualizações do time</p>
+      </div>
+      <button class="add-link" onclick="openAvisoForm()">+ inserir novo aviso</button>
+    </div>
+
+    <div id="avisos-list"></div>
   </div>
 </div>
-
 </div><!-- /content-area -->
 
 <!-- ══════════════════════════════════════════
@@ -4778,7 +4794,7 @@ if (sessionStorage.getItem('vitta-auth') === '1'){
 <script>
 function showTab(t){
   document.getElementById('content-area').style.display='';
-  var tabs = ['rules','elig','escala','exames','avisos','conf'];
+  var tabs = ['rules','elig','escala','exames','avisos'];
   tabs.forEach(function(name){
     var el = document.getElementById('tab-'+name);
     if (el) el.classList.toggle('hidden', t !== name);
@@ -5639,5 +5655,372 @@ function enviarSugestao(){
   </div>
 </div>
 
+
+<!-- ===== Modal: senha avisos ===== -->
+<div class="modal-bg" id="modal-aviso-pwd">
+  <div class="modal-box" style="max-width:380px">
+    <div class="head">
+      <h3>🔐 Senha para inserir aviso</h3>
+      <button class="x" onclick="closeAvisoPwd()">×</button>
+    </div>
+    <div class="body edit-form">
+      <p style="font-size:.85rem;color:#374151;margin:0 0 6px">Digite a senha do gestor.</p>
+      <input type="password" id="aviso-pwd-input" class="pwd-input" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter')submitAvisoPwd()" autocomplete="off"/>
+      <p class="pwd-err" id="aviso-pwd-err"></p>
+    </div>
+    <div class="foot">
+      <button class="cancel" onclick="closeAvisoPwd()">Cancelar</button>
+      <button class="save" onclick="submitAvisoPwd()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal: criar aviso ===== -->
+<div class="modal-bg" id="modal-aviso-new">
+  <div class="modal-box">
+    <div class="head">
+      <h3>📢 Novo aviso</h3>
+      <button class="x" onclick="closeAvisoForm()">×</button>
+    </div>
+    <div class="body">
+      <div class="aviso-form" style="border:0;box-shadow:none;padding:0;margin:0">
+        <div class="row" style="position:relative">
+          <button type="button" class="ej" id="aviso-emoji-btn" onclick="toggleEmojiPicker()">😀</button>
+          <textarea id="aviso-text" placeholder="Digite o aviso aqui..."></textarea>
+          <div class="emoji-picker" id="aviso-emoji-picker"></div>
+        </div>
+        <div class="aviso-toolbar">
+          <button type="button" onclick="exportAvisos()">⬇️ Exportar avisos JSON</button>
+          <button type="button" onclick="exportReads()">⬇️ Exportar quem leu (JSON)</button>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="cancel" onclick="closeAvisoForm()">Cancelar</button>
+      <button class="save" onclick="saveAviso()">Publicar aviso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal: nome do leitor ===== -->
+<div class="modal-bg" id="modal-reader">
+  <div class="modal-box" style="max-width:380px">
+    <div class="head">
+      <h3>✓ Marcar como lido</h3>
+      <button class="x" onclick="closeReaderModal()">×</button>
+    </div>
+    <div class="body edit-form">
+      <p style="font-size:.85rem;color:#374151;margin:0 0 6px">Qual seu primeiro nome?</p>
+      <input type="text" id="reader-name" class="pwd-input" placeholder="Seu nome"
+             onkeydown="if(event.key==='Enter')submitReaderName()" autocomplete="off" autocapitalize="words"/>
+    </div>
+    <div class="foot">
+      <button class="cancel" onclick="closeReaderModal()">Cancelar</button>
+      <button class="save" onclick="submitReaderName()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ESCALA — dados, render e filtros
+============================================================ */
+const ESCALA_START = new Date('2026-07-01T00:00:00');
+const ESCALA_DAYS = (() => {
+  const out = [];
+  const end = new Date('2026-08-02T00:00:00');
+  let d = new Date(ESCALA_START);
+  while (d <= end){
+    out.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+  return out;
+})();
+const DOW_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MES_PT = ['','jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function fmtDay(d){ return `${String(d.getDate()).padStart(2,'0')}/${MES_PT[d.getMonth()+1]}`; }
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function isWeekend(d){ return d.getDay()===0 || d.getDay()===6; }
+
+const ESCALA_DATA = {
+  'Andressa Vitoria': ['07:00-16:00','07:00-16:00','07:00-16:00','FOLGA','FOLGA','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','FÉRIAS','07:00-16:00','07:00-16:00','07:00-16:00','07:00-16:00','FOLGA','FOLGA','09:00-18:00'],
+  'Renan Machado de Matos Pontes': ['08:00-17:00','08:00-17:00','08:00-17:00','FOLGA','FOLGA','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','FOLGA','FOLGA','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','FOLGA','FOLGA','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','FOLGA','FOLGA','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','08:00-17:00','FOLGA','FOLGA'],
+  'Igor Cordeiro Aarão': ['09:00-18:00','09:00-18:00','FOLGA','FOLGA','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','FOLGA','FOLGA','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','FOLGA','FOLGA','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','FOLGA','FOLGA','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','09:00-18:00','FOLGA','FOLGA'],
+  'Jessica Clemente': ['10:00-19:00','FOLGA','10:00-19:00','09:00-18:00','FOLGA','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','FOLGA','FOLGA','10:00-19:00','10:00-19:00','10:00-19:00','FOLGA','10:00-19:00','09:00-18:00','FOLGA','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','FOLGA','FOLGA','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','10:00-19:00','FOLGA','FOLGA'],
+  'Bruna Pereira': ['11:00-20:00','11:00-20:00','11:00-20:00','FOLGA','FOLGA','11:00-20:00','11:00-20:00','11:00-20:00','FOLGA','11:00-20:00','09:00-18:00','FOLGA','11:00-20:00','11:00-20:00','11:00-20:00','11:00-20:00','11:00-20:00','FOLGA','FOLGA','11:00-20:00','11:00-20:00','11:00-20:00','FOLGA','11:00-20:00','09:00-18:00','FOLGA','11:00-20:00','11:00-20:00','11:00-20:00','11:00-20:00','11:00-20:00','FOLGA','FOLGA'],
+  'Ilton Oliveira Da Silva Neto': ['12:00-21:00','12:00-21:00','12:00-21:00','FOLGA','FOLGA','12:00-21:00','12:00-21:00','12:00-21:00','12:00-21:00','FOLGA','FOLGA','09:00-18:00','12:00-21:00','12:00-21:00','12:00-21:00','12:00-21:00','12:00-21:00','FOLGA','FOLGA','12:00-21:00','12:00-21:00','12:00-21:00','12:00-21:00','12:00-21:00','FOLGA','FOLGA','12:00-21:00','12:00-21:00','12:00-21:00','FOLGA','12:00-21:00','09:00-18:00','FOLGA'],
+  'Ana Claudia Silva': ['DAYOFF','13:00-22:00','13:00-22:00','FOLGA','FOLGA','13:00-22:00','AT','AT','AT','AT','FOLGA','FOLGA','13:00-22:00','13:00-22:00','13:00-22:00','13:00-22:00','FOLGA','FOLGA','09:00-18:00','13:00-22:00','13:00-22:00','13:00-22:00','13:00-22:00','13:00-22:00','FOLGA','FOLGA','13:00-22:00','13:00-22:00','13:00-22:00','13:00-22:00','13:00-22:00','FOLGA','FOLGA']
+};
+
+function shiftCell(v, weekend){
+  const we = weekend ? ' weekend' : '';
+  if (v === 'FOLGA')  return `<td class="cell-folga${we}">Folga</td>`;
+  if (v === 'FÉRIAS') return `<td class="cell-ferias${we}">Férias</td>`;
+  if (v === 'AT')     return `<td class="cell-at${we}">AT</td>`;
+  if (v === 'DAYOFF') return `<td class="cell-dayoff${we}">Day-off</td>`;
+  return `<td class="${we.trim()}">${v.replace('-','–')}</td>`;
+}
+
+function buildEscalaFilters(){
+  const sel = document.getElementById('esc-filter-analista');
+  if (!sel || sel.options.length > 1) return;
+  Object.keys(ESCALA_DATA).forEach(n=>{
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+}
+
+function clearEscalaFilters(){
+  document.getElementById('esc-filter-analista').value = '';
+  document.getElementById('esc-filter-from').value = '';
+  document.getElementById('esc-filter-to').value = '';
+  renderEscala();
+}
+
+function renderEscala(){
+  buildEscalaFilters();
+  const tbl = document.getElementById('escala-tbl');
+  if (!tbl) return;
+  const fA = document.getElementById('esc-filter-analista').value;
+  const fF = document.getElementById('esc-filter-from').value;
+  const fT = document.getElementById('esc-filter-to').value;
+
+  const dayMask = ESCALA_DAYS.map(d => {
+    const iso = isoDate(d);
+    if (fF && iso < fF) return false;
+    if (fT && iso > fT) return false;
+    return true;
+  });
+  const visibleDays = ESCALA_DAYS.filter((d,i)=>dayMask[i]);
+
+  let html = '<thead><tr><th class="assistente">Assistente</th>';
+  visibleDays.forEach(d=>{
+    const we = isWeekend(d) ? ' weekend' : '';
+    html += `<th class="${we.trim()}">${fmtDay(d)}<span class="dow">${DOW_PT[d.getDay()]}</span></th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  Object.entries(ESCALA_DATA).forEach(([name, shifts])=>{
+    if (fA && name !== fA) return;
+    html += `<tr><td class="assistente">${name}</td>`;
+    shifts.forEach((v,i)=>{
+      if (!dayMask[i]) return;
+      html += shiftCell(v, isWeekend(ESCALA_DAYS[i]));
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+/* ============================================================
+   AVISOS INTERNOS — localStorage, password gate, timeline
+============================================================ */
+const AVISO_PWD = 'Deivid16';
+const AVISO_STORAGE = 'avisos_v1';
+const READS_STORAGE = 'avisos_reads_v1';
+const READER_NAME_STORAGE = 'avisos_reader_name_v1';
+let AVISO_AUTH = false;
+let READER_CONTEXT = null;
+const EMOJIS = ['📢','📣','📌','✅','✨','🎉','⚠️','🚨','🔔','📅','📝','💡','🚀','💬','👥','🩺','💙','🎯','📈','🤝','🙏','🏆','🛟','🆘','🆕'];
+
+function loadAvisos(){
+  try { return JSON.parse(localStorage.getItem(AVISO_STORAGE)||'[]'); } catch(e){ return []; }
+}
+function saveAvisos(arr){
+  localStorage.setItem(AVISO_STORAGE, JSON.stringify(arr));
+}
+function loadReads(){
+  try { return JSON.parse(localStorage.getItem(READS_STORAGE)||'{}'); } catch(e){ return {}; }
+}
+function saveReads(o){
+  localStorage.setItem(READS_STORAGE, JSON.stringify(o));
+}
+function getReaderName(){ return localStorage.getItem(READER_NAME_STORAGE) || ''; }
+
+function openAvisoForm(){
+  if (AVISO_AUTH){ showAvisoForm(); return; }
+  document.getElementById('aviso-pwd-input').value = '';
+  document.getElementById('aviso-pwd-err').textContent = '';
+  document.getElementById('modal-aviso-pwd').classList.add('open');
+  setTimeout(()=>document.getElementById('aviso-pwd-input').focus(), 50);
+}
+function closeAvisoPwd(){ document.getElementById('modal-aviso-pwd').classList.remove('open'); }
+function submitAvisoPwd(){
+  if (document.getElementById('aviso-pwd-input').value === AVISO_PWD){
+    AVISO_AUTH = true;
+    closeAvisoPwd();
+    showAvisoForm();
+  } else {
+    document.getElementById('aviso-pwd-err').textContent = 'Senha incorreta.';
+  }
+}
+function showAvisoForm(){
+  document.getElementById('aviso-text').value = '';
+  document.getElementById('aviso-emoji-btn').textContent = '📢';
+  document.getElementById('modal-aviso-new').classList.add('open');
+  // Build emoji picker
+  const p = document.getElementById('aviso-emoji-picker');
+  p.innerHTML = EMOJIS.map(e=>`<span onclick="pickEmoji('${e}')">${e}</span>`).join('');
+  p.classList.remove('open');
+}
+function closeAvisoForm(){ document.getElementById('modal-aviso-new').classList.remove('open'); }
+function toggleEmojiPicker(){
+  document.getElementById('aviso-emoji-picker').classList.toggle('open');
+}
+function pickEmoji(e){
+  document.getElementById('aviso-emoji-btn').textContent = e;
+  document.getElementById('aviso-emoji-picker').classList.remove('open');
+}
+function saveAviso(){
+  const txt = document.getElementById('aviso-text').value.trim();
+  const emj = document.getElementById('aviso-emoji-btn').textContent;
+  if (!txt){ alert('Escreva o texto do aviso.'); return; }
+  const arr = loadAvisos();
+  arr.unshift({
+    id: 'a' + Date.now(),
+    emoji: emj || '📢',
+    text: txt,
+    when: new Date().toISOString()
+  });
+  saveAvisos(arr);
+  closeAvisoForm();
+  renderAvisos();
+}
+
+function deleteAviso(id){
+  if (!AVISO_AUTH){ openAvisoForm(); return; }
+  if (!confirm('Excluir este aviso? Esta ação não pode ser desfeita.')) return;
+  const arr = loadAvisos().filter(a=>a.id!==id);
+  saveAvisos(arr);
+  const r = loadReads();
+  delete r[id];
+  saveReads(r);
+  renderAvisos();
+}
+
+function markRead(id){
+  READER_CONTEXT = id;
+  const known = getReaderName();
+  if (known){
+    recordRead(id, known);
+    return;
+  }
+  document.getElementById('reader-name').value = '';
+  document.getElementById('modal-reader').classList.add('open');
+  setTimeout(()=>document.getElementById('reader-name').focus(), 50);
+}
+function closeReaderModal(){ document.getElementById('modal-reader').classList.remove('open'); READER_CONTEXT = null; }
+function submitReaderName(){
+  const name = document.getElementById('reader-name').value.trim();
+  if (!name){ return; }
+  const cap = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  localStorage.setItem(READER_NAME_STORAGE, cap);
+  if (READER_CONTEXT) recordRead(READER_CONTEXT, cap);
+  closeReaderModal();
+}
+function recordRead(id, name){
+  const r = loadReads();
+  if (!r[id]) r[id] = [];
+  if (!r[id].some(x=>x.nome===name)){
+    r[id].push({ nome:name, when:new Date().toISOString() });
+    saveReads(r);
+  }
+  renderAvisos();
+}
+
+function fmtAvisoDate(iso){
+  const d = new Date(iso);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mi = String(d.getMinutes()).padStart(2,'0');
+  return `${dd}/${mm}/${yy} ${hh}:${mi}`;
+}
+
+function escHTMLav(s){
+  return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAvisos(){
+  const list = document.getElementById('avisos-list');
+  if (!list) return;
+  const arr = loadAvisos();
+  const reads = loadReads();
+  const me = getReaderName();
+  if (!arr.length){
+    list.innerHTML = '<div class="avisos-empty">Nenhum aviso publicado ainda. Use o botão "+ inserir novo aviso" no topo.</div>';
+    return;
+  }
+  list.innerHTML = arr.map(a=>{
+    const r = reads[a.id] || [];
+    const meRead = me && r.some(x=>x.nome===me);
+    const btnCls = meRead ? 'read-btn done' : 'read-btn';
+    const btnTxt = meRead ? '✓ Já marcou como lido' : '✓ Marcar como lido';
+    const whoList = r.length
+      ? r.map(x=>`<span class="who" title="${fmtAvisoDate(x.when)}">${escHTMLav(x.nome)}</span>`).join(' ')
+      : '<span style="color:#9ca3af;font-size:.72rem">ninguém leu ainda</span>';
+    return `<div class="aviso">
+      <div class="emoji">${escHTMLav(a.emoji)}</div>
+      <div class="body">
+        <div class="meta">${fmtAvisoDate(a.when)} ${AVISO_AUTH?`<button class="del" title="Excluir" onclick="deleteAviso('${a.id}')">🗑️</button>`:''}</div>
+        <div class="text">${escHTMLav(a.text)}</div>
+        <div class="reads">
+          <button class="${btnCls}" onclick="markRead('${a.id}')">${btnTxt}</button>
+          <span class="cnt">${r.length} leitura${r.length===1?'':'s'}:</span>
+          ${whoList}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function exportAvisos(){
+  const data = loadAvisos();
+  if (!data.length){ alert('Não há avisos para exportar.'); return; }
+  downloadJSON('avisos.json', data);
+}
+function exportReads(){
+  const data = loadReads();
+  if (!Object.keys(data).length){ alert('Não há leituras registradas.'); return; }
+  downloadJSON('avisos-leituras.json', data);
+}
+function downloadJSON(name, obj){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// fecha emoji picker se clicar fora
+document.addEventListener('click', e=>{
+  const picker = document.getElementById('aviso-emoji-picker');
+  const btn = document.getElementById('aviso-emoji-btn');
+  if (!picker || !picker.classList.contains('open')) return;
+  if (e.target === btn || picker.contains(e.target)) return;
+  picker.classList.remove('open');
+});
+
+/* ---- Hook: renderiza ao trocar de aba ---- */
+(function(){
+  const _showTab = window.showTab;
+  window.showTab = function(t){
+    _showTab(t);
+    if (t === 'escala') try { renderEscala(); } catch(e){}
+    if (t === 'avisos') try { renderAvisos(); } catch(e){}
+  };
+})();
+
+// inicializa no load
+document.addEventListener('DOMContentLoaded', ()=>{
+  try { renderEscala(); } catch(e){}
+  try { renderAvisos(); } catch(e){}
+});
+</script>
 </body>
 </html>

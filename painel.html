@@ -217,32 +217,32 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
      HERO
 ═══════════════════════════════════════════════ -->
 <div class="bg-navy-dark" style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
-  <div class="max-w-6xl mx-auto px-6 py-10">
+  <div class="max-w-6xl mx-auto px-6 py-5">
     <div>
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
-           class="h-10 mb-5 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
-      <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-2" style="white-space:nowrap">Hospital Digital Vitta</h1>
-      <p id="role-subtitle" class="text-blue-100 text-sm font-medium mb-5" style="display:none">Seja bem-vindo, analista, ao portal do atendimento.</p>
+           class="h-7 mb-2 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
+      <h1 class="font-bold text-white leading-tight" style="font-size:1.4rem;white-space:nowrap;margin-bottom:2px">Hospital Digital Vitta</h1>
+      <p id="role-subtitle" class="text-blue-100 font-medium" style="display:none;font-size:.78rem;margin-bottom:8px">Seja bem-vindo, analista, ao portal do atendimento.</p>
     </div>
-    <div id="tab-buttons" class="flex flex-wrap gap-2 mt-4">
+    <div id="tab-buttons" class="flex flex-wrap gap-2 mt-2">
       <button onclick="showTab('avisos')" id="btn-avisos"
-        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
+        class="tab-btn px-3 py-1.5 font-semibold tracking-wide front-only" style="font-size:.72rem;display:none">
         📢 Avisos Internos
       </button>
       <button onclick="showTab('escala')" id="btn-escala"
-        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
+        class="tab-btn px-3 py-1.5 font-semibold tracking-wide front-only" style="font-size:.72rem;display:none">
         🗓️ Escala
       </button>
       <button onclick="showTab('rules')" id="btn-rules"
-        class="tab-btn active px-4 py-2.5 font-semibold text-xs tracking-wide">
+        class="tab-btn active px-3 py-1.5 font-semibold tracking-wide" style="font-size:.72rem">
         <span id="btn-rules-label">📋 Regras Gerais</span>
       </button>
       <button onclick="showTab('elig')" id="btn-elig"
-        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide">
+        class="tab-btn px-3 py-1.5 font-semibold tracking-wide" style="font-size:.72rem">
         🏥 Elegibilidade
       </button>
       <button onclick="showTab('exames')" id="btn-exames"
-        class="tab-btn px-4 py-2.5 font-semibold text-xs tracking-wide front-only" style="display:none">
+        class="tab-btn px-3 py-1.5 font-semibold tracking-wide front-only" style="font-size:.72rem;display:none">
         🧪 Agendamento de Exames
       </button>
     </div>
@@ -4647,7 +4647,8 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
      BOTÕES FLUTUANTES
 ══════════════════════════════════════════ -->
 <style>
-#float-stack{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;align-items:flex-end;gap:12px;z-index:9999;}
+#float-stack{position:fixed;top:18px;right:18px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:9999;}
+.fab{width:44px!important;height:44px!important;}
 .fab{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s;}
 .fab:hover{transform:scale(1.08);box-shadow:0 6px 18px rgba(0,0,0,.3);}
 #chat-box{display:none;width:320px;max-height:480px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);flex-direction:column;overflow:hidden;}
@@ -4768,7 +4769,7 @@ function applyRole(){
   if (ft) ft.textContent = isFront ? 'Painel Interno — Front/Rede' : 'Painel Interno';
   // Rules tab label
   var rlbl = document.getElementById('btn-rules-label');
-  if (rlbl) rlbl.textContent = isFront ? '📋 Fluxos' : '📋 Regras Gerais';
+  if (rlbl) rlbl.textContent = isFront ? '📋 Fluxos e Scripts' : '📋 Regras Gerais';
   // Show/hide front-only tabs
   document.querySelectorAll('.front-only').forEach(function(b){
     b.style.display = isFront ? '' : 'none';
@@ -5852,7 +5853,14 @@ function submitAvisoPwd(){
   if (document.getElementById('aviso-pwd-input').value === AVISO_PWD){
     AVISO_AUTH = true;
     closeAvisoPwd();
-    showAvisoForm();
+    if (window.__avisoPendingAction){
+      const fn = window.__avisoPendingAction;
+      window.__avisoPendingAction = null;
+      fn();
+      renderAvisos(); // re-render para mostrar lixeiras nos outros avisos
+    } else {
+      showAvisoForm();
+    }
   } else {
     document.getElementById('aviso-pwd-err').textContent = 'Senha incorreta.';
   }
@@ -5891,14 +5899,22 @@ function saveAviso(){
 }
 
 function deleteAviso(id){
-  if (!AVISO_AUTH){ openAvisoForm(); return; }
-  if (!confirm('Excluir este aviso? Esta ação não pode ser desfeita.')) return;
-  const arr = loadAvisos().filter(a=>a.id!==id);
-  saveAvisos(arr);
-  const r = loadReads();
-  delete r[id];
-  saveReads(r);
-  renderAvisos();
+  const proceed = () => {
+    if (!confirm('Excluir este aviso? Esta ação não pode ser desfeita.')) return;
+    const arr = loadAvisos().filter(a=>a.id!==id);
+    saveAvisos(arr);
+    const r = loadReads();
+    delete r[id];
+    saveReads(r);
+    renderAvisos();
+  };
+  if (AVISO_AUTH){ proceed(); return; }
+  // Pede senha antes — guarda a ação no buffer
+  window.__avisoPendingAction = proceed;
+  document.getElementById('aviso-pwd-input').value = '';
+  document.getElementById('aviso-pwd-err').textContent = '';
+  document.getElementById('modal-aviso-pwd').classList.add('open');
+  setTimeout(()=>document.getElementById('aviso-pwd-input').focus(), 50);
 }
 
 function markRead(id){
@@ -5966,7 +5982,7 @@ function renderAvisos(){
     return `<div class="aviso">
       <div class="emoji">${escHTMLav(a.emoji)}</div>
       <div class="body">
-        <div class="meta">${fmtAvisoDate(a.when)} ${AVISO_AUTH?`<button class="del" title="Excluir" onclick="deleteAviso('${a.id}')">🗑️</button>`:''}</div>
+        <div class="meta">${fmtAvisoDate(a.when)} <button class="del" title="Excluir aviso (pede senha)" onclick="deleteAviso('${a.id}')">🗑️</button></div>
         <div class="text">${escHTMLav(a.text)}</div>
         <div class="reads">
           <button class="${btnCls}" onclick="markRead('${a.id}')">${btnTxt}</button>

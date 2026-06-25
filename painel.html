@@ -260,26 +260,25 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
      TELA DE BOAS-VINDAS (visível quando content-area está oculto)
 ═══════════════════════════════════════════════ -->
 <div id="welcome-area" style="flex:1;display:none">
-  <div class="max-w-6xl mx-auto px-6 py-8">
-    <!-- Banner hero com V grande -->
-    <div style="background:linear-gradient(135deg,#0e3a78 0%,#1a4f9e 50%,#1d4ed8 100%);border-radius:18px;padding:36px 28px;color:#fff;position:relative;overflow:hidden;min-height:200px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;box-shadow:0 14px 36px rgba(7,31,66,.18)">
-      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.12;pointer-events:none">
-        <svg width="320" height="320" viewBox="0 0 200 200" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <div class="max-w-6xl mx-auto px-6" style="padding-top:14px;padding-bottom:14px">
+    <!-- Banner hero -->
+    <div style="background:linear-gradient(135deg,#0e3a78 0%,#1a4f9e 50%,#1d4ed8 100%);border-radius:14px;padding:18px 22px;color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;box-shadow:0 8px 22px rgba(7,31,66,.16)">
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.10;pointer-events:none">
+        <svg width="220" height="220" viewBox="0 0 200 200" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 50 Q60 100 100 60 Q140 100 180 50 L100 160 Z"/>
         </svg>
       </div>
-      <div style="flex:1;min-width:260px;position:relative;z-index:2">
-        <p style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#bfdbfe;margin:0 0 8px">Hospital Digital Vitta</p>
-        <h2 style="font-size:1.7rem;font-weight:800;line-height:1.2;margin:0 0 8px">Saúde sem sair de casa,<br/>do seu jeito.</h2>
-        <p style="font-size:.95rem;color:#dde6f5;line-height:1.55;max-width:520px;margin:0">Atendimento médico digital com tecnologia própria, agenda flexível e cobertura 24/7 para você e sua família.</p>
+      <div style="flex:1;min-width:240px;position:relative;z-index:2">
+        <h2 style="font-size:1.2rem;font-weight:800;line-height:1.25;margin:0 0 4px">Saúde sem sair de casa, do seu jeito.</h2>
+        <p style="font-size:.78rem;color:#dde6f5;line-height:1.5;max-width:520px;margin:0">Atendimento médico digital com tecnologia própria, agenda flexível e cobertura 24/7 para você e sua família.</p>
       </div>
       <div style="position:relative;z-index:2;flex-shrink:0">
-        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:24px;width:120px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
-          <div style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:32px">👨‍⚕️</div>
-          <div style="display:flex;gap:10px;margin-top:14px">
-            <div style="width:24px;height:24px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:11px">📞</div>
-            <div style="width:24px;height:24px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transform:rotate(135deg)">📞</div>
-            <div style="width:24px;height:24px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:11px">🎥</div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:18px;width:90px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:22px">👨‍⚕️</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <div style="width:18px;height:18px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:9px">📞</div>
+            <div style="width:18px;height:18px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;transform:rotate(135deg)">📞</div>
+            <div style="width:18px;height:18px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:9px">🎥</div>
           </div>
         </div>
       </div>
@@ -287,33 +286,33 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 
     <!-- 4 cards de destaque -->
     <div class="welcome-cards">
-      <div style="background:#eef4ff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(7,31,66,.05)">
-        <div style="background:#1d4ed8;padding:16px 18px;display:flex;align-items:center;justify-content:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/></svg>
+      <div style="background:#eef4ff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(7,31,66,.05)">
+        <div style="background:#1d4ed8;padding:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/></svg>
         </div>
-        <p style="padding:18px 16px;font-size:.95rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Tecnologia própria e pioneira no atendimento digital</p>
+        <p style="padding:11px 13px;font-size:.78rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Tecnologia própria e pioneira no atendimento digital</p>
       </div>
-      <div style="background:#eef4ff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(7,31,66,.05)">
-        <div style="background:#16a34a;padding:16px 18px;display:flex;align-items:center;justify-content:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+      <div style="background:#eef4ff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(7,31,66,.05)">
+        <div style="background:#16a34a;padding:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
         </div>
-        <p style="padding:18px 16px;font-size:.95rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Agendamento facilitado via aplicativo ou WhatsApp</p>
+        <p style="padding:11px 13px;font-size:.78rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Agendamento facilitado via aplicativo ou WhatsApp</p>
       </div>
-      <div style="background:#eef4ff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(7,31,66,.05)">
-        <div style="background:#0d1b3e;padding:16px 18px;display:flex;align-items:center;justify-content:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="1.5" fill="#fff"/><polygon points="3.5,12 6.5,12 5,14.6"/><rect x="3.5" y="18" width="3" height="3"/><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="13" x2="21" y2="13"/><line x1="10" y1="20" x2="21" y2="20"/></svg>
+      <div style="background:#eef4ff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(7,31,66,.05)">
+        <div style="background:#0d1b3e;padding:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="1.5" fill="#fff"/><polygon points="3.5,12 6.5,12 5,14.6"/><rect x="3.5" y="18" width="3" height="3"/><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="13" x2="21" y2="13"/><line x1="10" y1="20" x2="21" y2="20"/></svg>
         </div>
-        <p style="padding:18px 16px;font-size:.95rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Acesso a mais de 20 especialidades</p>
+        <p style="padding:11px 13px;font-size:.78rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Acesso a mais de 20 especialidades</p>
       </div>
-      <div style="background:#eef4ff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(7,31,66,.05)">
-        <div style="background:#1d4ed8;padding:16px 18px;display:flex;align-items:center;justify-content:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><text x="9" y="18" fill="#fff" stroke="none" font-family="sans-serif" font-size="6" font-weight="700">7</text><circle cx="14" cy="16" r="2.5"/></svg>
+      <div style="background:#eef4ff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(7,31,66,.05)">
+        <div style="background:#1d4ed8;padding:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><text x="9" y="18" fill="#fff" stroke="none" font-family="sans-serif" font-size="6" font-weight="700">7</text><circle cx="14" cy="16" r="2.5"/></svg>
         </div>
-        <p style="padding:18px 16px;font-size:.95rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Assistência Médica 24/7 via aplicativo para urgências e dúvidas.</p>
+        <p style="padding:11px 13px;font-size:.78rem;color:#0a2d5e;font-weight:500;line-height:1.4;margin:0">Assistência Médica 24/7 via aplicativo para urgências e dúvidas.</p>
       </div>
     </div>
 
-    <p style="text-align:center;color:#9ca3af;font-size:.78rem;margin-top:20px">Clique novamente no logo Vitta para voltar ao painel.</p>
+    <p style="text-align:center;color:#9ca3af;font-size:.72rem;margin-top:12px;margin-bottom:0">Clique novamente no logo Vitta para voltar ao painel.</p>
   </div>
 </div>
 

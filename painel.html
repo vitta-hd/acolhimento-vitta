@@ -211,7 +211,7 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
     </button>
   </div>
 </div>
-<div id="main-content" style="display:none">
+<div id="main-content" style="display:none;min-height:100vh;flex-direction:column">
 
 <!-- ═══════════════════════════════════════════════
      HERO
@@ -256,7 +256,7 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 <!-- ═══════════════════════════════════════════════
      ABA ELEGIBILIDADE
 ═══════════════════════════════════════════════ -->
-<div id="content-area" style="display:none">
+<div id="content-area" style="display:none;flex:1">
 <div id="tab-elig" class="max-w-6xl mx-auto px-6 py-10 hidden">
 
   <!-- Realizar alterações em empresas -->
@@ -4652,9 +4652,11 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 ══════════════════════════════════════════ -->
 <style>
 #float-stack{position:fixed;top:18px;right:18px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:9999;}
-.fab{width:44px!important;height:44px!important;}
-.fab{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s;}
+.fab{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s;}
 .fab:hover{transform:scale(1.08);box-shadow:0 6px 18px rgba(0,0,0,.3);}
+#float-trigger{background:#0a2d5e;color:#fff;font-size:1.2rem;font-weight:700;}
+#float-stack.collapsed > div, #float-stack.collapsed #chat-box, #float-stack.collapsed #sug-box{display:none!important;}
+#float-stack:not(.collapsed) #float-trigger{transform:rotate(45deg);background:#dc2626;}
 #chat-box{display:none;width:320px;max-height:480px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);flex-direction:column;overflow:hidden;}
 #chat-box.open{display:flex;}
 #chat-header{background:#0a2d5e;color:#fff;padding:12px 14px;font-size:.85rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
@@ -4673,7 +4675,12 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 #sug-body button{background:#0a2d5e;color:#fff;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;font-size:.8rem;width:100%;margin-top:8px;}
 </style>
 
-<div id="float-stack">
+<div id="float-stack" class="collapsed">
+
+  <!-- Trigger único (sempre visível) -->
+  <button id="float-trigger" class="fab" onclick="toggleFloatStack()" title="Atalhos">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
 
   <!-- Caixa de Sugestões -->
   <div id="sug-box">
@@ -4733,7 +4740,7 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 
 </div>
 
-<footer class="mt-12 py-5 text-center text-white" style="background:#071f42">
+<footer class="py-4 text-center text-white" style="background:#071f42;margin-top:auto">
   <p class="text-lg font-bold"><span id="footer-label">Painel Interno</span></p>
   <p class="text-xs mt-1" style="color:#bfdbfe"><a href="#" onclick="logout();return false" style="color:#bfdbfe;text-decoration:underline">Sair</a></p>
 </footer>
@@ -4757,7 +4764,7 @@ function checkPass(){
   sessionStorage.setItem('vitta-auth','1');
   sessionStorage.setItem('vitta-role', USER_ROLE);
   document.getElementById('lock-screen').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
+  document.getElementById('main-content').style.display = 'flex';
   applyRole();
 }
 
@@ -4789,7 +4796,7 @@ function logout(){
 if (sessionStorage.getItem('vitta-auth') === '1'){
   USER_ROLE = sessionStorage.getItem('vitta-role') || 'admin';
   document.getElementById('lock-screen').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
+  document.getElementById('main-content').style.display = 'flex';
   document.addEventListener('DOMContentLoaded', applyRole);
   // If DOMContentLoaded already fired (script loaded after parse), run immediately
   if (document.readyState !== 'loading') applyRole();
@@ -5507,6 +5514,18 @@ function toggleSug(){
   var open=b.classList.toggle('open');
   document.getElementById('sug-label').style.display=open?'none':'';
   if(open){ document.getElementById('chat-box').classList.remove('open'); document.getElementById('sug-texto').focus(); }
+}
+function toggleFloatStack(){
+  var s=document.getElementById('float-stack');
+  var wasCollapsed=s.classList.contains('collapsed');
+  s.classList.toggle('collapsed');
+  // Ao fechar, esconde também as caixas abertas (chat/sug)
+  if(!wasCollapsed){
+    document.getElementById('chat-box').classList.remove('open');
+    document.getElementById('sug-box').classList.remove('open');
+    var cl=document.getElementById('chat-label'); if(cl) cl.style.display='';
+    var sl=document.getElementById('sug-label'); if(sl) sl.style.display='';
+  }
 }
 
 // ── Chat bot ──

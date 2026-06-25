@@ -265,7 +265,7 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
     <div style="position:relative;border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(7,31,66,.16);background:#0e3a78">
       <img src="https://www.vitta.com.br/wp-content/uploads/2026/02/s01-hd-1536x376.jpg"
            alt="Hospital Digital Vitta — atendimento médico digital"
-           style="display:block;width:100%;height:auto;max-height:260px;object-fit:cover"
+           style="display:block;width:100%;height:auto;max-height:200px;object-fit:cover"
            onerror="this.style.display='none';this.parentElement.querySelector('.hero-fallback').style.display='flex'"/>
       <!-- Texto sobreposto à imagem -->
       <div style="position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;padding:18px 28px;background:linear-gradient(90deg,rgba(7,31,66,.78) 0%,rgba(7,31,66,.45) 55%,rgba(7,31,66,0) 80%);max-width:62%">
@@ -5651,6 +5651,99 @@ function toggleFloatStack(){
     var sl=document.getElementById('sug-label'); if(sl) sl.style.display='';
   }
 }
+
+/* ====== Float trigger: arrastável (mouse + touch) ====== */
+(function(){
+  function init(){
+    var trigger = document.getElementById('float-trigger');
+    var stack = document.getElementById('float-stack');
+    if (!trigger || !stack) return;
+    // CSS: cursor de arrastar
+    trigger.style.cursor = 'grab';
+    trigger.style.touchAction = 'none';
+    // Restaurar posição salva
+    try {
+      var saved = JSON.parse(localStorage.getItem('float-stack-pos') || 'null');
+      if (saved && typeof saved.top==='number' && typeof saved.left==='number'){
+        stack.style.top = saved.top + 'px';
+        stack.style.left = saved.left + 'px';
+        stack.style.right = 'auto';
+        stack.style.bottom = 'auto';
+      }
+    } catch(e){}
+
+    var dragging=false, sx=0, sy=0, st=0, sl=0, moved=false, suppressNextClick=false;
+
+    function getPt(e){ return e.touches ? e.touches[0] : e; }
+
+    function onStart(e){
+      var pt = getPt(e);
+      sx = pt.clientX; sy = pt.clientY;
+      var rect = stack.getBoundingClientRect();
+      st = rect.top; sl = rect.left;
+      dragging = true; moved = false;
+      trigger.style.cursor = 'grabbing';
+    }
+    function onMove(e){
+      if (!dragging) return;
+      var pt = getPt(e);
+      var dx = pt.clientX - sx;
+      var dy = pt.clientY - sy;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      var rect = stack.getBoundingClientRect();
+      var margin = 4;
+      var newTop = Math.max(margin, Math.min(window.innerHeight - rect.height - margin, st + dy));
+      var newLeft = Math.max(margin, Math.min(window.innerWidth - rect.width - margin, sl + dx));
+      stack.style.top = newTop + 'px';
+      stack.style.left = newLeft + 'px';
+      stack.style.right = 'auto';
+      stack.style.bottom = 'auto';
+      if (e.cancelable) e.preventDefault();
+    }
+    function onEnd(){
+      if (!dragging) return;
+      dragging = false;
+      trigger.style.cursor = 'grab';
+      if (moved){
+        suppressNextClick = true;
+        try {
+          var rect = stack.getBoundingClientRect();
+          localStorage.setItem('float-stack-pos', JSON.stringify({top:rect.top, left:rect.left}));
+        } catch(e){}
+      }
+    }
+    function onClickCapture(e){
+      if (suppressNextClick){
+        e.stopPropagation();
+        e.preventDefault();
+        suppressNextClick = false;
+      }
+    }
+
+    trigger.addEventListener('mousedown', onStart);
+    trigger.addEventListener('touchstart', onStart, {passive:true});
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+    trigger.addEventListener('click', onClickCapture, true);
+
+    // Reposiciona se a janela for redimensionada (mantém dentro da viewport)
+    window.addEventListener('resize', function(){
+      var rect = stack.getBoundingClientRect();
+      var t = parseFloat(stack.style.top);
+      var l = parseFloat(stack.style.left);
+      if (isNaN(t) || isNaN(l)) return;
+      var margin = 4;
+      var newTop = Math.max(margin, Math.min(window.innerHeight - rect.height - margin, t));
+      var newLeft = Math.max(margin, Math.min(window.innerWidth - rect.width - margin, l));
+      stack.style.top = newTop + 'px';
+      stack.style.left = newLeft + 'px';
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 
 // ── Chat bot ──
 var SECTION_LABELS={'atendimento':'Time de Atendimento','agendamentos':'Agendamentos de Consultas','plantao':'Plantão Médico','reagendamento':'Reagendamentos e Cancelamentos','falha':'Falha na Teleconsulta','documentos':'Documentos da Consulta','limitadores':'Limitadores do App','app':'Aplicativo Vitta','exames':'Agendamento de Exames','terapias':'Terapias','particular':'Consultas Particulares','omni':'Benefício Omni','rede':'Busca de Rede Externa'};

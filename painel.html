@@ -4880,6 +4880,13 @@ function applyRole(){
   // Role class no body para CSS condicional
   document.body.classList.toggle('role-admin', !isFront);
   document.body.classList.toggle('role-front', isFront);
+  // Tela inicial = boas-vindas (esconde qualquer conteúdo de aba)
+  var ca = document.getElementById('content-area');
+  var wa = document.getElementById('welcome-area');
+  if (ca) ca.style.display = 'none';
+  if (wa) wa.style.display = '';
+  // Tira o estado 'active' de qualquer aba (nenhuma selecionada no welcome)
+  document.querySelectorAll('.tab-btn.active').forEach(function(b){ b.classList.remove('active'); });
 }
 
 function logout(){
@@ -4900,6 +4907,9 @@ if (sessionStorage.getItem('vitta-auth') === '1'){
 
 <script>
 function showTab(t){
+  // Esconde tela de boas-vindas ao abrir qualquer aba
+  var wa = document.getElementById('welcome-area');
+  if (wa) wa.style.display = 'none';
   document.getElementById('content-area').style.display='';
   var tabs = ['rules','elig','escala','exames','avisos'];
   tabs.forEach(function(name){
@@ -4913,15 +4923,25 @@ function showTab(t){
 function toggleContent(){
   var ca=document.getElementById('content-area');
   var wa=document.getElementById('welcome-area');
-  var showingWelcome = wa && wa.style.display !== 'none' && ca.style.display === 'none';
+  if (!wa){ // fallback: só esconde/mostra o content
+    ca.style.display = (ca.style.display==='none') ? '' : 'none';
+    return;
+  }
+  var showingWelcome = wa.style.display !== 'none';
   if (showingWelcome){
-    // Voltar ao painel: esconde welcome, mostra content
+    // Voltar ao painel: esconde welcome e abre a primeira aba disponível
     wa.style.display = 'none';
     ca.style.display = '';
+    // se nenhuma aba estava ativa, ativa a primeira visível
+    if (!document.querySelector('.tab-btn.active')){
+      var firstBtn = document.querySelector('#tab-buttons .tab-btn:not([style*="display:none"])');
+      if (firstBtn) firstBtn.click();
+    }
   } else {
-    // Esconder painel: mostra welcome
+    // Mostrar a tela inicial novamente
     ca.style.display = 'none';
-    if (wa) wa.style.display = '';
+    wa.style.display = '';
+    document.querySelectorAll('.tab-btn.active').forEach(function(b){ b.classList.remove('active'); });
   }
 }
 

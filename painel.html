@@ -218,11 +218,15 @@ table.escala tbody td.cell-dayoff{background:#f9a8d4;color:#831843}
 ═══════════════════════════════════════════════ -->
 <div class="bg-navy-dark" style="background:linear-gradient(135deg,#071f42 0%,#0a2d5e 60%,#0e3a78 100%)">
   <div class="max-w-6xl mx-auto px-6 py-5">
-    <div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <img src="https://s3-sa-east-1.amazonaws.com/cdn.mkt.vitta.com.br/logo_assinatura.png"
-           class="h-7 mb-2 brightness-0 invert" alt="Vitta" onclick="toggleContent()" style="cursor:pointer" title="Mostrar/ocultar conteúdo"/>
-      <h1 class="font-bold text-white leading-tight" style="font-size:1.4rem;white-space:nowrap;margin-bottom:2px">Hospital Digital Vitta</h1>
-      <p id="role-subtitle" class="text-blue-100 font-medium" style="display:none;font-size:.78rem;margin-bottom:8px">Seja bem-vindo, analista, ao portal do atendimento.</p>
+           class="brightness-0 invert" alt="Vitta" onclick="toggleContent()"
+           style="height:34px;cursor:pointer;flex-shrink:0" title="Mostrar/ocultar conteúdo"/>
+      <div style="height:28px;width:1px;background:rgba(255,255,255,.25)"></div>
+      <div>
+        <h1 class="font-bold text-white leading-tight" style="font-size:1.4rem;white-space:nowrap;margin:0">Hospital Digital Vitta</h1>
+        <p id="role-subtitle" class="text-blue-100 font-medium" style="display:none;font-size:.74rem;margin:2px 0 0">Seja bem-vindo, analista, ao portal do atendimento.</p>
+      </div>
     </div>
     <div id="tab-buttons" class="flex flex-wrap gap-2 mt-2">
       <button onclick="showTab('avisos')" id="btn-avisos"
